@@ -1,15 +1,30 @@
 import './App.css';
 import Header from '../header/Header';
 import Navbar from '../navbar/Navbar';
-import Main from '../main/Main';
+import Landing from '../landing/Landing';
+import Teams from '../teams/Teams';
+import SigninForm from '../signinForm/SigninForm';
+import {BrowserRouter, Routes, Route,} from 'react-router-dom'
+import { Provider } from 'react-redux';
+import store from '../../redux/store'
 
 function App() {
   	return (
-    	<div className='bg-base-100'>
-      		<Header></Header>
-			<Navbar></Navbar>
-			<Main></Main>
-    	</div>
+		<Provider store={store}>
+			<BrowserRouter>
+				<div className='bg-base-100'>
+					<Header></Header>
+					<Navbar></Navbar>
+					<main className="margins bg-neutral h-auto">
+						<Routes>
+							<Route exact path='/' element={<Landing/>}/ >
+							<Route exact path='/teams' element={<Teams/>}/ >
+							<Route exact path='/sign-up' element={<SigninForm/>}/ >
+						</Routes>
+					</main>
+				</div>
+			</BrowserRouter>
+		</Provider>
   	);
 }
 
