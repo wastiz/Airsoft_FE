@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import './App.css';
 import Header from '../header/Header';
 import Navbar from '../navbar/Navbar';
@@ -13,18 +12,19 @@ import store from '../../redux/store'
 function App () {
 	const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await axios.get('/api/users');
-                setUsers(result.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
-    }, []);
+	useEffect(() => {
+	  const fetchData = async () => {
+		try {
+		  const response = await fetch('http://localhost:5000/api/users');
+		  const data = await response.json();
+		  setUsers(data);
+		} catch (error) {
+		  console.error('Error fetching data:', error);
+		}
+	  };
+  
+	  fetchData();
+	}, []);
 
   	return (
 		<Provider store={store}>
