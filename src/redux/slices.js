@@ -6,6 +6,7 @@ const signInSlice = createSlice({
         name: '',
         email: '',
         password: '',
+        responseText: 'not sent'
     },
     reducers: {
         setName: (state, action) => {
@@ -17,6 +18,13 @@ const signInSlice = createSlice({
         setPassword: (state, action) => {
             state.password = action.payload
         },
+        setStatus: (state, action) => {
+            if (action.payload === 200) {
+                state.responseText = 'Thank you'
+            } else {
+                state.responseText = 'Something went wrong'
+            }
+        },
         resetForm: (state) => {
             state.name = '';
             state.email = '';
@@ -25,5 +33,5 @@ const signInSlice = createSlice({
     },
 })
 
-export const { setName, setEmail, setPassword, resetForm } = signInSlice.actions;
+export const { setName, setEmail, setPassword, setStatus, resetForm } = signInSlice.actions;
 export default signInSlice.reducer;

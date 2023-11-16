@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+//В консоли от имени админа прописать net start MongoDB
 
 // Подключение к MongoDB
 mongoose.connect('mongodb://localhost:27017/airsoft', {
@@ -30,6 +31,16 @@ app.get('/api/users', async (req, res) => {
     // Пример использования Mongoose для получения данных из MongoDB
     const users = await User.find(); // Предполагается, что у вас есть модель User
     res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/api/users', async (req, res) => {
+  try {
+    const newUser = await User.create(req.body);
+    res.json(newUser);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

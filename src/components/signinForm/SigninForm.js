@@ -1,11 +1,12 @@
 import { useDispatch, useSelector} from 'react-redux';
-import { setName, setEmail, setPassword, resetForm } from '../../redux/slices';
+import { setName, setEmail, setPassword, setStatus, resetForm } from '../../redux/slices';
+import axios from 'axios';
 
 const SigninForm = () => {
 
   const dispatch = useDispatch();
-  const formData = useSelector((state) => state.signIn);
-
+  const states = useSelector((state) => state.signIn);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -24,9 +25,23 @@ const SigninForm = () => {
     }
   };
 
+  const sendDataToMongoDB = async (data) => {
+	try {
+	  const response = await axios.post('http://localhost:5000/api/users', data);
+	  dispatch(setStatus(response.status));
+	  console.log(response.statusText);
+	} catch (error) {
+	  console.error(error);
+	}
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Отправка данных:', formData);
+	sendDataToMongoDB({
+		name: states.name,
+		email: states.email,
+		password: states.password
+	});
     dispatch(resetForm());
   };
 
@@ -39,7 +54,7 @@ const SigninForm = () => {
 			<input
 				type="text"
 				name="name"
-				value={formData.name}
+				value={states.name}
 				onChange={handleChange}
 				placeholder="Имя"
 				className="input input-bordered w-full max-w-xs"
@@ -50,7 +65,7 @@ const SigninForm = () => {
 			<input
 				type="email"
 				name="email"
-				value={formData.email}
+				value={states.email}
 				onChange={handleChange}
 				placeholder="Электронная почта"
 				className="input input-bordered w-full max-w-xs"
@@ -61,13 +76,14 @@ const SigninForm = () => {
 			<input
 				type="password"
 				name="password"
-				value={formData.password}
+				value={states.password}
 				onChange={handleChange}
 				placeholder="Пароль"
 				className="input input-bordered w-full max-w-xs"
 			/>
 			<br />
 			<button className="btn btn-primary" type='submit'>Submit</button>
+			{states.responseText}
 		</form>
 	</div>
   );
