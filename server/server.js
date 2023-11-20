@@ -13,29 +13,45 @@ mongoose.connect('mongodb://localhost:27017/airsoft', {
 });
 
 // Middleware для поддержки CORS
-app.use(cors()); // Добавьте это
-
+app.use(cors());
 
 // Обработка JSON данных
 app.use(express.json());
 
 const userSchema = new mongoose.Schema({
+  _id: String,
   name: String,
   email: String,
-  password: String
+  password: String,
 });
 
 // Маршруты
 app.get('/api/users', async (req, res) => {
   try {
-    // Пример использования Mongoose для получения данных из MongoDB
-    const users = await User.find(); // Предполагается, что у вас есть модель User
+    const users = await User.find();
     res.json(users);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.get('/api/users/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 app.post('/api/users', async (req, res) => {
   try {

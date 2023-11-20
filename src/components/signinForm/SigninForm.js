@@ -1,12 +1,16 @@
 import { useDispatch, useSelector} from 'react-redux';
-import { setName, setEmail, setPassword, setStatus, resetForm } from '../../redux/slices';
+import { setName, setEmail, setPassword, setId, setStatus, resetForm } from '../../redux/slices';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
 const SigninForm = () => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const states = useSelector((state) => state.signIn);
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -25,24 +29,28 @@ const SigninForm = () => {
     }
   };
 
-  const sendDataToMongoDB = async (data) => {
+  const handleSubmit = async (e) => {
+	const newId = uuidv4();
+	dispatch(setId(newId));
+	localStorage.setItem('id', newId);
+	e.preventDefault();
+  
 	try {
-	  const response = await axios.post('http://localhost:5000/api/users', data);
-	  dispatch(setStatus(response.status));
-	  console.log(response.statusText);
-	} catch (error) {
-	  console.error(error);
-	}
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-	sendDataToMongoDB({
+	  const response = await axios.post('http://localhost:5000/api/users', {
+		_id: newId,
 		name: states.name,
 		email: states.email,
-		password: states.password
-	});
-    dispatch(resetForm());
+		password: states.password,
+	  });
+  
+	  dispatch(setStatus(response.status));
+	  console.log(response.statusText);
+  
+	  dispatch(resetForm());
+	  navigate('/');
+	} catch (error) {
+	  console.error('Error submitting data to MongoDB:', error);
+	}
   };
 
   return (
