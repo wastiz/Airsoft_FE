@@ -91,7 +91,7 @@ const SigninForm = () => {
 			/>
 			<br />
 			<button className="btn btn-primary" type='submit'>Submit</button>
-			{states.responseText}
+			<p className='text-white'>{states.responseText}</p>
 		</form>
 	</div>
   );

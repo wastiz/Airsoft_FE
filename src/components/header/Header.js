@@ -1,7 +1,7 @@
 import './Header.scss';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 const fetchData = async (userId) => {
     try {
@@ -14,24 +14,19 @@ const fetchData = async (userId) => {
 };
 
 function Header () {
-    const [userData, setUserData] = useState();
-
+    const usernameRef = useRef('');
     useEffect(() => {
         const currentId = localStorage.getItem('id');
 
         fetchData(currentId)
             .then((data) => {
-                console.log('Data fetched successfully:', data);
-                setUserData(data);
+                usernameRef.current = data.name;
+                console.log('Data fetched successfully:', data.name);
             })
             .catch((error) => {
                 console.error('Error in fetchData:', error);
             });
-    }, []); // Empty dependency array to run only once when the component mounts
-
-    useEffect(() => {
-        console.log('Current userData:', userData);
-    }, [userData]); // Log the state whenever it changes
+    }, []);
 
     return (
         <header className='bg-neutral margins h-40 display-row'>
@@ -47,8 +42,11 @@ function Header () {
                         <li><p className='text-white'>Russian</p></li>
                     </ul>
                 </div>
-                {userData.length > 2 ? (
-                    userData
+                {usernameRef.current.length > 1 ? (
+                    <div>
+                        <h4 className='text-white'>Welcome back,</h4>
+                        <h3 className='text-white'>{usernameRef.current}</h3>
+                    </div>
                 ) : (
                     <div>
                         <button className="btn btn-outline btn-primary ml-2">Log In</button>

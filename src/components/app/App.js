@@ -4,6 +4,7 @@ import Navbar from '../navbar/Navbar';
 import Landing from '../landing/Landing';
 import Teams from '../teams/Teams';
 import SigninForm from '../signinForm/SigninForm';
+import LoginForm from '../loginForm/LoginForm';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom'
 
 
@@ -19,6 +20,7 @@ function App () {
 						<Route exact path='/' element={<Landing/>}/ >
 						<Route exact path='/teams' element={<Teams/>}/ >
 						<Route exact path='/sign-up' element={<SigninForm/>}/ >
+						<Route exact path='/log-in' element={<LoginForm/>}/ >
 					</Routes>
 				</main>
 			</div>

@@ -1,9 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit'
-import signInSlice from './slices'
+import {signinReducer, loginReducer} from './slices'
 
 const store = configureStore({
     reducer: {
-        signIn: signInSlice
+        signIn: signinReducer,
+        logIn: loginReducer,
     },
 		middleware: getDefaultMiddleware => getDefaultMiddleware(),
 		devTools: process.env.NODE_ENV !== 'production'
