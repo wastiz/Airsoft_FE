@@ -33,6 +33,7 @@ const SigninForm = () => {
 	const newId = uuidv4();
 	dispatch(setId(newId));
 	localStorage.setItem('id', newId);
+	localStorage.setItem('username', states.name)
 	e.preventDefault();
   
 	try {

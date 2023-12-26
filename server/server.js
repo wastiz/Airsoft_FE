@@ -63,6 +63,25 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+app.get('/api/user/:name', async (req, res) => {
+  try {
+    const name = req.params.name;
+    const user = await User.findOne({ name });
+
+    if (user) {
+      res.json({
+        name: user.name,
+        pass: user.pass,
+      });
+    } else {
+      res.status(404).json({ error: 'Пользователь не найден' });
+    }
+  } catch (error) {
+    console.error('Ошибка при запросе данных пользователя:', error);
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
+});
+
 // Обработка других маршрутов...
 
 // Запуск сервера

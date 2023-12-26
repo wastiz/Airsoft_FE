@@ -1,6 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-
+const currentDataSlice = createSlice({
+    name: 'currentData',
+    initialState: {
+        _id: '',
+        name: '',
+        email: '',
+    },
+    reducers: {
+        setData: (state, action) =>{
+            state._id = action.payload.id;
+            state.name = action.payload.name;
+            state.email = action.payload.email;
+        }
+    }
+})
 const signInSlice = createSlice({
     name: 'sign-in',
     initialState: {
@@ -65,6 +79,9 @@ const loginSlice = createSlice({
         }
     },
 })
+
+export const { setData } = currentDataSlice.actions;
+export const currentDataReducer = currentDataSlice.reducer;
 
 export const { setName, setEmail, setPassword, setId, setStatus, resetForm } = signInSlice.actions;
 export const signinReducer = signInSlice.reducer;

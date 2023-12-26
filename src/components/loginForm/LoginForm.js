@@ -1,6 +1,7 @@
 import { useDispatch, useSelector} from 'react-redux';
 import { setNameLog, setPasswordLog, setStatusLog, resetFormLog } from '../../redux/slices';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function LoginForm () {
 
@@ -24,25 +25,21 @@ function LoginForm () {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        try {
-          const response = await axios.post('http://localhost:5000/api/users', {
-            _id: newId,
-            name: states.name,
-            email: states.email,
-            password: states.password,
-          });
+      e.preventDefault();
       
-          dispatch(setStatus(response.status));
-          console.log(response.statusText);
+      try {
+        const response = await axios.get(`http://localhost:5000/api/user/${states.name}`);
       
-          dispatch(resetForm());
-          navigate('/');
-        } catch (error) {
-          console.error('Error submitting data to MongoDB:', error);
+        if (response.data.name === states.name || response.data.pass === states.password) {
+			console.log('good')
+			dispatch(resetFormLog())
+			navigate('/')
         }
-      };
+      } catch (error) {
+        console.error('Error submitting data to MongoDB:', error);
+      }
+    };
+    
     
     return (
     <div className='w-full h-full items-center justify-center'>
