@@ -6,11 +6,18 @@ import Teams from '../teams/Teams';
 import SigninForm from '../signinForm/SigninForm';
 import LoginForm from '../loginForm/LoginForm';
 import Profile from '../profile/Profile';
+import Events from '../events/Events';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {setState} from '../../redux/slices'
 
 
 function App () {
-
+	const id = localStorage.getItem('id');
+	const dispatch = useDispatch();
+	if (id) {
+		dispatch(setState(true))
+	}
   	return (
 		<BrowserRouter>
 			<div className='bg-base-100'>
@@ -23,6 +30,7 @@ function App () {
 						<Route exact path='/sign-up' element={<SigninForm/>}/ >
 						<Route exact path='/log-in' element={<LoginForm/>}/ >
 						<Route exact path='/profile/:userId' element={<Profile/>}/ >
+						<Route exact path='/events' element={<Events/>}/>
 					</Routes>
 				</main>
 			</div>

@@ -5,6 +5,7 @@ function Navbar () {
         <nav className="bg-neutral margins h-16 display-row">
             <Link to='/' className="text-white ml-2.5">Home</Link>
             <Link to='/teams' className="text-white ml-2.5">Teams</Link>
+            <Link to='/events' className="text-white ml-2.5">Events</Link>
             <p href='#' className="text-white ml-2.5">News</p>
             <p href='#' className="text-white ml-2.5">Places</p>
             <div className="dropdown dropdown-end ml-2.5">

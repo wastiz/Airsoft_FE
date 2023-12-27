@@ -3,11 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 const currentDataSlice = createSlice({
     name: 'currentData',
     initialState: {
+        logged: false,
         _id: '',
         name: '',
         email: '',
     },
     reducers: {
+        setState: (state, action) => {
+            state.logged = action.payload
+        },
         setData: (state, action) =>{
             state._id = action.payload.id;
             state.name = action.payload.name;
@@ -80,7 +84,7 @@ const loginSlice = createSlice({
     },
 })
 
-export const { setData } = currentDataSlice.actions;
+export const { setData, setState } = currentDataSlice.actions;
 export const currentDataReducer = currentDataSlice.reducer;
 
 export const { setName, setEmail, setPassword, setId, setStatus, resetForm } = signInSlice.actions;
