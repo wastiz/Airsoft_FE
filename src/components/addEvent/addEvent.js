@@ -10,7 +10,7 @@ function AddEvent() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
   
-    const states = useSelector((state) => state.signIn);
+    const states = useSelector((state) => state.addEvent);
   
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -40,28 +40,38 @@ function AddEvent() {
     };
   
     const handleSubmit = async (e) => {
-      const newId = uuidv4();
-      dispatch(setEventId(newId));
-      e.preventDefault();
-    
-      try {
-        const response = await axios.post('http://localhost:5000/api/users', {
-          eventId: newId,
-          title: states.title,
-          description: states.description,
-          rules: states.rules,
-          date: states.date,
-          start: states.start,
-          price: states.price
-        });
-    
-        dispatch(setEventFormStatus(response.status));
-        console.log(response.statusText);
-    
-        navigate('/');
-      } catch (error) {
-        console.error('Error submitting data to MongoDB:', error);
-      }
+		const newId = uuidv4();
+		dispatch(setEventId(newId));
+		e.preventDefault();
+		console.log(states.date)
+		console.log(states.start)
+
+		const originalDate = new Date(states.date);
+
+		const day = originalDate.getDate().toString().padStart(2, '0');
+		const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
+		const year = originalDate.getFullYear().toString().slice(-2);
+
+		const formattedDate = `${day}.${month}.${year}`;
+
+		try {
+			const response = await axios.post('http://localhost:5000/api/events', {
+			_id: newId,
+			title: states.title,
+			description: states.description,
+			rules: states.rules,
+			date: formattedDate,
+			start: states.start,
+			price: states.price
+			});
+		
+			dispatch(setEventFormStatus(response.status));
+			console.log(response.statusText);
+		
+			navigate('/');
+		} catch (error) {
+			console.error('Error submitting data to MongoDB:', error);
+		}
     };
 
     return (
@@ -75,15 +85,15 @@ function AddEvent() {
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-4">
-              <label htmlFor="event-title" className="block text-sm font-medium leading-6 text-white">
+              <label htmlFor="title" className="block text-sm font-medium leading-6 text-white">
                 Event Title
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                   <input
                     type="text"
-                    name="event-title"
-                    id="event-title"
+                    name="title"
+                    id="title"
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-white placeholder:text-white focus:ring-0 sm:text-sm sm:leading-6"
                     placeholder="Type here..."
                     onChange={handleChange}
@@ -102,7 +112,7 @@ function AddEvent() {
                   id="description"
                   name="description"
                   rows={3}
-                  className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   defaultValue={''}
                   onChange={handleChange}
                   value={states.description}
@@ -120,7 +130,7 @@ function AddEvent() {
                   id="rules"
                   name="rules"
                   rows={3}
-                  className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   defaultValue={''}
                   onChange={handleChange}
                   value={states.rules}

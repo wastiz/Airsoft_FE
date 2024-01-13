@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 function Header () {
     const username = localStorage.getItem('username');
     const userId = localStorage.getItem('id');
+
     return (
         <header className='bg-neutral margins h-40 display-row'>
             <div>

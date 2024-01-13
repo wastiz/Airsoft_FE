@@ -8,6 +8,7 @@ import LoginForm from '../loginForm/LoginForm';
 import Profile from '../profile/Profile';
 import Events from '../events/Events';
 import AddEvent from '../addEvent/addEvent';
+import Event from '../event/Event';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {setState} from '../../redux/slices'
@@ -33,6 +34,7 @@ function App () {
 						<Route exact path='/profile/:userId' element={<Profile/>}/ >
 						<Route exact path='/events' element={<Events/>}/>
 						<Route exact path='/add-event' element={<AddEvent/>}></Route>
+						<Route exact path='/events/:eventId' element={<Event/>}></Route>
 					</Routes>
 				</main>
 			</div>

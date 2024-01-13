@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit'
-import {signinReducer, loginReducer, currentDataReducer, addEventReducer} from './slices'
+import {signinReducer, loginReducer, currentDataReducer, addEventReducer, eventsReducer} from './slices'
 
 const store = configureStore({
     reducer: {
@@ -7,6 +7,7 @@ const store = configureStore({
         logIn: loginReducer,
         current: currentDataReducer,
         addEvent: addEventReducer,
+        events: eventsReducer,
     },
 		middleware: getDefaultMiddleware => getDefaultMiddleware(),
 		devTools: process.env.NODE_ENV !== 'production'

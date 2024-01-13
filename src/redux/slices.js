@@ -88,13 +88,13 @@ const loginSlice = createSlice({
 const addEventSlice = createSlice({
     name: 'add-event',
     initialState: {
+        _id: '',
         title: '',
         description: '',
         rules: '',
         date: '',
         start: '',
         price: '',
-        eventId: '',
         responseText: 'not sent',
     },
     reducers: {
@@ -117,7 +117,7 @@ const addEventSlice = createSlice({
             state.price = action.payload
         },
         setEventId: (state, action) => {
-            state.eventId = action.payload
+            state._id = action.payload
         },
         setEventFormStatus: (state, action) => {
             if (action.payload === 200) {
@@ -134,6 +134,18 @@ const addEventSlice = createSlice({
     },
 })
 
+const eventsSlice = createSlice({
+    name: 'events',
+    initialState: {
+        events: [],
+    },
+    reducers: {
+        setEvents: (state, action) => {
+            state.events = action.payload
+        }
+    }
+})
+
 export const { setData, setState } = currentDataSlice.actions;
 export const currentDataReducer = currentDataSlice.reducer;
 
@@ -145,3 +157,6 @@ export const loginReducer = loginSlice.reducer;
 
 export const { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus } = addEventSlice.actions;
 export const addEventReducer = addEventSlice.reducer;
+
+export const { setEvents } = eventsSlice.actions;
+export const eventsReducer = eventsSlice.reducer;
