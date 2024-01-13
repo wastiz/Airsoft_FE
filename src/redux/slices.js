@@ -19,6 +19,7 @@ const currentDataSlice = createSlice({
         }
     }
 })
+
 const signInSlice = createSlice({
     name: 'sign-in',
     initialState: {
@@ -84,6 +85,55 @@ const loginSlice = createSlice({
     },
 })
 
+const addEventSlice = createSlice({
+    name: 'add-event',
+    initialState: {
+        title: '',
+        description: '',
+        rules: '',
+        date: '',
+        start: '',
+        price: '',
+        eventId: '',
+        responseText: 'not sent',
+    },
+    reducers: {
+        setTitle: (state, action) => {
+            state.title = action.payload
+        },
+        setDescr: (state, action) => {
+            state.description = action.payload
+        },
+        setRules: (state, action) => {
+            state.rules = action.payload
+        },
+        setDate: (state, action) => {
+            state.date = action.payload
+        },
+        setStart: (state, action) => {
+            state.start = action.payload
+        },
+        setPrice: (state, action) => {
+            state.price = action.payload
+        },
+        setEventId: (state, action) => {
+            state.eventId = action.payload
+        },
+        setEventFormStatus: (state, action) => {
+            if (action.payload === 200) {
+                state.responseText = 'Thank you. Event has been added'
+            } else {
+                state.responseText = 'Something went wrong'
+            }
+        },
+        resetForm: (state) => {
+            state.title = '';
+            state.email = '';
+            state.password = '';
+        }
+    },
+})
+
 export const { setData, setState } = currentDataSlice.actions;
 export const currentDataReducer = currentDataSlice.reducer;
 
@@ -92,3 +142,6 @@ export const signinReducer = signInSlice.reducer;
 
 export const { setNameLog, setPasswordLog, setStatusLog, resetFormLog } = loginSlice.actions;
 export const loginReducer = loginSlice.reducer;
+
+export const { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus } = addEventSlice.actions;
+export const addEventReducer = addEventSlice.reducer;

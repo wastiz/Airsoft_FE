@@ -1,30 +1,31 @@
 import './Events.scss';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import EventCard from '../eventCard/eventCard';
+import {Link} from 'react-router-dom'
+
+
 function Events () {
     const states = useSelector((state) => state.current)
     return (
         <Container>
-            {states.logged ? (
-                <button className='text-white'>Add event</button>
-            ) : (
-                <div>To add event you have to be logged in</div>
-            )}
+            <Row>
+                {states.logged ? (
+                    <Link to='/add-event'><button className='text-white btn btn-primary'>Add Event</button></Link>
+                ) : (
+                    <h3 className='text-white'>To add event you have to be logged in</h3>
+                )}
+            </Row>
+            <br />
             <Row>
                 <Col>
-                    <div className='event-block'>
-                        <h1>Some text is here</h1>
-                    </div>
+                    <EventCard/>
                 </Col>
                 <Col>
-                    <div className='event-block'>
-                        <h1>Some text is here</h1>
-                    </div>
+                    <EventCard/>
                 </Col>
                 <Col>
-                    <div className='event-block'>
-                        <h1>Some text is here</h1>
-                    </div>
+                    <EventCard/>
                 </Col>
             </Row>
         </Container>

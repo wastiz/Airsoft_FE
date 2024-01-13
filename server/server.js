@@ -25,6 +25,16 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
+const eventSchema = new mongoose.Schema({
+  _id: String,
+  title: String,
+  description: String,
+  rules: String,
+  date: String,
+  start: Date,
+  price: String,
+});
+
 // Маршруты
 app.get('/api/users', async (req, res) => {
   try {
@@ -63,6 +73,16 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+app.post('/api/events', async (req, res) => {
+  try {
+    const newEvent = await Event.create(req.body);
+    res.json(newEvent);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.get('/api/user/:name', async (req, res) => {
   try {
     const name = req.params.name;
@@ -90,6 +110,7 @@ app.listen(PORT, () => {
 });
 
 const User = mongoose.model('User', userSchema);
+const Event = mongoose.model('Event', eventSchema);
 
 module.exports = User;
   
