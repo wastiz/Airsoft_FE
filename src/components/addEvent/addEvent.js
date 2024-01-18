@@ -1,9 +1,10 @@
 import placeholder from '../../img/placeholder.png'
 import { useDispatch, useSelector} from 'react-redux';
-import { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus } from '../../redux/slices';
+import { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus, setLocation, setAgeRestriction,  setRegFormFirstName, setRegFormLastName, setRegFormNickname, setRegFormEmail, setRegFormPhone, setRegFormAge, setRegFormArbitrary, setRegFormArbitraryContent, setOrgFirstName, setOrgLastName, setOrgEmail } from '../../redux/slices';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { useState } from 'react';
 
 function AddEvent() {
 
@@ -34,6 +35,48 @@ function AddEvent() {
         case 'price':
             dispatch(setPrice(value));
             break;
+        case 'location':
+			dispatch(setLocation(value));
+			break;
+		case 'ageRestriction':
+			dispatch(setAgeRestriction(value));
+			break;
+		case 'regFirstName':
+			dispatch(setRegFormFirstName());
+			break;
+		case 'regLastName':
+			dispatch(setRegFormLastName());
+			break;
+		case 'regNickname':
+			dispatch(setRegFormNickname());
+			break;
+		case 'regEmail':
+			dispatch(setRegFormEmail());
+			break;
+		case 'regPhone':
+			dispatch(setRegFormPhone());
+			break;
+		case 'regAge':
+			dispatch(setRegFormAge());
+			break;
+		case 'regArbitrary':
+			dispatch(setRegFormArbitrary());
+			break;
+		case 'regTextarea':
+			dispatch(setRegFormArbitraryContent(['textarea']));
+			break;
+		case 'regSelect':
+			dispatch(setRegFormArbitraryContent(['select']));
+			break;
+		case 'orgFirstName':
+			dispatch(setOrgFirstName(value));
+			break;
+		case 'orgLastName':
+			dispatch(setOrgLastName(value));
+			break;
+		case 'orgEmail':
+			dispatch(setOrgEmail(value));
+			break;
         default:
           break;
       }
@@ -43,16 +86,19 @@ function AddEvent() {
 		const newId = uuidv4();
 		dispatch(setEventId(newId));
 		e.preventDefault();
-		console.log(states.date)
-		console.log(states.start)
 
 		const originalDate = new Date(states.date);
-
 		const day = originalDate.getDate().toString().padStart(2, '0');
 		const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
 		const year = originalDate.getFullYear().toString().slice(-2);
-
 		const formattedDate = `${day}.${month}.${year}`;
+
+		const keysArray = Object.keys(inputValues);
+
+		if (states.arbitraryContent[0] === 'select') {
+			dispatch(setRegFormArbitraryContent(['select', keysArray]))
+			console.log(states.arbitraryContent)
+		}
 
 		try {
 			const response = await axios.post('http://localhost:5000/api/events', {
@@ -62,7 +108,22 @@ function AddEvent() {
 			rules: states.rules,
 			date: formattedDate,
 			start: states.start,
-			price: states.price
+			price: states.price,
+			location: states.location,
+			ageRestriction: states.ageRestriction,
+			regForm: {
+				firstName: false,
+				lastName: false,
+				nickname: false,
+				email: false,
+				phone: false,
+				age: false,
+				arbitrary: false,
+				arbitraryContent: states.arbitraryContent
+			},
+			orgFirstName: states.orgFirstName,
+			orgLastName: states.orgLastName,
+			orgEmail: states.orgEmail,
 			});
 		
 			dispatch(setEventFormStatus(response.status));
@@ -73,6 +134,36 @@ function AddEvent() {
 			console.error('Error submitting data to MongoDB:', error);
 		}
     };
+
+	const [isChecked, setIsChecked] = useState(false);
+
+	const handleCheckboxChange = () => {
+		setIsChecked(!isChecked);
+	};
+
+	const [inputValues, setInputValues] = useState({
+		input1: '',
+		input2: '',
+	});
+	const [inputNames, setInputNames] = useState(['input1', 'input2']);
+
+	const handleInputChange = (event) => {
+		const { name, value } = event.target;
+		setInputValues((prevValues) => ({
+		...prevValues,
+		[name]: value,
+		}));
+	};
+
+	const handleAddInput = () => {
+		const newInputName = `input${inputNames.length + 1}`;
+		setInputNames([...inputNames, newInputName]);
+		setInputValues((prevValues) => ({
+		...prevValues,
+		[newInputName]: '',
+		}));
+	};
+
 
     return (
     <form onSubmit={handleSubmit}>
@@ -190,6 +281,39 @@ function AddEvent() {
                         />
                     </div>
                     </div>
+					
+                    <div className="sm:col-span-3">
+                    <label htmlFor="location" className="block text-sm font-medium leading-6 text-white">
+                        Location:
+                    </label>
+                    <div className="mt-2">
+                        <input
+                        type="text"
+                        name="location"
+                        id="location"
+                        className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        onChange={handleChange}
+                        value={states.location}
+                        />
+                    </div>
+                    </div>
+
+					<div className="sm:col-span-3">
+                    <label htmlFor="ageRestriction" className="block text-sm font-medium leading-6 text-white">
+                        Age Restriction (leave empty if there is no age restriction):
+                    </label>
+                    <div className="mt-2">
+                        <input
+                        type="text"
+                        name="ageRestriction"
+                        id="ageRestriction"
+                        className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        onChange={handleChange}
+                        value={states.ageRestriction}
+                        />
+                    </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -217,55 +341,237 @@ function AddEvent() {
           </div>
         </div>
 
+		<div className="border-b border-gray-900/10 pb-12">
+          <h2 className="text-base font-semibold leading-7 text-white">Registration fields</h2>
+          <p className="mt-1 text-sm leading-6 text-white">
+            Set fields that will be displayed, when user registrering
+          </p>
+
+          <div className="space-y-10">
+            <fieldset>
+              <div className="mt-6 space-y-6">
+
+                <div className="relative flex gap-x-3">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="regFirstName"
+                      name="regFirstName"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+					  onChange={handleChange}
+                    />
+                  </div>
+                  <div className="text-sm leading-6">
+                    <label htmlFor="regFirstName" className="font-medium text-white">
+                      First name
+                    </label>
+                    <p className="text-white">Player's first name</p>
+                  </div>
+                </div>
+
+                <div className="relative flex gap-x-3">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="regLastName"
+                      name="regLastName"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+					  onChange={handleChange}
+                    />
+                  </div>
+                  <div className="text-sm leading-6">
+                    <label htmlFor="regLastName" className="font-medium text-white">
+                      Last name
+                    </label>
+                    <p className="text-white">Player's last name</p>
+                  </div>
+                </div>
+
+                <div className="relative flex gap-x-3">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="regNickname"
+                      name="regNickname"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+					  onChange={handleChange}
+                    />
+                  </div>
+                  <div className="text-sm leading-6">
+                    <label htmlFor="regNickname" className="font-medium text-white">
+                      Nickname
+                    </label>
+                    <p className="text-white">Player's nickname (can be used from profile)</p>
+                  </div>
+                </div>
+
+				<div className="relative flex gap-x-3">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="regEmail"
+                      name="regEmail"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+					  onChange={handleChange}
+                    />
+                  </div>
+                  <div className="text-sm leading-6">
+                    <label htmlFor="regEmail" className="font-medium text-white">
+                      Email
+                    </label>
+                    <p className="text-white">Player's email</p>
+                  </div>
+                </div>
+
+				<div className="relative flex gap-x-3">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="regPhone"
+                      name="regPhone"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+					  onChange={handleChange}
+                    />
+                  </div>
+                  <div className="text-sm leading-6">
+                    <label htmlFor="regPhone" className="font-medium text-white">
+                      Phone
+                    </label>
+                    <p className="text-white">Player's phone</p>
+                  </div>
+                </div>
+
+				<div className="relative flex gap-x-3">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="regAge"
+                      name="regAge"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+					  onChange={handleChange}
+                    />
+                  </div>
+                  <div className="text-sm leading-6">
+                    <label htmlFor="regAge" className="font-medium text-white">
+                      Age
+                    </label>
+                    <p className="text-white">Player's age</p>
+                  </div>
+                </div>
+
+				<div className="relative flex gap-x-3">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="regArbitrary"
+                      name="regArbitrary"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+					  onChange={handleChange}
+                    />
+                  </div>
+                  <div className="text-sm leading-6">
+                    <label htmlFor="regArbitrary" className="font-medium text-white">
+                      Arbitrary
+                    </label>
+                    <p className="text-white">You can add more inputs for additional info</p>
+                  </div>
+                </div>
+
+				<div className="relative flex gap-x-3">
+					<div className='display-col flex-gap'>
+					{states.regForm.arbitrary ? (
+						<div className='display-row flex-gap'>
+							<h4 className='text-white'>Textarea</h4>
+							<input type="checkbox" onChange={handleCheckboxChange} className="toggle [--tglbg:white] bg-green hover:bg-primary border-secondary"/>
+							<h4 className='text-white'>Select</h4>
+						</div>
+					) : null}
+					{states.regForm.arbitrary && !isChecked ? (
+						<div className='display-col flex-gap'>
+							<label className='text-white' htmlFor="regTextarea">You have chose textarea, tell what player should type in this textarea</label>
+							<input onChange={handleChange} type="text" id='regTextarea' name='regTextarea'/>
+						</div>
+					) : null }
+					{states.regForm.arbitrary && isChecked ? (
+						<div className='display-column flex-gap'>
+							<label className='text-white' htmlFor="regSelect">You have chose select, type options that player will have to choose</label>
+							<input onChange={handleChange} type="text" id='regSelect' name='regSelect'/>
+							{inputNames.map((name) => (
+								<label className='text-white' key={name}>
+								{name.charAt(0).toUpperCase() + name.slice(1)}:
+								<input
+									type="text"
+									name={name}
+									value={inputValues[name]}
+									onChange={handleInputChange}
+									className="common-input-class"
+								/>
+								</label>
+							))}
+							<button type="button" className='text-white' onClick={handleAddInput}>Add Input</button>
+						</div>
+					) : null }
+					</div>
+                </div>
+
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-white">Personal Information</h2>
           <p className="mt-1 text-sm leading-6 text-white">Use a permanent address where you can receive mail.</p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
-              <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-white">
+              <label htmlFor="orgFirstName" className="block text-sm font-medium leading-6 text-white">
                 First name
               </label>
               <div className="mt-2">
                 <input
                   type="text"
-                  name="first-name"
-                  id="first-name"
+                  name="orgFirstName"
+                  id="orgFirstName"
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+				  onChange={handleChange}
                 />
               </div>
             </div>
 
             <div className="sm:col-span-3">
-              <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-white">
+              <label htmlFor="orgLastName" className="block text-sm font-medium leading-6 text-white">
                 Last name
               </label>
               <div className="mt-2">
                 <input
                   type="text"
-                  name="last-name"
-                  id="last-name"
+                  name="orgLastName"
+                  id="orgLastName"
                   autoComplete="family-name"
                   className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+				  onChange={handleChange}
                 />
               </div>
             </div>
 
             <div className="sm:col-span-4">
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-white">
+              <label htmlFor="orgEmail" className="block text-sm font-medium leading-6 text-white">
                 Email address
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  name="email"
+                  id="orgEmail"
+                  name="orgEmail"
                   type="email"
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+				  onChange={handleChange}
                 />
               </div>
             </div>
+
           </div>
         </div>
 

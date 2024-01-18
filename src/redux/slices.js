@@ -95,6 +95,21 @@ const addEventSlice = createSlice({
         date: '',
         start: '',
         price: '',
+        location: '',
+        ageRestriction: '',
+        regForm: {
+            firstName: false,
+            lastName: false,
+            nickname: false,
+            email: false,
+            phone: false,
+            age: false,
+            arbitrary: false,
+            arbitraryContent: []
+        },
+        orgFirstName: '',
+        orgLastName: '',
+        orgEmail: '',
         responseText: 'not sent',
     },
     reducers: {
@@ -115,6 +130,45 @@ const addEventSlice = createSlice({
         },
         setPrice: (state, action) => {
             state.price = action.payload
+        },
+        setLocation: (state, action) => {
+            state.location = action.payload
+        },
+        setAgeRestriction: (state, action) => {
+            state.ageRestriction = action.payload
+        },
+        setRegFormFirstName: (state) => {
+            state.regForm.firstName = true
+        },
+        setRegFormLastName: (state) => {
+            state.regForm.lastName = true
+        },
+        setRegFormNickname: (state) => {
+            state.regForm.nickname = true
+        },
+        setRegFormEmail: (state) => {
+            state.regForm.email = true
+        },
+        setRegFormPhone: (state) => {
+            state.regForm.phone = true
+        },
+        setRegFormAge: (state) => {
+            state.regForm.age = true
+        },
+        setRegFormArbitrary: (state) => {
+            state.regForm.arbitrary = true
+        },
+        setRegFormArbitraryContent: (state, action) => {
+            state.regForm.arbitraryContent = action.payload
+        },
+        setOrgFirstName: (state, action) => {
+            state.orgFirstName = action.payload
+        },
+        setOrgLastName: (state, action) => {
+            state.orgLastName = action.payload
+        },
+        setOrgEmail: (state, action) => {
+            state.orgEmail = action.payload
         },
         setEventId: (state, action) => {
             state._id = action.payload
@@ -155,7 +209,7 @@ export const signinReducer = signInSlice.reducer;
 export const { setNameLog, setPasswordLog, setStatusLog, resetFormLog } = loginSlice.actions;
 export const loginReducer = loginSlice.reducer;
 
-export const { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus } = addEventSlice.actions;
+export const { setTitle, setDescr, setRules, setDate, setStart, setPrice, setLocation, setAgeRestriction, setRegFormFirstName, setRegFormLastName, setRegFormNickname, setRegFormEmail, setRegFormPhone, setRegFormAge, setRegFormArbitrary, setRegFormArbitraryContent, setOrgFirstName, setOrgLastName, setOrgEmail, setEventId, setEventFormStatus } = addEventSlice.actions;
 export const addEventReducer = addEventSlice.reducer;
 
 export const { setEvents } = eventsSlice.actions;

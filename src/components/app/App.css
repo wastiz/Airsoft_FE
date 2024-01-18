@@ -16,6 +16,9 @@
 	align-items: center;
 	justify-content: center;
 }
+.flex-gap {
+	gap: 10px;
+}
 .landing-image {
 	width: 500px;
 	height: 350px;
