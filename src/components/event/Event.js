@@ -6,7 +6,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 function Event () {
     const { eventId } = useParams()
     const states = useSelector((state) => state.events.events);
-    const {title, date, description, price, rules, start} = states.find(event => event._id === eventId);
+    const {title, date, description, price, rules, start, location, ageRestriction, } = states.find(event => event._id === eventId);
 
     return (
         <Container>

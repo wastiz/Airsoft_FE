@@ -1,6 +1,6 @@
 import placeholder from '../../img/placeholder.png'
 import { useDispatch, useSelector} from 'react-redux';
-import { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus, setLocation, setAgeRestriction,  setRegFormFirstName, setRegFormLastName, setRegFormNickname, setRegFormEmail, setRegFormPhone, setRegFormAge, setRegFormArbitrary, setRegFormArbitraryContent, setOrgFirstName, setOrgLastName, setOrgEmail } from '../../redux/slices';
+import { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus, setLocation, setAgeRestriction, setRegFormFirstName, setRegFormLastName, setRegFormNickname, setRegFormEmail, setRegFormPhone, setRegFormAge, setRegFormArbitrary, setRegFormArbitraryContent, setOrgFirstName, setOrgLastName, setOrgEmail } from '../../redux/slices';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -94,10 +94,8 @@ function AddEvent() {
 		const formattedDate = `${day}.${month}.${year}`;
 
 		const keysArray = Object.keys(inputValues);
-
-		if (states.arbitraryContent[0] === 'select') {
+		if (states.regForm.arbitraryContent[0] === 'select') {
 			dispatch(setRegFormArbitraryContent(['select', keysArray]))
-			console.log(states.arbitraryContent)
 		}
 
 		try {
@@ -189,6 +187,7 @@ function AddEvent() {
                     placeholder="Type here..."
                     onChange={handleChange}
                     value={states.title}
+					required
                   />
                 </div>
               </div>
@@ -207,6 +206,7 @@ function AddEvent() {
                   defaultValue={''}
                   onChange={handleChange}
                   value={states.description}
+				  required
                 />
               </div>
               <p className="mt-3 text-sm leading-6 text-white">Write a description about your event.</p>
@@ -225,6 +225,7 @@ function AddEvent() {
                   defaultValue={''}
                   onChange={handleChange}
                   value={states.rules}
+				  required
                 />
               </div>
               <p className="mt-3 text-sm leading-6 text-white">Write event's rules</p>
@@ -246,6 +247,7 @@ function AddEvent() {
                         className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         onChange={handleChange}
                         value={states.date}
+						required
                         />
                     </div>
                     </div>
@@ -262,6 +264,7 @@ function AddEvent() {
                         className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         onChange={handleChange}
                         value={states.start}
+						required
                         />
                     </div>
                     </div>
@@ -278,6 +281,7 @@ function AddEvent() {
                         className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         onChange={handleChange}
                         value={states.price}
+						required
                         />
                     </div>
                     </div>
@@ -294,6 +298,7 @@ function AddEvent() {
                         className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         onChange={handleChange}
                         value={states.location}
+						required
                         />
                     </div>
                     </div>
@@ -504,7 +509,7 @@ function AddEvent() {
 									name={name}
 									value={inputValues[name]}
 									onChange={handleInputChange}
-									className="common-input-class"
+									className="common-input-class text-black"
 								/>
 								</label>
 							))}
@@ -536,6 +541,7 @@ function AddEvent() {
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 				  onChange={handleChange}
+				  required
                 />
               </div>
             </div>
@@ -552,6 +558,7 @@ function AddEvent() {
                   autoComplete="family-name"
                   className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 				  onChange={handleChange}
+				  required
                 />
               </div>
             </div>
@@ -568,6 +575,7 @@ function AddEvent() {
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 				  onChange={handleChange}
+				  required
                 />
               </div>
             </div>
