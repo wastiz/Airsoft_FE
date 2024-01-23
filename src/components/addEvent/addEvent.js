@@ -36,69 +36,106 @@ function AddEvent() {
             dispatch(setPrice(value));
             break;
         case 'location':
-			dispatch(setLocation(value));
-			break;
-		case 'ageRestriction':
-			dispatch(setAgeRestriction(value));
-			break;
-		case 'regFirstName':
-			dispatch(setRegFormFirstName());
-			break;
-		case 'regLastName':
-			dispatch(setRegFormLastName());
-			break;
-		case 'regNickname':
-			dispatch(setRegFormNickname());
-			break;
-		case 'regEmail':
-			dispatch(setRegFormEmail());
-			break;
-		case 'regPhone':
-			dispatch(setRegFormPhone());
-			break;
-		case 'regAge':
-			dispatch(setRegFormAge());
-			break;
-		case 'regArbitrary':
-			dispatch(setRegFormArbitrary());
-			break;
-		case 'regTextarea':
-			dispatch(setRegFormArbitraryContent(['textarea']));
-			break;
-		case 'regSelect':
-			dispatch(setRegFormArbitraryContent(['select']));
-			break;
-		case 'orgFirstName':
-			dispatch(setOrgFirstName(value));
-			break;
-		case 'orgLastName':
-			dispatch(setOrgLastName(value));
-			break;
-		case 'orgEmail':
-			dispatch(setOrgEmail(value));
-			break;
-        default:
+          dispatch(setLocation(value));
           break;
-      }
+        case 'ageRestriction':
+          dispatch(setAgeRestriction(value));
+          break;
+        case 'regFirstName':
+          dispatch(setRegFormFirstName());
+          break;
+        case 'regLastName':
+          dispatch(setRegFormLastName());
+          break;
+        case 'regNickname':
+          dispatch(setRegFormNickname());
+          break;
+        case 'regEmail':
+          dispatch(setRegFormEmail());
+          break;
+        case 'regPhone':
+          dispatch(setRegFormPhone());
+          break;
+        case 'regAge':
+          dispatch(setRegFormAge());
+          break;
+        case 'regArbitrary':
+          dispatch(setRegFormArbitrary());
+          break;
+        case 'regTextarea':
+          dispatch(setRegFormArbitraryContent(['textarea', value]));
+          break;
+        case 'regSelect':
+          dispatch(setRegFormArbitraryContent(['select', value]));
+          break;
+        case 'orgFirstName':
+          dispatch(setOrgFirstName(value));
+          break;
+        case 'orgLastName':
+          dispatch(setOrgLastName(value));
+          break;
+        case 'orgEmail':
+          dispatch(setOrgEmail(value));
+          break;
+            default:
+              break;
+          }
+    };
+
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxChange = () => {
+      setIsChecked(!isChecked);
     };
   
-    const handleSubmit = async (e) => {
-		const newId = uuidv4();
-		dispatch(setEventId(newId));
-		e.preventDefault();
-
-		const originalDate = new Date(states.date);
-		const day = originalDate.getDate().toString().padStart(2, '0');
-		const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
-		const year = originalDate.getFullYear().toString().slice(-2);
-		const formattedDate = `${day}.${month}.${year}`;
-
-		const keysArray = Object.keys(inputValues);
-		if (states.regForm.arbitraryContent[0] === 'select') {
-			dispatch(setRegFormArbitraryContent(['select', keysArray]))
-		}
-
+    const [inputValues, setInputValues] = useState({
+      input1: '',
+      input2: '',
+    });
+    const [inputNames, setInputNames] = useState(['input1', 'input2']);
+  
+    const handleInputChange = (event) => {
+      const { name, value } = event.target;
+      setInputValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+      }));
+    };
+  
+    const handleAddInput = () => {
+      const newInputName = `input${inputNames.length + 1}`;
+      setInputNames([...inputNames, newInputName]);
+      setInputValues((prevValues) => ({
+      ...prevValues,
+      [newInputName]: '',
+      }));
+    };
+  
+  	const handleSubmit = async (e) => {
 		try {
+			const newId = uuidv4();
+			dispatch(setEventId(newId));
+			e.preventDefault();
+	
+			const originalDate = new Date(states.date);
+			const day = originalDate.getDate().toString().padStart(2, '0');
+			const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
+			const year = originalDate.getFullYear().toString().slice(-2);
+			const formattedDate = `${day}.${month}.${year}`;
+
+			let updatedArbitraryContent = []
+			if (states.regForm.arbitraryContent[0] === 'select') {
+				const keysArray = Object.values(inputValues);
+				updatedArbitraryContent = [...states.regForm.arbitraryContent, keysArray];
+				console.log('added')
+			} else if (states.regForm.arbitraryContent[0] === 'textarea') {
+				updatedArbitraryContent = states.regForm.arbitraryContent;
+				console.log('added')
+			} else {
+				console.log('not added')
+			}
+			console.log(updatedArbitraryContent);
+
 			const response = await axios.post('http://localhost:5000/api/events', {
 			_id: newId,
 			title: states.title,
@@ -110,14 +147,14 @@ function AddEvent() {
 			location: states.location,
 			ageRestriction: states.ageRestriction,
 			regForm: {
-				firstName: false,
-				lastName: false,
-				nickname: false,
-				email: false,
-				phone: false,
-				age: false,
-				arbitrary: false,
-				arbitraryContent: states.arbitraryContent
+				firstName: states.regForm.firstName,
+				lastName: states.regForm.lastName,
+				nickname: states.regForm.nickname,
+				email: states.regForm.email,
+				phone: states.regForm.phone,
+				age: states.regForm.age,
+				arbitrary: states.regForm.arbitrary,
+				arbitraryContent: updatedArbitraryContent
 			},
 			orgFirstName: states.orgFirstName,
 			orgLastName: states.orgLastName,
@@ -132,35 +169,6 @@ function AddEvent() {
 			console.error('Error submitting data to MongoDB:', error);
 		}
     };
-
-	const [isChecked, setIsChecked] = useState(false);
-
-	const handleCheckboxChange = () => {
-		setIsChecked(!isChecked);
-	};
-
-	const [inputValues, setInputValues] = useState({
-		input1: '',
-		input2: '',
-	});
-	const [inputNames, setInputNames] = useState(['input1', 'input2']);
-
-	const handleInputChange = (event) => {
-		const { name, value } = event.target;
-		setInputValues((prevValues) => ({
-		...prevValues,
-		[name]: value,
-		}));
-	};
-
-	const handleAddInput = () => {
-		const newInputName = `input${inputNames.length + 1}`;
-		setInputNames([...inputNames, newInputName]);
-		setInputValues((prevValues) => ({
-		...prevValues,
-		[newInputName]: '',
-		}));
-	};
 
 
     return (
