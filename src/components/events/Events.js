@@ -29,11 +29,11 @@ function Events () {
             </Row>
             <br />
             <Row>
-            {events.map(event => (
-                <Col key={event._id}>
-                    <EventCard {...event}/>
-                </Col>
-            ))}
+                <div className='flex flex-row flex-gap flex-wrap'>
+                {events.map(event => (
+                    <EventCard key={event._id} {...event}/>
+                ))}
+                </div>
             </Row>
         </Container>
     )

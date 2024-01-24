@@ -7,8 +7,9 @@ const PORT = process.env.PORT || 5000;
 //В консоли от имени админа прописать net start MongoDB
 
 // Подключение к MongoDB
-const uri = process.env.MONGODB_URI;
-mongoose.connect(uri, {
+// const uri = process.env.MONGODB_URI;
+const url = 'mongodb://localhost:27017/airsoft';
+mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
