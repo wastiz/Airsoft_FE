@@ -12,7 +12,7 @@ const currentDataSlice = createSlice({
         setState: (state, action) => {
             state.logged = action.payload
         },
-        setData: (state, action) =>{
+        setData: (state, action) => {
             state._id = action.payload.id;
             state.name = action.payload.name;
             state.email = action.payload.email;
@@ -62,6 +62,7 @@ const loginSlice = createSlice({
     initialState: {
         name: '',
         password: '',
+        rememberMe: false,
         responseText: 'not logged',
     },
     reducers: {
@@ -70,6 +71,9 @@ const loginSlice = createSlice({
         },
         setPasswordLog: (state, action) => {
             state.password = action.payload
+        },
+        setRememberMe: (state) => {
+            state.rememberMe = !state.rememberMe
         },
         setStatusLog: (state, action) => {
             if (action.payload === 200) {
@@ -206,7 +210,7 @@ export const currentDataReducer = currentDataSlice.reducer;
 export const { setName, setEmail, setPassword, setId, setStatus, resetForm } = signInSlice.actions;
 export const signinReducer = signInSlice.reducer;
 
-export const { setNameLog, setPasswordLog, setStatusLog, resetFormLog } = loginSlice.actions;
+export const { setNameLog, setPasswordLog, setStatusLog, setRememberMe, resetFormLog } = loginSlice.actions;
 export const loginReducer = loginSlice.reducer;
 
 export const { setTitle, setDescr, setRules, setDate, setStart, setPrice, setLocation, setAgeRestriction, setRegFormFirstName, setRegFormLastName, setRegFormNickname, setRegFormEmail, setRegFormPhone, setRegFormAge, setRegFormArbitrary, setRegFormArbitraryContent, setOrgFirstName, setOrgLastName, setOrgEmail, setEventId, setEventFormStatus } = addEventSlice.actions;

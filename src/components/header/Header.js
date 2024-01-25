@@ -1,10 +1,11 @@
 import './Header.scss';
 import {Link} from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 function Header () {
-    const username = localStorage.getItem('username');
-    const userId = localStorage.getItem('id');
+
+    const states = useSelector((state) => state.current);
 
     return (
         <header className='bg-neutral margins h-40 display-row'>
@@ -20,14 +21,14 @@ function Header () {
                         <li><p className='text-white'>Russian</p></li>
                     </ul>
                 </div>
-                {username !== '' ? (
+                {states.name !== '' ? (
                     <>
                     <div>
                         <h4 className='text-white'>Welcome back,</h4>
-                        <h3 className='text-white'>{username}</h3>
+                        <h3 className='text-white'>{states.name}</h3>
                     </div>
                     <button className="btn btn-outline btn-primary ml-2">
-                        <Link to={`/profile/${userId}`}>My profile</Link>
+                        <Link to={`/profile/${states._id}`}>My profile</Link>
                     </button>
                     </>
                     

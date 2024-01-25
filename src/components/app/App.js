@@ -10,16 +10,22 @@ import Events from '../events/Events';
 import AddEvent from '../addEvent/addEvent';
 import Event from '../event/Event';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
-import {setState} from '../../redux/slices'
+import {useDispatch, useSelector} from 'react-redux';
+import { setState, setData } from '../../redux/slices'
 
 
 function App () {
 	const id = localStorage.getItem('id');
-	const dispatch = useDispatch();
+    const dispatch = useDispatch()
 	if (id) {
 		dispatch(setState(true))
+		dispatch(setData({
+            id: id,
+			name: '',
+			email: '',
+        }))
 	}
+
   	return (
 		<BrowserRouter>
 			<div className='bg-base-100'>

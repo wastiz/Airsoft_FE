@@ -1,5 +1,5 @@
 import { useDispatch, useSelector} from 'react-redux';
-import { setNameLog, setPasswordLog, setStatusLog, resetFormLog } from '../../redux/slices';
+import { setNameLog, setPasswordLog, setRememberMe, setStatusLog, resetFormLog } from '../../redux/slices';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -19,6 +19,10 @@ function LoginForm () {
           case 'password':
             dispatch(setPasswordLog(value));
             break;
+		  case 'rememberMe':
+			dispatch(setRememberMe());
+			console.log(states.rememberMe);
+			break;
           default:
             break;
         }
@@ -32,6 +36,9 @@ function LoginForm () {
       
         if (response.data.name === states.name || response.data.pass === states.password) {
 			console.log('good')
+			if (states.rememberMe) {
+				localSt
+			}
 			dispatch(resetFormLog())
 			navigate('/')
         }
@@ -66,6 +73,13 @@ function LoginForm () {
 				placeholder="Пароль"
 				className="input input-bordered w-full max-w-xs"
 			/>
+			<br />
+			<div className="form-control">
+				<label className="label cursor-pointer" htmlFor='rememberMe'>
+					<span className="label-text">Remember me</span> 
+					<input name='rememberMe' type="checkbox" onChange={handleChange} className="checkbox checkbox-primary" />
+				</label>
+			</div>
 			<br />
 			<button className="btn btn-primary" type='submit'>Submit</button>
 			<p className='text-white'>{states.responseText}</p>
