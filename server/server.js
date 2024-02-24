@@ -63,7 +63,7 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-app.get('/api/users/:userId', async (req, res) => {
+app.get('/api/user/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
     const user = await User.findById(userId);
@@ -132,10 +132,7 @@ app.get('/api/user/:name', async (req, res) => {
     const user = await User.findOne({ name });
 
     if (user) {
-      res.json({
-        name: user.name,
-        pass: user.pass,
-      });
+      res.json(user);
     } else {
       res.status(404).json({ error: 'Пользователь не найден' });
     }

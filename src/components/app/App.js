@@ -12,19 +12,46 @@ import Event from '../event/Event';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import { setState, setData } from '../../redux/slices'
+import axios from 'axios';
 
 
 function App () {
 	const id = localStorage.getItem('id');
+	console.log(id);
     const dispatch = useDispatch()
-	if (id) {
-		dispatch(setState(true))
-		dispatch(setData({
-            id: id,
-			name: '',
-			email: '',
-        }))
+	// if (id !== undefined) {
+	// 	try {
+	// 		const response = axios.get(`http://localhost:5000/api/user/${id}`)
+	// 		dispatch(setState(true))
+	// 		dispatch(setData({
+	// 			id: id,
+	// 			name: response.data.name,
+	// 			email: response.data.email,
+	// 		}))
+	// 	} catch (error) {
+	// 		console.error('Error submitting data to MongoDB:', error);
+	// 	}
+	// }
+	async function fetchData() {
+		if (id !== undefined) {
+			try {
+				// Используем await для ожидания ответа на запрос
+				const response = await axios.get(`http://localhost:5000/api/user/${id}`).
+				dispatch(setState(true))
+				dispatch(setData({
+					id: id,
+					name: response.data.name,
+					email: response.data.email,
+				}))
+			} catch (error) {
+				console.error('Error submitting data to MongoDB:', error);
+			}
+		} else {
+			console.log('id is undefined')
+		}
 	}
+
+	fetchData();
 
   	return (
 		<BrowserRouter>

@@ -21,7 +21,7 @@ function Header () {
                         <li><p className='text-white'>Russian</p></li>
                     </ul>
                 </div>
-                {states.name !== '' ? (
+                {states.logged ? (
                     <>
                     <div>
                         <h4 className='text-white'>Welcome back,</h4>

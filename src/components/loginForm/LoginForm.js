@@ -37,7 +37,7 @@ function LoginForm () {
         if (response.data.name === states.name || response.data.pass === states.password) {
 			console.log('good')
 			if (states.rememberMe) {
-				localSt
+				localStorage.setItem('id', response._id);
 			}
 			dispatch(resetFormLog())
 			navigate('/')
@@ -60,7 +60,7 @@ function LoginForm () {
 				value={states.name}
 				onChange={handleChange}
 				placeholder="Имя"
-				className="input input-bordered w-full max-w-xs"
+				className="input input-bordered w-full max-w-xs text-white"
 			/>
 			<label className="label">
 				<span className="label-text">And your password:</span>
