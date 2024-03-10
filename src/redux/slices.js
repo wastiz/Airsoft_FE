@@ -62,7 +62,7 @@ const loginSlice = createSlice({
     initialState: {
         name: '',
         password: '',
-        rememberMe: false,
+        rememberMe: true,
         responseText: 'not logged',
     },
     reducers: {

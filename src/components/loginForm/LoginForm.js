@@ -32,7 +32,7 @@ function LoginForm () {
       e.preventDefault();
       
       try {
-        const response = await axios.get(`http://localhost:5000/api/user/${states.name}`);
+        const response = await axios.get('/api/user', { params: { name: states.name } });
       
         if (response.data.name === states.name || response.data.pass === states.password) {
 			console.log('good')
@@ -43,7 +43,7 @@ function LoginForm () {
 			navigate('/')
         }
       } catch (error) {
-        console.error('Error submitting data to MongoDB:', error);
+        console.error('Error getting data from MongoDB:', error);
       }
     };
     

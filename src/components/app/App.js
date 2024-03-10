@@ -19,39 +19,42 @@ function App () {
 	const id = localStorage.getItem('id');
 	console.log(id);
     const dispatch = useDispatch()
-	// if (id !== undefined) {
-	// 	try {
-	// 		const response = axios.get(`http://localhost:5000/api/user/${id}`)
-	// 		dispatch(setState(true))
-	// 		dispatch(setData({
-	// 			id: id,
-	// 			name: response.data.name,
-	// 			email: response.data.email,
-	// 		}))
-	// 	} catch (error) {
-	// 		console.error('Error submitting data to MongoDB:', error);
-	// 	}
-	// }
-	async function fetchData() {
-		if (id !== undefined) {
-			try {
-				// Используем await для ожидания ответа на запрос
-				const response = await axios.get(`http://localhost:5000/api/user/${id}`).
-				dispatch(setState(true))
-				dispatch(setData({
-					id: id,
-					name: response.data.name,
-					email: response.data.email,
-				}))
-			} catch (error) {
-				console.error('Error submitting data to MongoDB:', error);
-			}
-		} else {
-			console.log('id is undefined')
+	const states = useSelector((state) => state.current);
+	if (id !== null) {
+		try {
+			const response = axios.get(`http://localhost:5000/api/user/${id}`)
+			dispatch(setState(true))
+			dispatch(setData({
+				id: id,
+				name: response.data.name,
+				email: response.data.email,
+			}))
+			console.log(states.id)
+		} catch (error) {
+			console.error('Error getting data from MongoDB:', error);
 		}
 	}
 
-	fetchData();
+	// async function fetchData() {
+	// 	if (id !== undefined) {
+	// 		try {
+	// 			// Используем await для ожидания ответа на запрос
+	// 			const response = await axios.get(`http://localhost:5000/api/user/${id}`).
+	// 			dispatch(setState(true))
+	// 			dispatch(setData({
+	// 				id: id,
+	// 				name: response.data.name,
+	// 				email: response.data.email,
+	// 			}))
+	// 		} catch (error) {
+	// 			console.error('Error submitting data to MongoDB:', error);
+	// 		}
+	// 	} else {
+	// 		console.log('id is undefined')
+	// 	}
+	// }
+	// fetchData();
+	
 
   	return (
 		<BrowserRouter>
