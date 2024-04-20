@@ -1,6 +1,10 @@
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
+const userSchema = require('./models/userSchema');
+const eventSchema = require('./models/eventSchema');
 const cors = require('cors'); 
+const UserSchema = require('./models/userSchema');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,42 +24,11 @@ app.use(cors());
 // Обработка JSON данных
 app.use(express.json());
 
-const userSchema = new mongoose.Schema({
-  _id: String,
-  name: String,
-  email: String,
-  password: String,
-});
-
-const eventSchema = new mongoose.Schema({
-  _id: String,
-  title: String,
-  description: String,
-  rules: String,
-  date: String,
-  start: String,
-  price: String,
-  location: String,
-  ageRestriction: String,
-  regForm: {
-    firstName: Boolean,
-    lastName: Boolean,
-    nickname: Boolean,
-    email: Boolean,
-    phone: Boolean,
-    age: Boolean,
-    arbitrary: Boolean,
-    arbitraryContent: Array
-  },
-  orgFirstName: String,
-  orgLastName: String,
-  orgEmail: String,
-});
 
 // Маршруты
 app.get('/api/users', async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await UserSchema.find();
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -63,27 +36,29 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-app.get('/api/user', async (req, res) => {
-	const { userId, name } = req.query;
+// const getUser = (req, res) => {
+//   userSchema
+//     .findById(req.params.id)
+//     .then(post => res.render(createPath('post'), { post, title }))
+//     .catch((error) => handleError(res, error));
+// }
+
+app.get('/api/users', async (req, res) => {
+	const userId = req.params.id; // Получение id из URL
   
 	try {
-	  let user;
-	  if (userId) {
-		user = await User.findById(userId);
-	  } else if (name) {
-		user = await User.findOne({ name: name });
-	  }
+	  const user = await UserSchema.findOne({ _id: ObjectId(userId) }); // Поиск пользователя по id
   
-	  if (!user) {
+	if (!user) {
 		return res.status(404).json({ message: 'Пользователь не найден' });
-	  }
+	}
   
-	  res.json(user);
+	res.json(user);
 	} catch (error) {
 	  console.error('Ошибка при запросе данных пользователя:', error);
 	  res.status(500).json({ error: 'Внутренняя ошибка сервера' });
 	}
-  });
+});
 
 
 app.post('/api/users', async (req, res) => {

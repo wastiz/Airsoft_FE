@@ -16,19 +16,22 @@ import axios from 'axios';
 
 
 function App () {
+	const dispatch = useDispatch()
+
+	
 	const id = localStorage.getItem('id');
 	console.log(id);
-    const dispatch = useDispatch()
 	const states = useSelector((state) => state.current);
 	if (id !== null) {
 		try {
-			const response = axios.get(`http://localhost:5000/api/user/${id}`)
-			dispatch(setState(true))
-			dispatch(setData({
+			axios.get(`http://localhost:5000/api/user/${id}`).then(response => {
+				dispatch(setState(true))
+				dispatch(setData({
 				id: id,
 				name: response.data.name,
 				email: response.data.email,
 			}))
+			})
 			console.log(states.id)
 		} catch (error) {
 			console.error('Error getting data from MongoDB:', error);

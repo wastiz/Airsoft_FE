@@ -51,6 +51,7 @@ const SigninForm = () => {
 			if (!isOccupied) {
 				const newId = uuidv4();
 				dispatch(setId(newId));
+				localStorage.setItem("id", newId);
 				const response = await axios.post('http://localhost:5000/api/users', {
 					_id: newId,
 					name: states.name,
