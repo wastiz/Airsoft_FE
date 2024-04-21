@@ -24,7 +24,7 @@ function App () {
 	const states = useSelector((state) => state.current);
 	if (id !== null) {
 		try {
-			axios.get(`http://localhost:5000/api/user/${id}`).then(response => {
+			axios.get(`http://localhost:5000/api/users/${id}`).then(response => {
 				dispatch(setState(true))
 				dispatch(setData({
 				id: id,
@@ -37,26 +37,6 @@ function App () {
 			console.error('Error getting data from MongoDB:', error);
 		}
 	}
-
-	// async function fetchData() {
-	// 	if (id !== undefined) {
-	// 		try {
-	// 			// Используем await для ожидания ответа на запрос
-	// 			const response = await axios.get(`http://localhost:5000/api/user/${id}`).
-	// 			dispatch(setState(true))
-	// 			dispatch(setData({
-	// 				id: id,
-	// 				name: response.data.name,
-	// 				email: response.data.email,
-	// 			}))
-	// 		} catch (error) {
-	// 			console.error('Error submitting data to MongoDB:', error);
-	// 		}
-	// 	} else {
-	// 		console.log('id is undefined')
-	// 	}
-	// }
-	// fetchData();
 	
 
   	return (

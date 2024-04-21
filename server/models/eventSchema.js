@@ -25,5 +25,5 @@ const eventSchema = new mongoose.Schema({
     orgEmail: String,
 });
 
-const EventSchema = mongoose.model('Post', eventSchema);
+const EventSchema = mongoose.model('Event', eventSchema);
 module.exports = EventSchema;
