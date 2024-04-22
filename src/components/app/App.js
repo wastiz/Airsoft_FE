@@ -17,24 +17,26 @@ import axios from 'axios';
 
 function App () {
 	const dispatch = useDispatch()
+	const loginStates = useSelector((state) => state.logIn);
+	const currentStates = useSelector((state) => state.current);
 
-	
-	const id = localStorage.getItem('id');
-	console.log(id);
-	const states = useSelector((state) => state.current);
-	if (id !== null) {
-		try {
-			axios.get(`http://localhost:5000/api/users/${id}`).then(response => {
-				dispatch(setState(true))
-				dispatch(setData({
-				id: id,
-				name: response.data.name,
-				email: response.data.email,
-			}))
-			})
-			console.log(states.id)
-		} catch (error) {
-			console.error('Error getting data from MongoDB:', error);
+	if(loginStates.rememberMe) {
+		const id = localStorage.getItem('id');
+		console.log(id);
+		if (id !== null) {
+			try {
+				axios.get(`http://localhost:5000/api/users/${id}`).then(response => {
+					dispatch(setState(true))
+					dispatch(setData({
+						id: id,
+						name: response.data.name,
+						email: response.data.email,
+					}))
+				})
+				console.log(currentStates.id)
+			} catch (error) {
+				console.error('Error getting data from MongoDB:', error);
+			}
 		}
 	}
 	

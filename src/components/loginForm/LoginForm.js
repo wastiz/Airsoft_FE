@@ -21,7 +21,6 @@ function LoginForm () {
             break;
 		  case 'rememberMe':
 			dispatch(setRememberMe());
-			console.log(states.rememberMe);
 			break;
           default:
             break;
@@ -30,18 +29,18 @@ function LoginForm () {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-      
       try {
-        const response = await axios.get('/api/user', { params: { name: states.name } });
-      
-        if (response.data.name === states.name || response.data.pass === states.password) {
-			console.log('good')
-			if (states.rememberMe) {
-				localStorage.setItem('id', response._id);
+        axios.get(`http://localhost:5000/api/users/${states.name}`).then(response => {
+			console.log(response.data)
+			if (response.data.name === states.name || response.data.pass === states.password) {
+				console.log('good')
+				if (states.rememberMe) {
+					localStorage.setItem('id', response.data._id);
+				}
+				dispatch(resetFormLog())
+				navigate('/')
 			}
-			dispatch(resetFormLog())
-			navigate('/')
-        }
+		});
       } catch (error) {
         console.error('Error getting data from MongoDB:', error);
       }

@@ -12,6 +12,24 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:name', async (req, res) => {
+    try {
+        const userName = req.params.name;
+        const user = await userSchema.findOne({ 'name': userName });
+        if (!user) {    
+            return res.status(404).json({
+                message: 'User not found'
+            });
+        }
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({
+            error: 'Internal Server Error'
+        });
+    }
+});
+
 router.get('/:id', async (req, res) => {
     try {
         const user = await userSchema.findById(req.params.id);

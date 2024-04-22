@@ -1,12 +1,21 @@
 import './Header.scss';
 import {Link} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { setState, setData } from '../../redux/slices'
 
 function Header () {
-
+    const dispatch = useDispatch();
     const states = useSelector((state) => state.current);
-
+    
+    const logout = () => {
+        dispatch(setState(false))
+        dispatch(setData({
+            id: "",
+            name: "",
+            email: "",
+        }))
+        localStorage.removeItem('id');
+    }
     return (
         <header className='bg-neutral margins h-40 display-row'>
             <div>
@@ -30,6 +39,7 @@ function Header () {
                     <button className="btn btn-outline btn-primary ml-2">
                         <Link to={`/profile/${states._id}`}>My profile</Link>
                     </button>
+                    <button className="btn btn-outline btn-primary ml-2" onClick={logout}>Log out</button>
                     </>
                     
                 ) : (
