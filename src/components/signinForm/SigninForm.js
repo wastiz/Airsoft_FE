@@ -3,7 +3,6 @@ import { setName, setEmail, setPassword, setId, setStatus, resetForm } from '../
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import React, { useState } from 'react';
 
 const SigninForm = () => {
 	const dispatch = useDispatch();
@@ -61,7 +60,7 @@ const SigninForm = () => {
 			
 				dispatch(setStatus(response.status));
 				console.log(response.statusText);
-			
+				
 				dispatch(resetForm());
 				navigate('/');
 			} else {

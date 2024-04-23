@@ -1,21 +1,43 @@
 import './Header.scss';
 import {Link} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setState, setData } from '../../redux/slices'
+import { setData, setLogged, setRememberMe, setCurrentId } from '../../redux/slices'
+import axios from 'axios';
 
 function Header () {
     const dispatch = useDispatch();
-    const states = useSelector((state) => state.current);
-    
+    const currentStates = useSelector((state) => state.current);
+
+    const id = localStorage.getItem('id');
+    const rememberMe = localStorage.getItem('rememberMe');
+    if (rememberMe === "true" && id !== "") {
+        try {
+            axios.get(`http://localhost:5000/api/users/id/${id}`).then(response => {
+                dispatch(setData({
+                    name: response.data.name,
+                    email: response.data.email,
+                }));
+                console.log('completed');
+            });
+        } catch (error) {
+            console.error('Error getting data from MongoDB:', error);
+        }
+    }
+
     const logout = () => {
-        dispatch(setState(false))
         dispatch(setData({
-            id: "",
             name: "",
             email: "",
         }))
-        localStorage.removeItem('id');
+        localStorage.setItem("rememberMe", false);
+        localStorage.setItem("logged", false);
+        localStorage.setItem("id", "");
+        dispatch(setLogged(false));
+        dispatch(setRememberMe(false));
+        dispatch(setCurrentId(""));
     }
+
+    console.log(localStorage.getItem('logged'));
     return (
         <header className='bg-neutral margins h-40 display-row'>
             <div>
@@ -30,18 +52,17 @@ function Header () {
                         <li><p className='text-white'>Russian</p></li>
                     </ul>
                 </div>
-                {states.logged ? (
+                {localStorage.getItem('logged') === 'true' ? (
                     <>
-                    <div>
-                        <h4 className='text-white'>Welcome back,</h4>
-                        <h3 className='text-white'>{states.name}</h3>
-                    </div>
-                    <button className="btn btn-outline btn-primary ml-2">
-                        <Link to={`/profile/${states._id}`}>My profile</Link>
-                    </button>
-                    <button className="btn btn-outline btn-primary ml-2" onClick={logout}>Log out</button>
+                        <div>
+                            <h4 className='text-white'>Welcome back,</h4>
+                            <h3 className='text-white'>{currentStates.name}</h3>
+                        </div>
+                        <button className="btn btn-outline btn-primary ml-2">
+                            <Link to={`/profile/${currentStates._id}`}>My profile</Link>
+                        </button>
+                        <button className="btn btn-outline btn-primary ml-2" onClick={logout}>Log out</button>
                     </>
-                    
                 ) : (
                     <div>
                         <button className="btn btn-outline btn-primary ml-2">

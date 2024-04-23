@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:name', async (req, res) => {
+router.get('/name/:name', async (req, res) => {
     try {
         const userName = req.params.name;
         const user = await userSchema.findOne({ 'name': userName });
@@ -30,7 +30,7 @@ router.get('/:name', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     try {
         const user = await userSchema.findById(req.params.id);
         if (!user) {

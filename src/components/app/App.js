@@ -10,37 +10,8 @@ import Events from '../events/Events';
 import AddEvent from '../addEvent/addEvent';
 import Event from '../event/Event';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import { setState, setData } from '../../redux/slices'
-import axios from 'axios';
-
 
 function App () {
-	const dispatch = useDispatch()
-	const loginStates = useSelector((state) => state.logIn);
-	const currentStates = useSelector((state) => state.current);
-
-	if(loginStates.rememberMe) {
-		const id = localStorage.getItem('id');
-		console.log(id);
-		if (id !== null) {
-			try {
-				axios.get(`http://localhost:5000/api/users/${id}`).then(response => {
-					dispatch(setState(true))
-					dispatch(setData({
-						id: id,
-						name: response.data.name,
-						email: response.data.email,
-					}))
-				})
-				console.log(currentStates.id)
-			} catch (error) {
-				console.error('Error getting data from MongoDB:', error);
-			}
-		}
-	}
-	
-
   	return (
 		<BrowserRouter>
 			<div className='bg-base-100'>

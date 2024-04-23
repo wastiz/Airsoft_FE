@@ -4,18 +4,20 @@ const userController = require('./controllers/user-controller');
 const eventController = require('./controllers/event-controller');
 const cors = require('cors');
 
-//Порт
+//Порт и ссылка базы данных
 const PORT = process.env.PORT || 5000;
+const URL = 'mongodb://localhost:27017/airsoft';
 
 //Переназначаем express в объект app
 const app = express();
 
 // Подключение к MongoDB
 //В консоли от имени админа прописать net start MongoDB, если mongodb сервис не запущен
-const url = 'mongodb://localhost:27017/airsoft';
-mongoose.connect(url, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
+
+mongoose.connect(URL).then(() => {
+	console.log('Connected to MongoDB');
+}).catch((error) => {
+	console.log('Error connecting to MongoDB:', error);
 });
 
 // Middleware для поддержки CORS

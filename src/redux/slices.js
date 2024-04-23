@@ -3,19 +3,25 @@ import { createSlice } from '@reduxjs/toolkit';
 const currentDataSlice = createSlice({
     name: 'currentData',
     initialState: {
-        logged: false,
         _id: '',
         name: '',
         email: '',
+        logged: false,
+        rememberMe: false,
     },
     reducers: {
-        setState: (state, action) => {
-            state.logged = action.payload
-        },
         setData: (state, action) => {
-            state._id = action.payload.id;
             state.name = action.payload.name;
             state.email = action.payload.email;
+        },
+        setLogged: (state, action) => {
+            state.logged = action.payload
+        },
+        setRememberMe: (state, action) => {
+            state.rememberMe = action.payload
+        },
+        setCurrentId: (state, action) => {
+            state._id = action.payload
         }
     }
 })
@@ -62,7 +68,6 @@ const loginSlice = createSlice({
     initialState: {
         name: '',
         password: '',
-        rememberMe: false,
         responseText: 'not logged',
     },
     reducers: {
@@ -71,9 +76,6 @@ const loginSlice = createSlice({
         },
         setPasswordLog: (state, action) => {
             state.password = action.payload
-        },
-        setRememberMe: (state) => {
-            state.rememberMe = !state.rememberMe
         },
         setStatusLog: (state, action) => {
             if (action.payload === 200) {
@@ -204,13 +206,13 @@ const eventsSlice = createSlice({
     }
 })
 
-export const { setData, setState } = currentDataSlice.actions;
+export const { setData, setLogged, setRememberMe, setCurrentId } = currentDataSlice.actions;
 export const currentDataReducer = currentDataSlice.reducer;
 
 export const { setName, setEmail, setPassword, setId, setStatus, resetForm } = signInSlice.actions;
 export const signinReducer = signInSlice.reducer;
 
-export const { setNameLog, setPasswordLog, setStatusLog, setRememberMe, resetFormLog } = loginSlice.actions;
+export const { setNameLog, setPasswordLog, setStatusLog, resetFormLog } = loginSlice.actions;
 export const loginReducer = loginSlice.reducer;
 
 export const { setTitle, setDescr, setRules, setDate, setStart, setPrice, setLocation, setAgeRestriction, setRegFormFirstName, setRegFormLastName, setRegFormNickname, setRegFormEmail, setRegFormPhone, setRegFormAge, setRegFormArbitrary, setRegFormArbitraryContent, setOrgFirstName, setOrgLastName, setOrgEmail, setEventId, setEventFormStatus } = addEventSlice.actions;
