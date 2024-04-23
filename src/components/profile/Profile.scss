@@ -1,6 +1,15 @@
 .img-div {
-    width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
     height: 350px;
     border: 2px solid gray;
     border-radius: 10px;
+    .avatar {
+        width: 95%;
+        height: 95%;
+        border-radius: 2%;
+        background-size:contain;
+    }
 }

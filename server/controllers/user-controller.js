@@ -12,10 +12,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/name/:name', async (req, res) => {
+router.get('/username/:username', async (req, res) => {
     try {
-        const userName = req.params.name;
-        const user = await userSchema.findOne({ 'name': userName });
+        const username = req.params.username;
+        const user = await userSchema.findOne({ 'username': username });
         if (!user) {    
             return res.status(404).json({
                 message: 'User not found'

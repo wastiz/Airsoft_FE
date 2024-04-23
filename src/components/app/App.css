@@ -19,6 +19,9 @@
 .flex-gap {
 	gap: 10px;
 }
+.flex-gap-5 {
+	gap: 5%;
+}
 .landing-image {
 	width: 500px;
 	height: 350px;

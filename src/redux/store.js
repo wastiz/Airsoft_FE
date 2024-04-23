@@ -1,5 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit'
-import {signinReducer, loginReducer, currentDataReducer, addEventReducer, eventsReducer} from './slices'
+import { eventsReducer } from './slices'
+import { currentDataReducer } from './slices/currentDataSlice'
+import { signinReducer } from './slices/signInSlice'
+import { loginReducer } from './slices/loginSlice'
+import { addEventReducer } from './slices/addEventSlice'
+
 
 const store = configureStore({
     reducer: {

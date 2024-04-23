@@ -1,10 +1,12 @@
 import './Header.scss';
 import {Link} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setData, setLogged, setRememberMe, setCurrentId } from '../../redux/slices'
+import { setData, setLogged, setRememberMe, setCurrentId } from '../../redux/slices/currentDataSlice'
+import { useNavigate } from'react-router-dom';
 import axios from 'axios';
 
 function Header () {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const currentStates = useSelector((state) => state.current);
 
@@ -14,7 +16,7 @@ function Header () {
         try {
             axios.get(`http://localhost:5000/api/users/id/${id}`).then(response => {
                 dispatch(setData({
-                    name: response.data.name,
+                    username: response.data.username,
                     email: response.data.email,
                 }));
                 console.log('completed');
@@ -26,7 +28,7 @@ function Header () {
 
     const logout = () => {
         dispatch(setData({
-            name: "",
+            username: "",
             email: "",
         }))
         localStorage.setItem("rememberMe", false);
@@ -35,9 +37,9 @@ function Header () {
         dispatch(setLogged(false));
         dispatch(setRememberMe(false));
         dispatch(setCurrentId(""));
+        navigate('/')
     }
 
-    console.log(localStorage.getItem('logged'));
     return (
         <header className='bg-neutral margins h-40 display-row'>
             <div>
@@ -56,10 +58,10 @@ function Header () {
                     <>
                         <div>
                             <h4 className='text-white'>Welcome back,</h4>
-                            <h3 className='text-white'>{currentStates.name}</h3>
+                            <h3 className='text-white'>{currentStates.username}</h3>
                         </div>
                         <button className="btn btn-outline btn-primary ml-2">
-                            <Link to={`/profile/${currentStates._id}`}>My profile</Link>
+                            <Link to={`/profile`}>My profile</Link>
                         </button>
                         <button className="btn btn-outline btn-primary ml-2" onClick={logout}>Log out</button>
                     </>
