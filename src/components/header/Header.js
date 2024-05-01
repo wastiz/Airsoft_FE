@@ -60,19 +60,19 @@ function Header () {
                             <h4 className='text-white'>Welcome back,</h4>
                             <h3 className='text-white'>{currentStates.username}</h3>
                         </div>
-                        <button className="btn btn-outline btn-primary ml-2">
-                            <Link to={`/profile`}>My profile</Link>
-                        </button>
+                        <Link to={`/profile`}>
+                            <button className="btn btn-outline btn-primary ml-2">My profile</button>
+                        </Link>
                         <button className="btn btn-outline btn-primary ml-2" onClick={logout}>Log out</button>
                     </>
                 ) : (
                     <div>
-                        <button className="btn btn-outline btn-primary ml-2">
-                            <Link to='/log-in'>Log In</Link>
-                        </button>
-                        <button className="btn btn-secondary ml-2.5">
-                            <Link to='/sign-up'>Sign Up</Link>
-                        </button>
+                        <Link to='/log-in'>
+                            <button className="btn btn-outline btn-primary ml-2">Log In</button>
+                        </Link>
+                        <Link to='/sign-up'>
+                            <button className="btn btn-secondary ml-2.5">Sign Up</button>
+                        </Link>
                     </div>
                 )}
 

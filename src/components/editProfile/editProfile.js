@@ -1,29 +1,28 @@
-import './Profile.scss';
+import './editProfile.scss';
 import { useParams } from 'react-router-dom';
-import React, { useEffect } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import {setData} from '../../redux/slices/currentDataSlice' 
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import avatar from '../../img/avatar.jpg'
 
-
-    //const id = localStorage.getItem('id');
-    // try {
-    //     axios.get(`http://localhost:5000/api/users/id/${id}`).then((response) =>{
-    //         // dispatch(setProfile({
-    //         //     name: response.data.name,
-    //         //     email: response.data.email,
-    //         // }));
-    //         console.log('Got profile')
-    //     })
-    // } catch (error) {
-    //     console.error('Error getting profile from MongoDB:', error);
-    // }
-
 function Profile () {
+    const dispatch = useDispatch();
     const currentStates = useSelector((state) => state.current);
     console.log(currentStates.username);
+
+    const id = localStorage.getItem('id');
+    try {
+        axios.get(`http://localhost:5000/api/users/id/${id}`).then((response) =>{
+            // dispatch(setProfile({
+            //     name: response.data.name,
+            //     email: response.data.email,
+            // }));
+            console.log('Got profile')
+        })
+    } catch (error) {
+        console.error('Error getting profile from MongoDB:', error);
+    }
 
     return (
         <div className='display-row flex-centered flex-gap-5'>
@@ -44,7 +43,7 @@ function Profile () {
                 <h3 className='text-white'><b>Favourite weapon: </b></h3>
             </div>
             <div>
-                <Link to='/profile-edit'>
+                <Link to='/edit-profile'>
                     <button className="btn btn-outline btn-primary ml-2">Edit profile</button>
                 </Link>
             </div>

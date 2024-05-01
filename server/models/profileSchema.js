@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const avatarImg = require('../../src/img/avatar.jpg');
 
 const profileSchema = new mongoose.Schema({
     avatar: {
         type: String,
-        default: avatarImg
+        default: '../../src/img/avatar.jpg'
     },
     firstName: {
         type: String,
@@ -28,5 +27,4 @@ const profileSchema = new mongoose.Schema({
     favWeapon: String
 });
 
-const ProfileSchema = mongoose.model('Profile', profileSchema);
-module.exports = ProfileSchema;
+module.exports = profileSchema;
