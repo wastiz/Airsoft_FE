@@ -6,7 +6,7 @@ import Teams from '../teams/Teams';
 import SigninForm from '../signinForm/SigninForm';
 import LoginForm from '../loginForm/LoginForm';
 import Profile from '../profile/Profile';
-import editProfile from '../editProfile/editProfile';
+import EditProfile from '../editProfile/editProfile';
 import Events from '../events/Events';
 import AddEvent from '../addEvent/addEvent';
 import Event from '../event/Event';
@@ -25,7 +25,7 @@ function App () {
 						<Route exact path='/sign-up' element={<SigninForm/>}/ >
 						<Route exact path='/log-in' element={<LoginForm/>}/ >
 						<Route exact path='/profile' element={<Profile/>}/ >
-						<Route exact path='/profile-edit' element={<editProfile/>}></Route>
+						<Route exact path='/profile-edit' element={<EditProfile/>}></Route>
 						<Route exact path='/events' element={<Events/>}/>
 						<Route exact path='/add-event' element={<AddEvent/>}></Route>
 						<Route exact path='/events/:eventId' element={<Event/>}></Route>
