@@ -3,13 +3,14 @@
 	padding: 20px;
 	border-radius: 20px;
 }
-.display-row {
+.display-flex {
 	display: flex;
+}
+.display-row {
     flex-direction: row;
     align-items: center;
 }
 .display-column {
-	display: flex;
 	flex-direction: column;
 }
 .flex-centered {

@@ -22,7 +22,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    profile: ProfileSchema,
+    profile: {
+        type: ProfileSchema,
+        default: null,
+    },
 });
 
 const UserSchema = mongoose.model('User', userSchema);

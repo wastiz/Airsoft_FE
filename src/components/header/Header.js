@@ -41,12 +41,12 @@ function Header () {
     }
 
     return (
-        <header className='bg-neutral margins h-40 display-row'>
+        <header className='bg-neutral margins h-40 display-flex display-row'>
             <div>
                 <h1 className='text-white'>Logo</h1>
                 <h3 className='text-white'>Welcome to airsoft community</h3>
             </div>
-            <div className='display-row'>
+            <div className='display-flex display-row'>
                 <div className="dropdown dropdown-end">
                     <label tabIndex="0" className="btn m-1">Language</label>
                     <ul tabIndex="0" className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">

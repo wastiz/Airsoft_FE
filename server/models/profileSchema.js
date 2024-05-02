@@ -1,30 +1,36 @@
 const mongoose = require('mongoose');
 
 const profileSchema = new mongoose.Schema({
-    avatar: {
-        type: String,
-        default: '../../src/img/avatar.jpg'
-    },
+    avatar: Buffer,
     firstName: {
         type: String,
-        default: "not provided"
+        default: ""
     },
     lastName: {
         type: String,
-        default: "not provided"
+        default: ""
     },
     age: Number,
     phone: {
         type: String,
-        default: "not provided"
+        default: ""
     },
     aboutMe: {
         type: String,
-        default: "not provided"
+        default: ""
     },
-    roles:[String],
-    team: [String],
-    favWeapon: String
+    roles:{
+        type: [String],
+        default: [""]
+    },
+    team: {
+        type: [String],
+        default: [""]
+    },
+    favWeapon: {
+        type: String,
+        default: ''
+    }
 });
 
 module.exports = profileSchema;

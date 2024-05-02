@@ -2,7 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userController = require('./controllers/user-controller');
 const eventController = require('./controllers/event-controller');
+const profileController = require('./controllers/profile-controller');
 const cors = require('cors');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 //Порт и ссылка базы данных
 const PORT = process.env.PORT || 5000;
@@ -23,12 +26,21 @@ mongoose.connect(URL).then(() => {
 // Middleware для поддержки CORS
 app.use(cors());
 
+//Для предотвращения лимитов на картинку
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 // Обработка JSON данных
 app.use(express.json());
+
+//Для логов с сервера
+app.use(morgan('dev'));
+
 
 // Маршруты
 app.use('/api/users', userController);
 app.use('/api/events', eventController);
+app.use('/api/users', profileController);
 
 // Запуск сервера
 app.listen(PORT, () => {
