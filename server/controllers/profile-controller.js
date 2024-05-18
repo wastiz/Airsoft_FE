@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const UserSchema = require('../models/userSchema');
+const { v4: uuidv4 } = require('uuid');
 
-router.post('/:userId/profile', async (req, res) => {
+router.post('/profile', async (req, res) => {
     try {
-        const userId = req.params.userId;
         const userProfileData = req.body;
 
-        const user = await UserSchema.findById(userId);
+        const user = await UserSchema.findById(req.user.id)
+
+        await user.save()
+        return res.json(user)
 
         user.profile = userProfileData;
 

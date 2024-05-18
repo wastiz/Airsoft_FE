@@ -11,7 +11,7 @@ function EditProfile () {
     console.log(currentStates.username);
 
     const dispatch = useDispatch();
-    const profileStates = useSelector((state) => state.editProfile);
+    const profileStates = useSelector((state) => state.profile);
     const navigate = useNavigate();
 
 
@@ -77,7 +77,7 @@ function EditProfile () {
         try {
             const fileContent = await readFile(fileInput);
             console.log(fileContent)
-
+            console.log(profileStates.firstName)
             const profileData = {
                 avatar: fileContent,
                 firstName: profileStates.firstName,

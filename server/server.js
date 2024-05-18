@@ -6,6 +6,7 @@ const profileController = require('./controllers/profile-controller');
 const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const multer = require("multer");
 
 //Порт и ссылка базы данных
 const PORT = process.env.PORT || 5000;
@@ -41,6 +42,35 @@ app.use(morgan('dev'));
 app.use('/api/users', userController);
 app.use('/api/events', eventController);
 app.use('/api/users', profileController);
+
+//Маршрут для загрузки аватара
+const avatarStorage = multer.diskStorage({
+	destination: (_, __, cb) => {
+		cb(null, 'avatar-uploads');
+	},
+	filename: (_, file, cb) => {
+		cb(null, file.originalname);
+	}
+});
+
+const upload = multer({ storage: avatarStorage });
+
+app.post('/api/uploadAvatar', upload.single('avatar'), (req, res) => {
+	try {
+		// Проверяем, был ли загружен файл
+		if (!req.file) {
+			return res.status(400).json({ message: 'No file uploaded' });
+		}
+		// Возвращаем URL файла
+		res.json({
+			url: `/uploads/${req.file.filename}`
+		});
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ message: 'Server error' });
+	}
+});
+
 
 // Запуск сервера
 app.listen(PORT, () => {
