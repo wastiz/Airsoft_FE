@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom'
 
 function Navbar () {
     return (
-        <nav className="bg-neutral margins h-16 display-row">
+        <nav className="bg-neutral margins h-16 display-flex display-row flex-gap">
             <Link to='/' className="text-white ml-2.5">Home</Link>
             <Link to='/teams' className="text-white ml-2.5">Teams</Link>
             <Link to='/events' className="text-white ml-2.5">Events</Link>

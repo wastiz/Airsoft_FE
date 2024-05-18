@@ -3,13 +3,14 @@
 	padding: 20px;
 	border-radius: 20px;
 }
-.display-row {
+.display-flex {
 	display: flex;
+}
+.display-row {
     flex-direction: row;
     align-items: center;
 }
 .display-column {
-	display: flex;
 	flex-direction: column;
 }
 .flex-centered {
@@ -18,6 +19,9 @@
 }
 .flex-gap {
 	gap: 10px;
+}
+.flex-gap-5 {
+	gap: 5%;
 }
 .landing-image {
 	width: 500px;

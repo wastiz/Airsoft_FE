@@ -1,13 +1,14 @@
 import { useDispatch, useSelector} from 'react-redux';
-import { setNameLog, setPasswordLog, setRememberMe, setStatusLog, resetFormLog } from '../../redux/slices';
 import { useNavigate } from 'react-router-dom';
+import { setNameLog, setPasswordLog, setStatusLog, resetFormLog } from '../../redux/slices/loginSlice';
+import { setRememberMe, setLogged, setCurrentId } from '../../redux/slices/currentDataSlice';
 import axios from 'axios';
 
 function LoginForm () {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const states = useSelector((state) => state.logIn);
+    const loginStates = useSelector((state) => state.logIn);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,34 +20,34 @@ function LoginForm () {
           case 'password':
             dispatch(setPasswordLog(value));
             break;
-		  case 'rememberMe':
-			dispatch(setRememberMe());
-			console.log(states.rememberMe);
-			break;
           default:
             break;
         }
     };
 
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      
-      try {
-        const response = await axios.get(`http://localhost:5000/api/user/${states.name}`);
-      
-        if (response.data.name === states.name || response.data.pass === states.password) {
-			console.log('good')
-			if (states.rememberMe) {
-				localStorage.setItem('id', response._id);
-			}
+		e.preventDefault();
+		try {
+			const rememberMeChecked = e.target.elements.rememberMe.checked;
+			axios.get(`http://localhost:5000/api/users/username/${loginStates.username}`).then(response => {
+				if (response.data.username === loginStates.username || response.data.pass === loginStates.password) {
+					console.log('Name and pass match')
+					localStorage.setItem('id', response.data._id);
+					localStorage.setItem('logged', true);
+					if (rememberMeChecked) {
+						localStorage.setItem('rememberMe', true);
+						dispatch(setRememberMe(true));
+					}
+					dispatch(setCurrentId(response.data._id));
+					dispatch(setLogged(true));
+					navigate('/')
+				}
+			});
 			dispatch(resetFormLog())
-			navigate('/')
-        }
-      } catch (error) {
-        console.error('Error submitting data to MongoDB:', error);
-      }
+		} catch (error) {
+			console.error('Error getting data from MongoDB:', error);
+		}
     };
-    
     
     return (
     <div className='w-full h-full items-center justify-center'>
@@ -57,7 +58,7 @@ function LoginForm () {
 			<input
 				type="text"
 				name="name"
-				value={states.name}
+				value={loginStates.username}
 				onChange={handleChange}
 				placeholder="Имя"
 				className="input input-bordered w-full max-w-xs text-white"
@@ -68,7 +69,7 @@ function LoginForm () {
 			<input
 				type="password"
 				name="password"
-				value={states.password}
+				value={loginStates.password}
 				onChange={handleChange}
 				placeholder="Пароль"
 				className="input input-bordered w-full max-w-xs"
@@ -77,12 +78,12 @@ function LoginForm () {
 			<div className="form-control">
 				<label className="label cursor-pointer" htmlFor='rememberMe'>
 					<span className="label-text">Remember me</span> 
-					<input name='rememberMe' type="checkbox" onChange={handleChange} className="checkbox checkbox-primary" />
+					<input name='rememberMe' type="checkbox" className="checkbox checkbox-primary" />
 				</label>
 			</div>
 			<br />
 			<button className="btn btn-primary" type='submit'>Submit</button>
-			<p className='text-white'>{states.responseText}</p>
+			<p className='text-white'>{loginStates.responseText}</p>
 		</form>
 	</div>
     )
