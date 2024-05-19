@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     profile: {
         type: ProfileSchema,
-        default: null,
+        default: () => ({}),
     },
 });
 

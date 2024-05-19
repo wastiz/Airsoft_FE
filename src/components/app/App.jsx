@@ -48,7 +48,6 @@ function App () {
 				dispatch(setLogged(false));
 			}
 		} catch (e) {
-			// В случае ошибки (например, если сервер вернул статус 401), устанавливаем logged в false
 			localStorage.removeItem('token');
 			dispatch(setLogged(false));
 		}

@@ -23,7 +23,6 @@ router.post('/registration',
 
             const { username, email, password } = req.body;
 
-            // Проверка наличия пользователя с таким же email или username
             const existingUser = await userSchema.findOne({
                 $or: [
                     { email: email },
@@ -46,7 +45,7 @@ router.post('/registration',
                 _id: newId,
                 username,
                 email,
-                password: hashPassword
+                password: hashPassword,
             });
             await user.save();
 
@@ -58,7 +57,7 @@ router.post('/registration',
     }
 );
 
-//validating username or email in login
+//Login
 router.post('/login', async (req, res) => {
     try {
         const { username, password, rememberMe } = req.body;
@@ -79,7 +78,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Invalid password" });
         }
 
-        const token = jwt.sign({ id: user.id }, "airsoft-fe-key", { expiresIn: rememberMe ? "7d" : "1h" });
+        const token = jwt.sign({ id: user.id }, "airsoft-fe-key", { expiresIn: rememberMe ? "30d" : "1d" });
 
         return res.json({
             token,
@@ -100,11 +99,10 @@ router.get('/auth', authMiddleware,
     async (req, res) => {
         try {
             const user = await userSchema.findOne({_id: req.user.id})
-            const token = jwt.sign({id: user.id}, "airsoft-fe-key", {expiresIn: "1h"})
+            const token = jwt.sign({id: user.id}, "airsoft-fe-key", {expiresIn: "30d"})
             return res.json({
                 token,
                 user: {
-                    id: user.id,
                     username: user.username,
                     email: user.email,
                 }
@@ -115,24 +113,6 @@ router.get('/auth', authMiddleware,
         }
     })
 
-//Getting user by id
-router.get('/id/:id', authMiddleware, async (req, res) => {
-    try {
-        const user = await userSchema.findById(req.params.id);
-        const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "1h"})
-        if (!user) {
-            return res.status(404).json({
-                message: 'User not found'
-            });
-        }
-        res.json({token, user});
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        res.status(500).json({
-            error: 'Internal Server Error'
-        });
-    }
-});
 
 router.get('')
 

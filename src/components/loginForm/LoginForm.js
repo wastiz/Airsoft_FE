@@ -1,7 +1,7 @@
 import { useDispatch, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setNameLog, setPasswordLog, setStatusLog, resetFormLog } from '../../redux/slices/loginSlice';
-import { setRememberMe, setLogged, setCurrentId } from '../../redux/slices/currentDataSlice';
+import {setRememberMe, setLogged, setCurrentId, setData} from '../../redux/slices/currentDataSlice';
 import axios from 'axios';
 
 function LoginForm () {
@@ -36,6 +36,10 @@ function LoginForm () {
 			});
 			if (response.data.token) {
 				localStorage.setItem('token', response.data.token);
+				dispatch(setData({
+					username: response.data.user.username,
+					email: response.data.user.email,
+				}));
 				dispatch(setLogged(true));
 				navigate('/');
 				dispatch(resetFormLog());
