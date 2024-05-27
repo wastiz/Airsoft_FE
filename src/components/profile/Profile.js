@@ -21,12 +21,21 @@ function Profile () {
             try {
                 const response = await axios.get(`http://localhost:5000/api/users/id/${id}`);
                 dispatch(setProfileData(response.data.profile));
-                const imageData = response.data.avatar.data;
-                const base64Image = Buffer.from(imageData).toString('base64');
-                const src = `data:image/jpeg;base64,${base64Image}`;
-                setAvatarSrc(src);
-                console.log('Got profile');
 
+                // Получение данных изображения как Blob
+                const imageData = new Blob([response.data.profile.avatar.data], { type: 'image/jpeg' });
+
+                // Создание объекта FileReader
+                const reader = new FileReader();
+                reader.onload = () => {
+                    // Установка src изображения после чтения
+                    setAvatarSrc(reader.result);
+                };
+                // Чтение изображения как data URL
+                reader.readAsDataURL(imageData);
+
+
+                console.log('Got profile');
             } catch (error) {
                 console.error('Error getting profile from MongoDB:', error);
             }
@@ -34,6 +43,7 @@ function Profile () {
 
         fetchData();
     }, [id, dispatch]);
+
     return (
         <div className='display-row flex-centered flex-gap-5'>
             <div className='img-div'>
