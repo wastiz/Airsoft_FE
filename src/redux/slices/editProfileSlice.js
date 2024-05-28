@@ -6,8 +6,8 @@ const editProfileSlice = createSlice({
     initialState: {
         firstName: '',
         lastName: '',
-        avatar: null,
-        age: '',
+        avatar: '',
+        age: null,
         phone: '',
         aboutMe: '',
         roles: [],

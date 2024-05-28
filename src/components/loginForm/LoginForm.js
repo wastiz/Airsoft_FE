@@ -1,7 +1,7 @@
 import { useDispatch, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setNameLog, setPasswordLog, setStatusLog, resetFormLog } from '../../redux/slices/loginSlice';
-import { setRememberMe, setLogged, setCurrentId } from '../../redux/slices/currentDataSlice';
+import {setRememberMe, setLogged, setCurrentId, setData} from '../../redux/slices/currentDataSlice';
 import axios from 'axios';
 
 function LoginForm () {
@@ -25,29 +25,31 @@ function LoginForm () {
         }
     };
 
-    const handleSubmit = async (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
+		const rememberMeChecked = e.target.elements.rememberMe.checked;
 		try {
-			const rememberMeChecked = e.target.elements.rememberMe.checked;
-			axios.get(`http://localhost:5000/api/users/username/${loginStates.username}`).then(response => {
-				if (response.data.username === loginStates.username || response.data.pass === loginStates.password) {
-					console.log('Name and pass match')
-					localStorage.setItem('id', response.data._id);
-					localStorage.setItem('logged', true);
-					if (rememberMeChecked) {
-						localStorage.setItem('rememberMe', true);
-						dispatch(setRememberMe(true));
-					}
-					dispatch(setCurrentId(response.data._id));
-					dispatch(setLogged(true));
-					navigate('/')
-				}
+			const response = await axios.post(`http://localhost:5000/api/users/login`, {
+				rememberMe: rememberMeChecked,
+				username: loginStates.username,
+				password: loginStates.password
 			});
-			dispatch(resetFormLog())
-		} catch (error) {
-			console.error('Error getting data from MongoDB:', error);
+			if (response.data.token) {
+				localStorage.setItem('token', response.data.token);
+				dispatch(setData({
+					username: response.data.user.username,
+					email: response.data.user.email,
+				}));
+				dispatch(setLogged(true));
+				navigate('/');
+				dispatch(resetFormLog());
+			} else {
+				alert("Token is missing in response");
+			}
+		} catch (e) {
+			alert(e.response.data.message);
 		}
-    };
+	};
     
     return (
     <div className='w-full h-full items-center justify-center'>

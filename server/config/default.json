@@ -1,0 +1,6 @@
+{
+  "serverPort" : 5000,
+  "secretKey": "airsoft-fe-key",
+  "staticPath": "C:\\Users\\valno\\Desktop\\Airsoft_FE\\server\\static"
+}
+

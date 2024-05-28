@@ -10,22 +10,6 @@ function Header () {
     const dispatch = useDispatch();
     const currentStates = useSelector((state) => state.current);
 
-    const id = localStorage.getItem('id');
-    const rememberMe = localStorage.getItem('rememberMe');
-    if (rememberMe === "true" && id !== "") {
-        try {
-            axios.get(`http://localhost:5000/api/users/id/${id}`).then(response => {
-                dispatch(setData({
-                    username: response.data.username,
-                    email: response.data.email,
-                }));
-                console.log('completed');
-            });
-        } catch (error) {
-            console.error('Error getting data from MongoDB:', error);
-        }
-    }
-
     const logout = () => {
         dispatch(setData({
             username: "",
@@ -54,7 +38,7 @@ function Header () {
                         <li><p className='text-white'>Russian</p></li>
                     </ul>
                 </div>
-                {localStorage.getItem('logged') === 'true' ? (
+                {currentStates.logged ? (
                     <>
                         <div>
                             <h4 className='text-white'>Welcome back,</h4>

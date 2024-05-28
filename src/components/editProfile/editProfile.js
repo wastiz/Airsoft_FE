@@ -1,20 +1,36 @@
 import './editProfile.scss';
 import {Link, useNavigate} from 'react-router-dom';
-import avatar from '../../img/avatar.jpg'
 import {useDispatch, useSelector} from "react-redux";
 import {InputGroup, Form, DropdownButton, Dropdown, FloatingLabel} from "react-bootstrap";
 import {setFirstName, setLastName, setAboutMe, setAge, setAvatar, setPhone, setRoles, setTeam, setFavWeapon} from "../../redux/slices/editProfileSlice";
 import axios from "axios";
+import defaultAvatar from "../../img/avatar.jpg";
+import React, {useState} from "react";
 
 function EditProfile () {
     const currentStates = useSelector((state) => state.current);
     console.log(currentStates.username);
 
     const dispatch = useDispatch();
-    const profileStates = useSelector((state) => state.editProfile);
+    const profileStates = useSelector((state) => state.profile);
     const navigate = useNavigate();
 
+    //Обработка картинки
+    const [avatarSrc, setAvatarSrc] = useState('');
 
+    const handleChangeFile = async (event) => {
+        try {
+            const formData = new FormData();
+            formData.append('avatar', event.target.files[0]);
+
+            const {data} = await axios.post('http://localhost:5000/api/uploadAvatar', formData);
+            setAvatarSrc(data.url);
+        } catch (e) {
+            console.warn(e);
+            alert('Error uploading image');
+        }
+    }
+    //Обработка формы
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -48,38 +64,11 @@ function EditProfile () {
         }
     };
 
-    const readFile = (fileInput) => {
-        return new Promise((resolve, reject) => {
-            const file = fileInput.files[0];
-
-            try {
-                if (!file) {
-                    reject('Файл не выбран');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    resolve(event.target.result);
-                };
-                reader.readAsDataURL(file);
-            } catch (error) {
-                reject(error);
-            }
-        });
-    };
-
     const submitForm = async (e) => {
         e.preventDefault();
-        const userId = localStorage.getItem('id');
-        const fileInput = e.target.querySelector('input[type="file"]');
-
         try {
-            const fileContent = await readFile(fileInput);
-            console.log(fileContent)
-
             const profileData = {
-                avatar: fileContent,
+                avatar: avatarSrc,
                 firstName: profileStates.firstName,
                 lastName: profileStates.lastName,
                 age: profileStates.age,
@@ -90,29 +79,18 @@ function EditProfile () {
                 favWeapon: profileStates.favWeapon,
             };
 
-            const userResponse = await axios.get(`http://localhost:5000/api/users/id/${userId}`);
+            const response = await axios.put(`http://localhost:5000/api/users/profile`, profileData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
 
-            if (userResponse.data.profile === null) {
-                await createProfile(userId, profileData);
-            } else {
-                await updateProfile(userId, profileData);
-            }
-            navigate('/profile')
+            alert(response.data.message);
+            navigate('/profile');
         } catch (error) {
             console.error(error);
         }
     };
-
-
-    const createProfile = async (userId, profileData) => {
-        const response = await axios.post(`http://localhost:5000/api/users/${userId}/profile`, profileData);
-        console.log(response.statusText);
-    }
-
-    const updateProfile = async (userId, profileData) => {
-        const response = await axios.put(`http://localhost:5000/api/users/${userId}/profile`, profileData);
-        console.log(response.statusText);
-    }
 
     return (
         <div className='display-flex display-column flex-centered flex-gap-5 profile-form'>
@@ -124,19 +102,29 @@ function EditProfile () {
                         placeholder='First name'
                         onChange={handleChange}
                         name='firstName'
+                        value={profileStates.firstName || ''}
                     />
                     <Form.Control
                         aria-label="Last name"
                         placeholder='Last name'
                         onChange={handleChange}
                         name='lastName'
+                        value={profileStates.lastName || ''}
                     />
                 </InputGroup>
                 <br/>
-                <p className='text-white'>Upload your avatar:</p>
-                <div className="input-group mb-3">
-                    <label className="input-group-text" htmlFor="inputGroupFile01">Upload</label>
-                    <input name='avatar' onChange={handleChange} type="file" className="form-control" id="inputGroupFile01"/>
+                <div className='display-flex display-row'>
+                    <div className='img-div'>
+                        <img className='avatar' src={avatarSrc ? avatarSrc : defaultAvatar} alt='avatar'></img>
+                    </div>
+                    <div>
+                        <p className='text-white'>Upload your avatar:</p>
+                        <div className="input-group mb-3">
+                            <label className="input-group-text" htmlFor="inputGroupFile01">Upload</label>
+                            <input name='avatar' onChange={handleChangeFile} type="file" className="form-control"
+                                   id="inputGroupFile01"/>
+                        </div>
+                    </div>
                 </div>
                 <br/>
                 <InputGroup className="mb-3">
@@ -147,6 +135,7 @@ function EditProfile () {
                         placeholder='Age'
                         onChange={handleChange}
                         name='age'
+                        value={profileStates.age || ''}
                     />
                 </InputGroup>
                 <br/>
@@ -161,6 +150,7 @@ function EditProfile () {
                         placeholder='Your phone number...'
                         onChange={handleChange}
                         name='phone'
+                        value={profileStates.phone || ''}
                     />
                 </InputGroup>
                 <br/>
@@ -171,6 +161,7 @@ function EditProfile () {
                         onChange={handleChange}
                         name='aboutMe'
                         style={{height: '100px'}}
+                        value={profileStates.aboutMe || ''}
                     />
                 </FloatingLabel>
                 <br/>
@@ -191,6 +182,7 @@ function EditProfile () {
                         aria-label="Text input with dropdown button"
                         placeholder='Enter you role in games...'
                         name='roles'
+                        value={profileStates.roles[0] || ''}
                     />
                 </InputGroup>
                 <br/>
@@ -204,6 +196,7 @@ function EditProfile () {
                         placeholder='Enter existing team...'
                         onChange={handleChange}
                         name='team'
+                        value={profileStates.team[0] || ''}
                     />
                 </InputGroup>
                 <br/>
@@ -217,6 +210,7 @@ function EditProfile () {
                         onChange={handleChange}
                         placeholder='Enter weapon you are playing with...'
                         name='favWeapon'
+                        value={profileStates.favWeapon || ''}
                     />
                 </InputGroup>
                 <button className="btn btn-primary" type='submit'>Submit</button>
