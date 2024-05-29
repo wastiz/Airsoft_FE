@@ -6,8 +6,6 @@ const profileController = require('./controllers/profile-controller');
 const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const multer = require("multer");
-const fs = require('fs');
 const path = require('path');
 
 //Порт и ссылка базы данных
@@ -40,40 +38,12 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 
-// Создаем multer storage
-const avatarStorage = multer.diskStorage({
-	destination: (_, __, cb) => {
-		cb(null, 'server/avatar-uploads');
-	},
-	filename: (_, file, cb) => {
-		cb(null, file.originalname);
-	}
-});
-
-const upload = multer({ storage: avatarStorage });
-
-// Маршрут для загрузки аватара
-app.post('/api/uploadAvatar', upload.single('avatar'), (req, res) => {
-	try {
-		// Проверяем, был ли загружен файл
-		if (!req.file) {
-			return res.status(400).json({ message: 'No file uploaded' });
-		}
-
-		res.json({
-			url: `http://localhost:5000/avatar-uploads/${req.file.filename}`
-		});
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ message: 'Server error' });
-	}
-});
-
 // Маршруты
 app.use('/api/users', userController);
 app.use('/api/events', eventController);
 app.use('/api/users', profileController);
-app.use('/avatar-uploads', express.static(path.join(__dirname, 'avatar-uploads')));
+app.use('/uploads/avatar-uploads', express.static(path.join(__dirname, 'uploads/avatar-uploads')));
+app.use('/uploads/cover-event-uploads', express.static(path.join(__dirname, 'uploads/cover-event-uploads')));
 
 
 // Запуск сервера

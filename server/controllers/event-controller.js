@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const eventSchema = require('../models/eventSchema');
+const multer = require("multer");
 
 router.post('/', async (req, res) => {
     try {
@@ -41,5 +42,34 @@ router.get('/:eventId', async (req, res) => {
         });
     }
 });
+
+// Multer storage for user's avatars
+const coverEventImagesStore = multer.diskStorage({
+    destination: (_, __, cb) => {
+        cb(null, 'server/uploads/cover-event-uploads');
+    },
+    filename: (_, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: coverEventImagesStore });
+
+// Маршрут для загрузки аватара
+router.post('/uploadCoverImage', upload.single('coverImage'), (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        res.json({
+            url: `http://localhost:5000/uploads/cover-event-uploads/${req.file.filename}`
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 
 module.exports = router;

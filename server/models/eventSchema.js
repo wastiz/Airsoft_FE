@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
     _id: String,
+    created: {
+        type: Date,
+        default: Date.now
+    },
     title: String,
     description: String,
     rules: String,
@@ -16,9 +20,17 @@ const eventSchema = new mongoose.Schema({
         start: String,
         end: String,
     },
-    services: Array,
-    coverPhoto: String,
-    photos: [String],
+    services: {
+        foodService: Boolean,
+        hpaService: Boolean,
+        toiletService: Boolean,
+        shopService: Boolean,
+        otherService: String,
+    },
+    photos: {
+        coverPhoto: String,
+        otherPhoto: [String],
+    },
     regForm: {
       	firstName: Boolean,
       	lastName: Boolean,
@@ -28,7 +40,6 @@ const eventSchema = new mongoose.Schema({
       	age: Boolean,
         cash: Boolean,
         transfer: Boolean,
-        arbitrary: Boolean,
       	arbitraryContent: Array
     },
     orgFirstName: String,

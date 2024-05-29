@@ -23,7 +23,7 @@ function EditProfile () {
             const formData = new FormData();
             formData.append('avatar', event.target.files[0]);
 
-            const {data} = await axios.post('http://localhost:5000/api/uploadAvatar', formData);
+            const {data} = await axios.post('http://localhost:5000/api/users/uploadAvatar', formData);
             setAvatarSrc(data.url);
         } catch (e) {
             console.warn(e);

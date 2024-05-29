@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs")
 const { v4: uuidv4 } = require('uuid');
 const authMiddleware = require('../middlewares/auth-middleware')
+const multer = require("multer");
 
 //User registration
 router.post('/registration',
@@ -113,6 +114,35 @@ router.get('/auth', authMiddleware,
         }
     })
 
+
+// Multer storage for user's avatars
+const avatarStorage = multer.diskStorage({
+    destination: (_, __, cb) => {
+        cb(null, 'server/uploads/avatar-uploads');
+    },
+    filename: (_, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: avatarStorage });
+
+// Маршрут для загрузки аватара
+router.post('/uploadAvatar', upload.single('avatar'), (req, res) => {
+    try {
+        // Проверяем, был ли загружен файл
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        res.json({
+            url: `http://localhost:5000/uploads/avatar-uploads/${req.file.filename}`
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 router.get('')
 

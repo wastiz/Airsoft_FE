@@ -1,6 +1,4 @@
 import placeholder from '../../img/placeholder.png'
-import { useDispatch, useSelector} from 'react-redux';
-import { setTitle, setDescr, setRules, setDate, setStart, setPrice, setEventId, setEventFormStatus, setLocation, setAgeRestriction, setRegFormFirstName, setRegFormLastName, setRegFormNickname, setRegFormEmail, setRegFormPhone, setRegFormAge, setRegFormArbitrary, setRegFormArbitraryContent, setOrgFirstName, setOrgLastName, setOrgEmail } from '../../redux/slices/addEventSlice';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -9,91 +7,63 @@ import {useForm} from "react-hook-form";
 
 
 function AddEvent2() {
-
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const states = useSelector((state) => state.addEvent);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        switch (name) {
-            case 'regArbitrary':
-                dispatch(setRegFormArbitrary());
-                break;
-            case 'regTextarea':
-                dispatch(setRegFormArbitraryContent(['textarea', value]));
-                break;
-            case 'regSelect':
-                dispatch(setRegFormArbitraryContent(['select', value]));
-                break;
-            default:
-                break;
-        }
-    };
-
 
     const {
         register,
         handleSubmit,
-        control,
         watch,
         setError,
         formState: { errors },
     } = useForm()
 
-    const onSubmit = async ({data}) => {
+    const onSubmit = async (data) => {
         try {
-            const newId = uuidv4();
-            dispatch(setEventId(newId));
+            const newId = uuidv4()
 
-            const originalDate = new Date(states.date);
+            const originalDate = new Date(data.date);
             const day = originalDate.getDate().toString().padStart(2, '0');
             const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
             const year = originalDate.getFullYear().toString().slice(-2);
             const formattedDate = `${day}.${month}.${year}`;
 
-            let updatedArbitraryContent = []
-            if (states.regForm.arbitraryContent[0] === 'select') {
-                const keysArray = Object.values(inputValues);
-                updatedArbitraryContent = [...states.regForm.arbitraryContent, keysArray];
-                console.log('added')
-            } else if (states.regForm.arbitraryContent[0] === 'textarea') {
-                updatedArbitraryContent = states.regForm.arbitraryContent;
-                console.log('added')
-            } else {
-                console.log('not added')
-            }
-            console.log(updatedArbitraryContent);
-
             const response = await axios.post('http://localhost:5000/api/events', {
                 _id: newId,
-                title: states.title,
-                description: states.description,
-                rules: states.rules,
+                title: data.title,
+                description: data.description,
+                rules: data.rules,
                 date: formattedDate,
-                start: states.start,
-                price: states.price,
-                location: states.location,
-                ageRestriction: states.ageRestriction,
-                regForm: {
-                    firstName: states.regForm.firstName,
-                    lastName: states.regForm.lastName,
-                    nickname: states.regForm.nickname,
-                    email: states.regForm.email,
-                    phone: states.regForm.phone,
-                    age: states.regForm.age,
-                    arbitrary: states.regForm.arbitrary,
-                    arbitraryContent: updatedArbitraryContent
+                price: data.price,
+                location: data.location,
+                ageRestriction: data.ageRestriction,
+                times: {
+                    meeting: data.meetingTime,
+                    briefing: data.briefTime,
+                    start: data.startTime,
+                    end: data.endTime,
                 },
-                orgFirstName: states.orgFirstName,
-                orgLastName: states.orgLastName,
-                orgEmail: states.orgEmail,
+                services: {
+                    foodService: data.foodService,
+                    hpaService: data.hpaService,
+                    toiletService: data.toiletService,
+                    shopService: data.shopService,
+                    otherService: data.otherService,
+                },
+                regForm: {
+                    firstName: data.regFirstName,
+                    lastName: data.regLastName,
+                    nickname: data.regNickname,
+                    email: data.regEmail,
+                    phone: data.regPhone,
+                    age: data.regAge,
+                    arbitraryContent: inputValues
+                },
+                orgFirstName: data.orgFirstName,
+                orgLastName: data.orgLastName,
+                orgEmail: data.orgEmail,
             });
 
-            dispatch(setEventFormStatus(response.status));
             console.log(response.statusText);
-
             navigate('/');
         } catch (error) {
             setError("root", {
@@ -102,29 +72,54 @@ function AddEvent2() {
             console.error('Error submitting data to MongoDB:', error);
         }
     }
-    const [inputValues, setInputValues] = useState({
-        input1: '',
-        input2: '',
-    });
-    const [inputNames, setInputNames] = useState(['input1', 'input2']);
+    //Обработка ковер картинки
+    const [coverEventImageSrc, setCoverEventImageSrc] = useState('');
+
+    const handleChangeFile = async (event) => {
+        try {
+            const formData = new FormData();
+            formData.append('coverImage', event.target.files[0]);
+
+            const {data} = await axios.post('http://localhost:5000/api/events/uploadCoverImage', formData);
+            setCoverEventImageSrc(data.url);
+        } catch (e) {
+            console.warn(e);
+            alert('Error uploading image');
+        }
+    }
+
+    //Обработка остальных картинок
+
+    //Обработка полей с разными аттрибутами
+
+    const [inputs, setInputs] = useState([]);
+    console.log(inputs)
+
+    const handleAddTextarea = () => {
+        setInputs([...inputs, { type: 'textarea', id: `textarea${inputs.length}` }]);
+    };
+
+    const handleAddSelect = () => {
+        setInputs([...inputs, { type: 'select', id: `select${inputs.length}`, options: ['option1'] }]);
+    };
+
+    const [inputValues, setInputValues] = useState();
 
     const handleInputChange = (event) => {
-        const { name, value } = event.target;
+        const {name, value} = event.target;
         setInputValues((prevValues) => ({
             ...prevValues,
             [name]: value,
         }));
     };
 
-    const handleAddInput = () => {
-        const newInputName = `input${inputNames.length + 1}`;
-        setInputNames([...inputNames, newInputName]);
-        setInputValues((prevValues) => ({
-            ...prevValues,
-            [newInputName]: '',
-        }));
+    const handleAddOption = (id) => {
+        setInputs((prevInputs) =>
+            prevInputs.map((input) =>
+                input.id === id ? { ...input, options: [...input.options, `option${input.options.length + 1}`] } : input
+            )
+        );
     };
-
 
     return (
         <form className="px-12" onSubmit={handleSubmit(onSubmit)}>
@@ -155,7 +150,7 @@ function AddEvent2() {
                                     />
                                 </div>
                             </div>
-                            {errors.title && (<div>{errors.title.message}</div>)}
+                            {errors.title && (<div><p className='text-white'>{errors.title.message}</p></div>)}
                         </div>
 
                         <div className="col-span-full">
@@ -293,7 +288,8 @@ function AddEvent2() {
                                 <div className='text-white col-span-full'>Times:</div>
 
                                 <div className="sm:col-span-3">
-                                    <label htmlFor="meetingTime" className="block text-sm font-medium leading-6 text-white">
+                                    <label htmlFor="meetingTime"
+                                           className="block text-sm font-medium leading-6 text-white">
                                         Meeting time:
                                     </label>
                                     <div className="mt-2">
@@ -308,7 +304,8 @@ function AddEvent2() {
                                 </div>
 
                                 <div className="sm:col-span-3">
-                                    <label htmlFor="briefTime" className="block text-sm font-medium leading-6 text-white">
+                                    <label htmlFor="briefTime"
+                                           className="block text-sm font-medium leading-6 text-white">
                                         Briefing time:
                                     </label>
                                     <div className="mt-2">
@@ -323,7 +320,8 @@ function AddEvent2() {
                                 </div>
 
                                 <div className="sm:col-span-3">
-                                    <label htmlFor="startTime" className="block text-sm font-medium leading-6 text-white">
+                                    <label htmlFor="startTime"
+                                           className="block text-sm font-medium leading-6 text-white">
                                         Start time*:
                                     </label>
                                     <div className="mt-2">
@@ -355,6 +353,96 @@ function AddEvent2() {
                                     </div>
                                 </div>
 
+                                <div className='text-white col-span-full'>Services:</div>
+
+                                <div className="relative flex gap-x-3">
+                                    <div className="flex h-6 items-center">
+                                        <input
+                                            id="foodService"
+                                            name="foodService"
+                                            type="checkbox"
+                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('foodService')}
+                                        />
+                                    </div>
+                                    <div className="text-sm leading-6">
+                                        <label htmlFor="foodService" className="font-medium text-white">
+                                            Food
+                                        </label>
+                                        <p className="text-white">There will be food on the game </p>
+                                    </div>
+                                </div>
+
+                                <div className="relative flex gap-x-3">
+                                    <div className="flex h-6 items-center">
+                                        <input
+                                            id="hpaService"
+                                            name="hpaService"
+                                            type="checkbox"
+                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('hpaService')}
+                                        />
+                                    </div>
+                                    <div className="text-sm leading-6">
+                                        <label htmlFor="hpaService" className="font-medium text-white">
+                                            HPA Service
+                                        </label>
+                                        <p className="text-white">There will be HPA air charger on the game</p>
+                                    </div>
+                                </div>
+
+                                <div className="relative flex gap-x-3">
+                                    <div className="flex h-6 items-center">
+                                        <input
+                                            id="toiletService"
+                                            name="toiletService"
+                                            type="checkbox"
+                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('toiletService')}
+                                        />
+                                    </div>
+                                    <div className="text-sm leading-6">
+                                        <label htmlFor="toiletService" className="font-medium text-white">
+                                            Toilet Service
+                                        </label>
+                                        <p className="text-white">There will be toilet on the game</p>
+                                    </div>
+                                </div>
+
+                                <div className="relative flex gap-x-3">
+                                    <div className="flex h-6 items-center">
+                                        <input
+                                            id="shopService"
+                                            name="shopService"
+                                            type="checkbox"
+                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('shopService')}
+                                        />
+                                    </div>
+                                    <div className="text-sm leading-6">
+                                        <label htmlFor="shopService" className="font-medium text-white">
+                                            Shop Service
+                                        </label>
+                                        <p className="text-white">There will be airsoft shop on the game</p>
+                                    </div>
+                                </div>
+
+                                <div className="sm:col-span-3">
+                                    <label htmlFor="otherService"
+                                           className="block text-sm font-medium leading-6 text-white">
+                                        Other Service (type other services if you have):
+                                    </label>
+                                    <div className="mt-2">
+                                        <input
+                                            type="text"
+                                            name="otherService"
+                                            id="otherService"
+                                            className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            {...register("otherService")}
+                                        />
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -367,14 +455,14 @@ function AddEvent2() {
                             <div
                                 className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                                 <div className="text-center">
-                                    <img src={placeholder} alt="" className='w-12 h-12'/>
+                                    <img src={coverEventImageSrc ? coverEventImageSrc : placeholder} alt="cover" className='w-12 h-12'/>
                                     <div className="mt-4 flex text-sm leading-6 text-white">
                                         <label
                                             htmlFor="file-upload"
                                             className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                         >
                                             <span>Upload a file</span>
-                                            <input id="file-upload" name="file-upload" type="file" className="sr-only"/>
+                                            <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleChangeFile}/>
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>
@@ -387,7 +475,7 @@ function AddEvent2() {
 
                         <div className="col-span-full">
                             <label htmlFor="other-photos" className="block text-sm font-medium leading-6 text-white">
-                                 Other photos (for example photos from polygon)
+                                Other photos (for example photos from polygon)
                             </label>
                             <div
                                 className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
@@ -428,6 +516,7 @@ function AddEvent2() {
                                             name="regFirstName"
                                             type="checkbox"
                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('regFirstName')}
                                         />
                                     </div>
                                     <div className="text-sm leading-6">
@@ -445,6 +534,7 @@ function AddEvent2() {
                                             name="regLastName"
                                             type="checkbox"
                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('regLastName')}
                                         />
                                     </div>
                                     <div className="text-sm leading-6">
@@ -462,6 +552,7 @@ function AddEvent2() {
                                             name="regNickname"
                                             type="checkbox"
                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('regNickname')}
                                         />
                                     </div>
                                     <div className="text-sm leading-6">
@@ -479,6 +570,7 @@ function AddEvent2() {
                                             name="regEmail"
                                             type="checkbox"
                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('regEmail')}
                                         />
                                     </div>
                                     <div className="text-sm leading-6">
@@ -496,6 +588,7 @@ function AddEvent2() {
                                             name="regPhone"
                                             type="checkbox"
                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('regPhone')}
                                         />
                                     </div>
                                     <div className="text-sm leading-6">
@@ -513,6 +606,7 @@ function AddEvent2() {
                                             name="regAge"
                                             type="checkbox"
                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            {...register('regAge')}
                                         />
                                     </div>
                                     <div className="text-sm leading-6">
@@ -530,7 +624,7 @@ function AddEvent2() {
                                             name="regArbitrary"
                                             type="checkbox"
                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                            onChange={handleChange}
+                                            {...register('regArbitrary')}
                                         />
                                     </div>
                                     <div className="text-sm leading-6">
@@ -543,37 +637,59 @@ function AddEvent2() {
 
                                 <div className="relative flex gap-x-3">
                                     <div className='display-col flex-gap'>
-                                        {states.regForm.arbitrary ? (
+                                        {watch("regArbitrary") ? (
                                             <div className='display-row flex gap-x-3'>
-                                                <button className="btn btn-primary">Add Textarea</button>
-                                                <button className="btn btn-primary">Add Select</button>
+                                                <button className="btn btn-primary" onClick={handleAddTextarea}>Add
+                                                    Textarea
+                                                </button>
+                                                <button className="btn btn-primary" onClick={handleAddSelect}>Add
+                                                    Select
+                                                </button>
                                             </div>
                                         ) : null}
-                                        {states.regForm.arbitrary ? (
-                                            <div className='display-col flex-gap'>
-                                                <label className='text-white' htmlFor="regTextarea">You have chose textarea, tell what player should type in this textarea</label>
-                                                <input onChange={handleChange} type="text" id='regTextarea' name='regTextarea'/>
-                                            </div>
-                                        ) : null }
-                                        {states.regForm.arbitrary ? (
-                                            <div className='display-column flex-gap'>
-                                                <label className='text-white' htmlFor="regSelect">You have chose select, type options that player will have to choose</label>
-                                                <input onChange={handleChange} type="text" id='regSelect' name='regSelect'/>
-                                                {inputNames.map((name) => (
-                                                    <label className='text-white' key={name}>
-                                                        {name.charAt(0).toUpperCase() + name.slice(1)}:
+                                        {inputs.map((input) => {
+                                            if (input.type === 'textarea') {
+                                                return (
+                                                    <div key={input.id} className='flex flex-col'>
+                                                        <label className='text-white' htmlFor={input.id}>You have added textarea to registration form, type what player should write in this textarea</label>
                                                         <input
-                                                            type="text"
-                                                            name={name}
-                                                            value={inputValues[name]}
-                                                            onChange={handleInputChange}
+                                                            onChange={(e) => handleInputChange(e, input.id)}
+                                                            id={input.id}
+                                                            name={input.id}
                                                             className="common-input-class text-black"
                                                         />
-                                                    </label>
-                                                ))}
-                                                <button type="button" className='text-white' onClick={handleAddInput}>Add Input</button>
-                                            </div>
-                                        ) : null }
+                                                    </div>
+                                                );
+                                            } else if (input.type === 'select') {
+                                                return (
+                                                    <div key={input.id} className='flex flex-col flex-gap'>
+                                                        <label className='text-white' htmlFor={input.id}>You have added select options to registration form, type options that player will have to choose (for example team)</label>
+                                                        <input
+                                                            type="text"
+                                                            onChange={(e) => handleInputChange(e, input.id)}
+                                                            id={input.id}
+                                                            name={input.id}
+                                                            className="common-input-class text-black"
+                                                        />
+                                                        {input.options.map((option, index) => (
+                                                            <div key={`${input.id}-option-${index}`}>
+                                                                <label className='text-white'>
+                                                                    {option.charAt(0).toUpperCase() + option.slice(1)}:
+                                                                    <input
+                                                                        type="text"
+                                                                        name={`${input.id}-option-${index}`}
+                                                                        className="common-input-class text-black"
+                                                                        onChange={handleInputChange}
+                                                                    />
+                                                                </label>
+                                                            </div>
+                                                        ))}
+                                                        <button type="button" className='text-white' onClick={() => handleAddOption(input.id)}>Add Option</button>
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        })}
                                     </div>
                                 </div>
 
@@ -584,12 +700,13 @@ function AddEvent2() {
 
                 <div className="border-b border-gray-900/10 pb-12">
                     <h2 className="text-base font-semibold leading-7 text-white">Personal Information</h2>
-                    <p className="mt-1 text-sm leading-6 text-white">Use a permanent address where you can receive mail.</p>
+                    <p className="mt-1 text-sm leading-6 text-white">Use a permanent address where you can receive
+                        mail.</p>
 
                     <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div className="sm:col-span-3">
                             <label htmlFor="orgFirstName" className="block text-sm font-medium leading-6 text-white">
-                                First name
+                                First name*
                             </label>
                             <div className="mt-2">
                                 <input
@@ -597,15 +714,18 @@ function AddEvent2() {
                                     name="orgFirstName"
                                     id="orgFirstName"
                                     autoComplete="given-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    required
+                                    className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    {...register("orgFirstName", {
+                                        required: "Organiser first name is required"
+                                    })}
                                 />
                             </div>
+                            {errors.orgFirstName && (<div>errors.orgFirstName.message</div>)}
                         </div>
 
                         <div className="sm:col-span-3">
                             <label htmlFor="orgLastName" className="block text-sm font-medium leading-6 text-white">
-                                Last name
+                                Last name*
                             </label>
                             <div className="mt-2">
                                 <input
@@ -613,26 +733,31 @@ function AddEvent2() {
                                     name="orgLastName"
                                     id="orgLastName"
                                     autoComplete="family-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    required
+                                    className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    {...register("orgLastName", {
+                                        required: "Organiser last name is required"
+                                    })}
                                 />
                             </div>
+                            {errors.orgLastName && (<div>errors.orgLastName.message</div>)}
                         </div>
 
                         <div className="sm:col-span-4">
                             <label htmlFor="orgEmail" className="block text-sm font-medium leading-6 text-white">
-                                Email address
+                                Email address*
                             </label>
                             <div className="mt-2">
                                 <input
                                     id="orgEmail"
                                     name="orgEmail"
                                     type="email"
-                                    autoComplete="email"
-                                    className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    required
+                                    className="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    {...register("orgEmail", {
+                                        required: "Organiser's email is required"
+                                    })}
                                 />
                             </div>
+                            {errors.orgEmail && (<div><p className='text-red-700'>errors.orgEmail.message</p></div>)}
                         </div>
 
                     </div>
