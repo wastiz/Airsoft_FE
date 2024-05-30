@@ -9,7 +9,7 @@ const eventSchema = new mongoose.Schema({
     title: String,
     description: String,
     rules: String,
-    plot: String,
+    gamePlot: String,
     date: String,
     price: String,
     location: String,

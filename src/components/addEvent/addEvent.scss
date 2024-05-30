@@ -51,3 +51,7 @@ cursor: default;
 input[type=radio].toggle:checked + label:after {
     left: 0;
 }
+
+.main-input::placeholder {
+    color: black;
+}

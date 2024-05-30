@@ -19,23 +19,18 @@ function Events () {
           .catch(error => console.error('Error fetching events:', error));
     }, []);
     return (
-        <Container>
-            <Row>
-                {states.logged ? (
-                    <Link to='/add-event'><button className='text-white btn btn-primary'>Add Event</button></Link>
-                ) : (
-                    <h3 className='text-white'>To add event you have to be logged in</h3>
-                )}
-            </Row>
-            <br />
-            <Row>
-                <div className='flex flex-row flex-gap flex-wrap'>
+        <>
+            {states.logged ? (
+                <Link to='/add-event'><button className='text-white btn btn-primary'>Add Event</button></Link>
+            ) : (
+                <h3 className='text-white'>To add event you have to be logged in</h3>
+            )}
+            <div className='mt-2.5 grid grid-cols-2 gap-y-4 justify-items-center'>
                 {events.map(event => (
-                    <EventCard key={event._id} {...event}/>
+                    <EventCard key={event._id} {...event} className="my-2"/>
                 ))}
-                </div>
-            </Row>
-        </Container>
+            </div>
+        </>
     )
 }
 

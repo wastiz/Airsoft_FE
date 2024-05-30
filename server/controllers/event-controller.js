@@ -43,7 +43,7 @@ router.get('/:eventId', async (req, res) => {
     }
 });
 
-// Multer storage for user's avatars
+// Multer storage for event cover photo
 const coverEventImagesStore = multer.diskStorage({
     destination: (_, __, cb) => {
         cb(null, 'server/uploads/cover-event-uploads');
@@ -53,10 +53,9 @@ const coverEventImagesStore = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: coverEventImagesStore });
+const coverUpload = multer({ storage: coverEventImagesStore });
 
-// Маршрут для загрузки аватара
-router.post('/uploadCoverImage', upload.single('coverImage'), (req, res) => {
+router.post('/uploadCoverImage', coverUpload.single('coverImage'), (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
@@ -71,5 +70,27 @@ router.post('/uploadCoverImage', upload.single('coverImage'), (req, res) => {
     }
 });
 
+// Multer storage for event other photos
+const otherEventImagesStore = multer.diskStorage({
+    destination: (_, __, cb) => {
+        cb(null, 'server/uploads/other-event-uploads');
+    },
+    filename: (_, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
 
+const otherUpload = multer({ storage: otherEventImagesStore });
+
+router.post('/uploadOtherImage', otherUpload.array('otherImages', 10), (req, res) => {
+    try {
+        const files = req.files;
+        const urls = files.map(file => `http://localhost:5000/uploads/other-event-uploads/${file.filename}`);
+
+        res.json({ urls });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 module.exports = router;
