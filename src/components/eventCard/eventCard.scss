@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+
 
 .event-card {
     width: 356px;
@@ -8,9 +8,12 @@
     text-align: center;
 }
 .event-title {
-    background-color: $secondary;
+    background-color: blue;
     border-radius: 7px;
 }
 .event-btn:hover {
     color: white;
+}
+.event-card-cover-img {
+    background-size: cover;
 }

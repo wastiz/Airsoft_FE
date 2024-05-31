@@ -8,8 +8,8 @@ function EventCard ({ _id, date, photos: { coverPhoto }, location, price, times:
             <div className='col-span-2 bg-primary text-white text-center'>
                 {title}
             </div>
-            <figure className="m-w-full h-full">
-                <img src={coverPhoto? coverPhoto : placeholder} alt="event cover" className="rounded-xl"/>
+            <figure className="w-full h-full overflow-hidden">
+                <img src={coverPhoto? coverPhoto : placeholder} alt="event cover" className="rounded-xl w-full bg-contain"/>
             </figure>
             <div className="card-body">
                 <h2 className="text-white">Date: {date}</h2>

@@ -1,5 +1,4 @@
 import './Events.scss';
-import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { setEvents } from '../../redux/slices';
 import EventCard from '../eventCard/eventCard';

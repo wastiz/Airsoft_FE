@@ -1,10 +1,38 @@
-@import "~bootstrap/scss/bootstrap";
+@import './variables.scss';
 
 body {
   margin: 0;
-  font-family: 'Rubik'
+  padding: 0;
+  background-color: $secondary;
+}
+h1, h2, h3, h4, p {
+  color: white;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+.margin-20px {
+  margin: 20px;
+}
+.padding-20px {
+  padding: 20px;
+}
+.flex {
+  display: flex;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+.flex-gap-10px {
+  gap: 10px;
+}
+.flex-gap-5 {
+  gap: 5%;
 }
