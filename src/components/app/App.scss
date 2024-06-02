@@ -1,0 +1,87 @@
+@import "~bootstrap/scss/bootstrap";
+// Custom color variables for react bootstrap
+
+//Main colors
+$theme-colors: (
+        "primary": #4B9B62,
+        "secondary": #292633,
+        "danger": #dc3545,
+        "text-color": #ffffff,
+        "body-color": #ffffff,
+);
+$primary: #4B9B62;
+$primary-light: #22C55E;
+$secondary: #292633;
+$secondary-light: #34313F;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+
+//Text colors
+$body-color: white;
+$text-color: white;
+$text-muted: #6c757d;
+$link-color: #007bff;
+$link-hover-color: #0056b3;
+
+//Other colors
+$body-bg: #34313F;
+$border-color: #34313F;
+
+// Re-import Bootstrap to apply custom variables
+@import "~bootstrap/scss/bootstrap";
+@import '../../variables.scss';
+
+body {
+  background-color: #292633
+}
+h1, h2, h3, h4, h5, h6, button, span, div, p, a, b{
+  color: white;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+.margin-20px {
+  margin: 20px;
+}
+.padding-20px {
+  padding: 20px;
+}
+.margin-padding-0 {
+  margin: 0;
+  padding: 0;
+}
+.flex {
+  display: flex;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+.flex-gap-10px {
+  gap: 10px;
+}
+.flex-gap-5 {
+  gap: 5%;
+}
+.flex-gap-1 {
+  gap: 1%;
+}
+.back-secondary {
+  background-color: $secondary-light;
+}
+.border-1 {
+  border-radius: 1rem;
+}
+.btn {
+  color: white;
+  font-weight: 600;
+}

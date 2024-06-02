@@ -1,6 +1,6 @@
 import './App.scss';
 import Header from '../header/Header';
-import Navbar from '../navbar/Navbar';
+import Navigation from '../navigation/Navigation';
 import Landing from '../landing/Landing';
 import Teams from '../teams/Teams';
 import SigninForm from '../signinForm/SigninForm';
@@ -61,8 +61,8 @@ function App () {
 		<BrowserRouter>
 			<div className='bg-base-100'>
 				<Header></Header>
-				<Navbar></Navbar>
-				<main className="margins bg-neutral h-auto">
+				<Navigation></Navigation>
+				<main className="margin-20px back-secondary border-1">
 					<Routes>
 						<Route exact path='/' element={<Landing/>}/ >
 						<Route exact path='/teams' element={<Teams/>}/ >
