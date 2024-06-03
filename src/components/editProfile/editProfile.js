@@ -5,6 +5,7 @@ import {setFirstName, setLastName, setAboutMe, setAge, setAvatar, setPhone, setR
 import axios from "axios";
 import defaultAvatar from "../../img/avatar.jpg";
 import React, {useState} from "react";
+import {DropdownButton, InputGroup, Form, Dropdown, FloatingLabel, Image, Row} from "react-bootstrap";
 
 function EditProfile () {
     const currentStates = useSelector((state) => state.current);
@@ -92,131 +93,125 @@ function EditProfile () {
     };
 
     return (
-        // <div className='display-flex display-column flex-centered flex-gap-5 profile-form'>
-        //     <form action="" onSubmit={submitForm}>
-        //         <InputGroup className="mb-3">
-        //             <InputGroup.Text className='text-white'>First and Last name</InputGroup.Text>
-        //             <Form.Control
-        //                 aria-label="First name"
-        //                 placeholder='First name'
-        //                 onChange={handleChange}
-        //                 name='firstName'
-        //                 value={profileStates.firstName || ''}
-        //             />
-        //             <Form.Control
-        //                 aria-label="Last name"
-        //                 placeholder='Last name'
-        //                 onChange={handleChange}
-        //                 name='lastName'
-        //                 value={profileStates.lastName || ''}
-        //             />
-        //         </InputGroup>
-        //         <br/>
-        //         <div className='display-flex display-row'>
-        //             <div className='img-div'>
-        //                 <img className='avatar' src={avatarSrc ? avatarSrc : defaultAvatar} alt='avatar'></img>
-        //             </div>
-        //             <div>
-        //                 <p className='text-white'>Upload your avatar:</p>
-        //                 <div className="input-group mb-3">
-        //                     <label className="input-group-text" htmlFor="inputGroupFile01">Upload</label>
-        //                     <input name='avatar' onChange={handleChangeFile} type="file" className="form-control"
-        //                            id="inputGroupFile01"/>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //         <br/>
-        //         <InputGroup className="mb-3">
-        //             <InputGroup.Text id="inputGroup-sizing-default" className='text-white'>Age</InputGroup.Text>
-        //             <Form.Control
-        //                 aria-label="Default"
-        //                 aria-describedby="inputGroup-sizing-default"
-        //                 placeholder='Age'
-        //                 onChange={handleChange}
-        //                 name='age'
-        //                 value={profileStates.age || ''}
-        //             />
-        //         </InputGroup>
-        //         <br/>
-        //         <InputGroup className="mb-3">
-        //             <DropdownButton variant="outline-secondary" title="Country" id="input-group-dropdown-1">
-        //                 <Dropdown.Item href="#">Estonia</Dropdown.Item>
-        //                 <Dropdown.Item href="#">Latvia</Dropdown.Item>
-        //                 <Dropdown.Item href="#">Lithuania</Dropdown.Item>
-        //             </DropdownButton>
-        //             <Form.Control
-        //                 aria-label="Text input with dropdown button"
-        //                 placeholder='Your phone number...'
-        //                 onChange={handleChange}
-        //                 name='phone'
-        //                 value={profileStates.phone || ''}
-        //             />
-        //         </InputGroup>
-        //         <br/>
-        //         <FloatingLabel controlId="floatingTextarea2" label="Leave a text about you (write anything you want)">
-        //             <Form.Control
-        //                 as="textarea"
-        //                 placeholder="Leave a text about you (write anything you want)"
-        //                 onChange={handleChange}
-        //                 name='aboutMe'
-        //                 style={{height: '100px'}}
-        //                 value={profileStates.aboutMe || ''}
-        //             />
-        //         </FloatingLabel>
-        //         <br/>
-        //         <InputGroup className="mb-3">
-        //             <DropdownButton
-        //                 variant="outline-secondary"
-        //                 title="Role"
-        //                 id="input-group-dropdown-1"
-        //             >
-        //                 <Dropdown.Item href="#">Write my own variant</Dropdown.Item>
-        //                 <Dropdown.Divider/>
-        //                 <Dropdown.Item href="#">Stormtrooper</Dropdown.Item>
-        //                 <Dropdown.Item href="#">Medic</Dropdown.Item>
-        //                 <Dropdown.Item href="#">Sniper</Dropdown.Item>
-        //                 <Dropdown.Item href="#">Lurker</Dropdown.Item>
-        //             </DropdownButton>
-        //             <Form.Control
-        //                 aria-label="Text input with dropdown button"
-        //                 placeholder='Enter you role in games...'
-        //                 name='roles'
-        //                 value={profileStates.roles[0] || ''}
-        //             />
-        //         </InputGroup>
-        //         <br/>
-        //         <InputGroup className="mb-3">
-        //             <InputGroup.Text id="inputGroup-sizing-default" className='text-white'>
-        //                 Team
-        //             </InputGroup.Text>
-        //             <Form.Control
-        //                 aria-label="Default"
-        //                 aria-describedby="inputGroup-sizing-default"
-        //                 placeholder='Enter existing team...'
-        //                 onChange={handleChange}
-        //                 name='team'
-        //                 value={profileStates.team[0] || ''}
-        //             />
-        //         </InputGroup>
-        //         <br/>
-        //         <InputGroup className="mb-3">
-        //             <InputGroup.Text id="inputGroup-sizing-default" className='text-white'>
-        //                 Weapon
-        //             </InputGroup.Text>
-        //             <Form.Control
-        //                 aria-label="Default"
-        //                 aria-describedby="inputGroup-sizing-default"
-        //                 onChange={handleChange}
-        //                 placeholder='Enter weapon you are playing with...'
-        //                 name='favWeapon'
-        //                 value={profileStates.favWeapon || ''}
-        //             />
-        //         </InputGroup>
-        //         <button className="btn btn-primary" type='submit'>Submit</button>
-        //     </form>
-        // </div>
-        <>
-        </>
+        <Form className={'flex flex-column flex-center padding-20px'} onSubmit={submitForm}>
+            <InputGroup>
+                <InputGroup.Text>First and Last name</InputGroup.Text>
+                <Form.Control
+                    aria-label="First name"
+                    placeholder='First name'
+                    onChange={handleChange}
+                    name='firstName'
+                    value={profileStates.firstName || ''}
+                />
+                <Form.Control
+                    aria-label="Last name"
+                    placeholder='Last name'
+                    onChange={handleChange}
+                    name='lastName'
+                    value={profileStates.lastName || ''}
+                />
+            </InputGroup>
+            <br/>
+            <div className={'flex flex-row align-items-center gap-4'}>
+                <Image className={'w-25'} src={avatarSrc ? avatarSrc : defaultAvatar} roundedCircle fluid></Image>
+                <div>
+                    <p className='text-white'>Upload your avatar:</p>
+                    <div className="input-group mb-3">
+                        <label className="input-group-text" htmlFor="inputGroupFile01">Upload</label>
+                        <input name='avatar' onChange={handleChangeFile} type="file" className="form-control"
+                               id="inputGroupFile01"/>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <InputGroup className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default" className='text-white'>Age</InputGroup.Text>
+                <Form.Control
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    placeholder='Age'
+                    onChange={handleChange}
+                    name='age'
+                    value={profileStates.age || ''}
+                />
+            </InputGroup>
+            <br/>
+            <InputGroup className="mb-3">
+                <DropdownButton variant="outline-secondary" title="Country" id="input-group-dropdown-1">
+                    <Dropdown.Item href="#">Estonia</Dropdown.Item>
+                    <Dropdown.Item href="#">Latvia</Dropdown.Item>
+                    <Dropdown.Item href="#">Lithuania</Dropdown.Item>
+                </DropdownButton>
+                <Form.Control
+                    aria-label="Text input with dropdown button"
+                    placeholder='Your phone number...'
+                    onChange={handleChange}
+                    name='phone'
+                    value={profileStates.phone || ''}
+                />
+            </InputGroup>
+            <br/>
+            <FloatingLabel controlId="floatingTextarea2" label="Leave a text about you (write anything you want)">
+                <Form.Control
+                    as="textarea"
+                    placeholder="Leave a text about you (write anything you want)"
+                    onChange={handleChange}
+                    name='aboutMe'
+                    style={{height: '100px'}}
+                    value={profileStates.aboutMe || ''}
+                />
+            </FloatingLabel>
+            <br/>
+            <InputGroup className="mb-3">
+                <DropdownButton
+                    variant="outline-secondary"
+                    title="Role"
+                    id="input-group-dropdown-1"
+                >
+                    <Dropdown.Item href="#">Write my own variant</Dropdown.Item>
+                    <Dropdown.Divider/>
+                    <Dropdown.Item href="#">Stormtrooper</Dropdown.Item>
+                    <Dropdown.Item href="#">Medic</Dropdown.Item>
+                    <Dropdown.Item href="#">Sniper</Dropdown.Item>
+                    <Dropdown.Item href="#">Lurker</Dropdown.Item>
+                </DropdownButton>
+                <Form.Control
+                    aria-label="Text input with dropdown button"
+                    placeholder='Enter you role in games...'
+                    name='roles'
+                    value={profileStates.roles[0] || ''}
+                />
+            </InputGroup>
+            <br/>
+            <InputGroup className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default" className='text-white'>
+                    Team
+                </InputGroup.Text>
+                <Form.Control
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    placeholder='Enter existing team...'
+                    onChange={handleChange}
+                    name='team'
+                    value={profileStates.team[0] || ''}
+                />
+            </InputGroup>
+            <br/>
+            <InputGroup className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default" className='text-white'>
+                    Weapon
+                </InputGroup.Text>
+                <Form.Control
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    onChange={handleChange}
+                    placeholder='Enter weapon you are playing with...'
+                    name='favWeapon'
+                    value={profileStates.favWeapon || ''}
+                />
+            </InputGroup>
+            <button className="btn btn-primary" type='submit'>Submit</button>
+        </Form>
     )
 }
 

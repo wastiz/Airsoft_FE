@@ -64,13 +64,13 @@ function App () {
 				<Navigation></Navigation>
 				<main className="margin-20px back-secondary border-1">
 					<Routes>
-						<Route exact path='/' element={<Landing/>}/ >
-						<Route exact path='/teams' element={<Teams/>}/ >
-						<Route exact path='/sign-up' element={<SigninForm/>}/ >
-						<Route exact path='/log-in' element={<LoginForm/>}/ >
-						<Route exact path='/profile' element={<Profile/>}/ >
+						<Route exact path='/' element={<Landing/>}></Route>
+						<Route exact path='/teams' element={<Teams/>}></Route>
+						<Route exact path='/sign-up' element={<SigninForm/>}></Route>
+						<Route exact path='/log-in' element={<LoginForm/>}></Route>
+						<Route exact path='/profile/*' element={<Profile/>}></Route>
 						<Route exact path='/profile-edit' element={<EditProfile/>}></Route>
-						<Route exact path='/events' element={<Events/>}/>
+						<Route exact path='/events' element={<Events/>}></Route>
 						<Route exact path='/add-event' element={<AddEvent/>}></Route>
 						<Route exact path='/events/:eventId' element={<Event/>}></Route>
 					</Routes>
