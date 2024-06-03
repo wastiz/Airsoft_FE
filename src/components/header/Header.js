@@ -28,24 +28,25 @@ function Header () {
     return (
         <Navbar expand="lg" className="back-secondary border-1 margin-20px justify-content-between">
             <Container>
-                <Navbar.Brand className='flex flex-row flex-gap-5' href="#home">
-                    <img
-                        alt="logo"
-                        src={logo}
-                        width="30"
-                        height="30"
-                        className="d-inline-block align-top"
-                    />
-                    <b>Airsoft FE</b>
-                </Navbar.Brand>
-
+                <Link to='/'>
+                    <Navbar.Brand className='flex flex-row flex-gap-5'>
+                            <img
+                                alt="logo"
+                                src={logo}
+                                width="30"
+                                height="30"
+                                className="d-inline-block align-top"
+                            />
+                            <b>Airsoft FE</b>
+                    </Navbar.Brand>
+                </Link>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
 
                 <Navbar.Collapse id="header" className="justify-content-end flex-gap-1">
 
                     {currentStates.logged ? (
                         <>
-                            <Navbar.Text className="text-white">
+                        <Navbar.Text className="text-white">
                                 Signed in as: <br/> <b>{currentStates.username}</b>
                             </Navbar.Text>
                             <Link to={`/profile`}>
@@ -65,10 +66,10 @@ function Header () {
                     )}
 
                     <NavDropdown title="Language" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">Estonian</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Latvian</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">English</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.4">Russian</NavDropdown.Item>
+                        <NavDropdown.Item className='navdrop-item' href="#action/3.1">Estonian</NavDropdown.Item>
+                        <NavDropdown.Item className='navdrop-item' href="#action/3.2">Latvian</NavDropdown.Item>
+                        <NavDropdown.Item className='navdrop-item' href="#action/3.3">English</NavDropdown.Item>
+                        <NavDropdown.Item className='navdrop-item' href="#action/3.4">Russian</NavDropdown.Item>
                     </NavDropdown>
 
                 </Navbar.Collapse>

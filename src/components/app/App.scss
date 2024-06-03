@@ -2,13 +2,6 @@
 // Custom color variables for react bootstrap
 
 //Main colors
-$theme-colors: (
-        "primary": #4B9B62,
-        "secondary": #292633,
-        "danger": #dc3545,
-        "text-color": #ffffff,
-        "body-color": #ffffff,
-);
 $primary: #4B9B62;
 $primary-light: #22C55E;
 $secondary: #292633;
@@ -17,17 +10,37 @@ $success: #28a745;
 $info: #17a2b8;
 $warning: #ffc107;
 $danger: #dc3545;
-
-//Text colors
-$body-color: white;
-$text-color: white;
-$text-muted: #6c757d;
-$link-color: #007bff;
-$link-hover-color: #0056b3;
+$theme-colors: (
+        "primary": $primary,
+        "secondary": $secondary,
+        "success":    $success,
+        "info":       $info,
+        "warning":    $warning,
+        "danger":     $danger,
+        "light":      $light,
+        "dark":       $dark
+);
 
 //Other colors
+$body-color: $secondary-light;
 $body-bg: #34313F;
 $border-color: #34313F;
+
+//Text colors
+$text-muted: #a5b1c4;
+$link-color: #007bff;
+$link-hover-color: #0056b3;
+$form-text-color: white;
+$input-color: white;
+$input-placeholder-color: white;
+
+//Inputs
+$input-bg: $secondary;
+$input-border-color: $secondary;
+$form-check-input-bg: $secondary;
+$form-check-input-checked-bg-color: $primary-light;
+$form-check-input-border: $primary-light;
+$input-focus-color: white;
 
 // Re-import Bootstrap to apply custom variables
 @import "~bootstrap/scss/bootstrap";
@@ -36,10 +49,12 @@ $border-color: #34313F;
 body {
   background-color: #292633
 }
-h1, h2, h3, h4, h5, h6, button, span, div, p, a, b{
-  color: white;
+h1, h2, h3, h4, h5, h6, button, span, div, p, a, b, small{
+  color: white !important;
 }
-
+a {
+  text-decoration: none !important;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
@@ -52,6 +67,9 @@ code {
 .margin-padding-0 {
   margin: 0;
   padding: 0;
+}
+.width-100 {
+  width: 100%
 }
 .flex {
   display: flex;
@@ -84,4 +102,7 @@ code {
 .btn {
   color: white;
   font-weight: 600;
+}
+.navdrop-item:hover {
+  background-color: $primary-light
 }

@@ -12,13 +12,13 @@ function Navigation () {
                         <Nav.Link><Link to='/events' className="text-white ml-2.5">Events</Link></Nav.Link>
                         <Nav.Link><Link to='/teams' className="text-white ml-2.5">Teams</Link></Nav.Link>
                         <NavDropdown title={<span className="text-white">Other pages</span>} id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">
+                            <NavDropdown.Item className='navdrop-item' href="#action/3.1">
                                 <p href='#' className="text-white ml-2.5">News</p>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">
+                            <NavDropdown.Item className='navdrop-item' href="#action/3.2">
                                 <p href='#' className="text-white ml-2.5">Places</p>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">
+                            <NavDropdown.Item className='navdrop-item' href="#action/3.3">
                                 Something
                             </NavDropdown.Item>
                         </NavDropdown>

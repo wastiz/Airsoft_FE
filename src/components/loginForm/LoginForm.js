@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { setNameLog, setPasswordLog, setStatusLog, resetFormLog } from '../../redux/slices/loginSlice';
 import {setRememberMe, setLogged, setCurrentId, setData} from '../../redux/slices/currentDataSlice';
 import axios from 'axios';
+import {Button, Form} from "react-bootstrap";
 
 function LoginForm () {
 
@@ -52,43 +53,43 @@ function LoginForm () {
 	};
     
     return (
-    <div className='w-full h-full items-center justify-center'>
-		<form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
-			<label className="label">
-				<span className="label-text">Your name, please:</span>
-			</label>
-			<input
-				type="text"
-				name="name"
-				value={loginStates.username}
-				onChange={handleChange}
-				placeholder="Имя"
-				className="input input-bordered w-full max-w-xs text-white"
-			/>
-			<label className="label">
-				<span className="label-text">And your password:</span>
-			</label>
-			<input
-				type="password"
-				name="password"
-				value={loginStates.password}
-				onChange={handleChange}
-				placeholder="Пароль"
-				className="input input-bordered w-full max-w-xs"
-			/>
-			<br />
-			<div className="form-control">
-				<label className="label cursor-pointer" htmlFor='rememberMe'>
-					<span className="label-text">Remember me</span> 
-					<input name='rememberMe' type="checkbox" className="checkbox checkbox-primary" />
-				</label>
-			</div>
-			<br />
-			<button className="btn btn-primary" type='submit'>Submit</button>
-			<p className='text-white'>{loginStates.responseText}</p>
-		</form>
-	</div>
-    )
+		<div className='flex flex-center padding-20px'>
+			<Form onSubmit={handleSubmit}>
+				<Form.Group className="mb-3" controlId="formBasicEmail">
+					<Form.Label>Email address or Username</Form.Label>
+					<Form.Control
+						type="text"
+						name="name"
+						value={loginStates.username}
+						onChange={handleChange}
+						placeholder="Username or Email"
+					/>
+					<Form.Text className="text-muted">
+						We'll never share your email with anyone else, promising)))
+					</Form.Text>
+				</Form.Group>
+
+				<Form.Group className="mb-3" controlId="formBasicPassword">
+					<Form.Label>Password</Form.Label>
+					<Form.Control
+						type="password"
+						name="password"
+						value={loginStates.password}
+						onChange={handleChange}
+						placeholder="Password"
+						className="input input-bordered w-full max-w-xs"
+					/>
+				</Form.Group>
+				<Form.Group className="mb-3" controlId="formBasicCheckbox">
+					<Form.Check name='rememberMe' type="checkbox" label="Remember me"/>
+				</Form.Group>
+				<Button variant="primary" type="submit">
+					Submit
+				</Button>
+				<p className='text-white'>{loginStates.responseText}</p>
+			</Form>
+		</div>
+	)
 }
 
 export default LoginForm;

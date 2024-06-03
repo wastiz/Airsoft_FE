@@ -2,6 +2,7 @@ import { useDispatch, useSelector} from 'react-redux';
 import { setName, setEmail, setPassword, setId, setStatus, resetForm } from '../../redux/slices/signInSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {Button, Form} from "react-bootstrap";
 
 const SigninForm = () => {
 	const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const SigninForm = () => {
 		const { name, value } = e.target;
 
 		switch (name) {
-		case 'name':
+		case 'username':
 			dispatch(setName(value));
 			break;
 		case 'email':
@@ -43,47 +44,49 @@ const SigninForm = () => {
 	};
 
   return (
-	<div className='w-full h-full items-center justify-center'>
-		<form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
-			<label className="label">
-				<span className="label-text">What is your name?</span>
-			</label>
-			<input
-				type="text"
-				name="name"
-				value={signInStates.username}
-				onChange={handleChange}
-				placeholder="Имя"
-				className="input input-bordered w-full max-w-xs"
-			/>
-			<label className="label">
-				<span className="label-text">What is your email?</span>
-			</label>
-			<input
-				type="email"
-				name="email"
-				value={signInStates.email}
-				onChange={handleChange}
-				placeholder="Электронная почта"
-				className="input input-bordered w-full max-w-xs"
-			/>
-			<label className="label">
-				<span className="label-text">Create your password:</span>
-			</label>
-			<input
-				type="password"
-				name="password"
-				value={signInStates.password}
-				onChange={handleChange}
-				placeholder="Пароль"
-				className="input input-bordered w-full max-w-xs"
-			/>
-			<br />
-			<button className="btn btn-primary" type='submit'>Submit</button>
-			<p className='text-white'>{signInStates.responseText}</p>
-		</form>
+	<div className='flex flex-center padding-20px'>
+		<Form onSubmit={handleSubmit}>
+			<Form.Group className="mb-3" controlId="username">
+				<Form.Label>Enter your Username</Form.Label>
+				<Form.Control
+					type="text"
+					name="username"
+					value={signInStates.username}
+					onChange={handleChange}
+					placeholder="Username"
+				/>
+			</Form.Group>
+
+			<Form.Group className="mb-3" controlId="email">
+				<Form.Label>Enter your Email</Form.Label>
+				<Form.Control
+					type="text"
+					name="email"
+					value={signInStates.email}
+					onChange={handleChange}
+					placeholder="Email"
+				/>
+			</Form.Group>
+
+			<Form.Group className="mb-3" controlId="password">
+				<Form.Label>Create Password</Form.Label>
+				<Form.Control
+					type="password"
+					name="password"
+					value={signInStates.password}
+					onChange={handleChange}
+					placeholder="Password"
+				/>
+			</Form.Group>
+
+			<Button variant="primary" type="submit">
+				Submit
+			</Button>
+			<p>{signInStates.responseText}</p>
+		</Form>
 	</div>
-  );
+)
+	;
 };
 
 export default SigninForm;

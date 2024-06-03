@@ -1,5 +1,4 @@
 import './Profile.scss';
-import { useParams } from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import {setData, setLogged} from '../../redux/slices/currentDataSlice'
@@ -7,6 +6,8 @@ import { setProfileData} from "../../redux/slices/editProfileSlice";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import defaultAvatar from '../../img/avatar.jpg'
+import {Col, Container, Row, Image, Nav} from "react-bootstrap";
+import {findAllByDisplayValue} from "@testing-library/react";
 
 
 function Profile () {
@@ -32,42 +33,65 @@ function Profile () {
 
 
     return (
-        <div className='display-row flex-centered flex-gap-5'>
-            <div className='img-div'>
-                <img className='avatar' src={profileStates.avatar ? profileStates.avatar : defaultAvatar} alt='avatar'></img>
-            </div>
-            <div>
-                <h3 className='text-white text-xl'>Username:</h3>
-                <h3 className='text-white text-3xl'><b>{currentStates.username}</b></h3>
-                <h3>General info:</h3>
-                <h3 className='text-white'><b>Email: </b>{currentStates.email}</h3>
-                <h3 className='text-white'><b>First Name: </b>
-                    {profileStates.firstName ? profileStates.firstName : 'Not provided'}
-                </h3>
-                <h3 className='text-white'><b>Last Name: </b>
-                    {profileStates.lastName ? profileStates.lastName : 'Not provided'}
-                </h3>
-                <h3 className='text-white'><b>Phone: </b>
-                    {profileStates.phone ? profileStates.phone : 'Not provided'}
-                </h3>
-                <h3 className='text-white'><b>About me: </b>
-                    {profileStates.aboutMe ? profileStates.aboutMe : 'Not provided'}
-                </h3>
-                <h3 className='text-white'><b>Roles: </b>
-                    {profileStates.roles[0] ? profileStates.roles[0] : 'Not provided'}
-                </h3>
-                <h3 className='text-white'><b>Team: </b>
-                    {profileStates.team[0] ? profileStates.team[0] : 'Not provided'}
-                </h3>
-                <h3 className='text-white'><b>Favourite weapon: </b>
-                    {profileStates.favWeapon ? profileStates.favWeapon : 'Not provided'}
-                </h3>
-            </div>
-            <div>
-                <Link to='/profile-edit'>
-                    <button className="btn btn-outline btn-primary ml-2">Edit profile</button>
-                </Link>
-            </div>
+            // <Container>
+            //     <Row>
+            //         <Col xs lg='2'>
+            //             <Image className='avatar' src={profileStates.avatar ? profileStates.avatar : defaultAvatar} roundedCircle fluid={true}/>
+            //         </Col>
+            //         <Col></Col>
+            //         <Col xs lg='2'>
+            //             <h3 className='text-white text-xl'>Username:</h3>
+            //             <h3 className='text-white text-3xl'><b>{currentStates.username}</b></h3>
+            //         </Col>
+            //     </Row>
+            //     <Row>
+            //         <Nav fill variant="tabs" defaultActiveKey="/home">
+            //             <Nav.Item>
+            //                 <Nav.Link href="/home">Active</Nav.Link>
+            //             </Nav.Item>
+            //             <Nav.Item>
+            //                 <Nav.Link eventKey="link-1">Loooonger NavLink</Nav.Link>
+            //             </Nav.Item>
+            //             <Nav.Item>
+            //                 <Nav.Link eventKey="link-2">Link</Nav.Link>
+            //             </Nav.Item>
+            //             <Nav.Item>
+            //                 <Nav.Link eventKey="disabled" disabled>
+            //                     Disabled
+            //                 </Nav.Link>
+            //             </Nav.Item>
+            //         </Nav>
+            //     </Row>
+            // </Container>
+        <div className='padding-20px'>
+            <Row className={'width-100'}>
+                <Col xs lg='2'>
+                    <Image className='avatar' src={profileStates.avatar ? profileStates.avatar : defaultAvatar} roundedCircle fluid={true}/>
+                </Col>
+                <Col></Col>
+                <Col xs lg='2'>
+                    <h3 className='text-white text-xl'>Username:</h3>
+                    <h3 className='text-white text-3xl'><b>{currentStates.username}</b></h3>
+                </Col>
+            </Row>
+            <Row className={'width-100'}>
+                <Nav fill variant="tabs" defaultActiveKey="/home">
+                    <Nav.Item>
+                        <Nav.Link href="/home">Active</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="link-1">Loooonger NavLink</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="link-2">Link</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="disabled" disabled>
+                            Disabled
+                        </Nav.Link>
+                    </Nav.Item>
+                </Nav>
+            </Row>
         </div>
     )
 }
