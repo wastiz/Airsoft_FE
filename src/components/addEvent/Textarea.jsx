@@ -1,23 +1,21 @@
+import {Form} from 'react-bootstrap';
+
 export function Textarea ({ label, name, description, register, required, errors }) {
     return (
-        <div className="col-span-full">
-            <label htmlFor={name} className="block text-sm font-medium leading-6 text-white">
-                {label}
-            </label>
-            <div className="mt-2">
-                <textarea
-                    id={name}
-                    name={name}
-                    rows={3}
-                    placeholder='Type here..'
-                    className="textarea w-full textarea-bordered text-white"
-                    {...register(name, {
-                        required: required
-                    })}
-                />
-            </div>
-            <p className="mt-3 text-sm leading-6 text-white">{description}</p>
-            {errors[name] && (<div><p className='text-white'>{errors[name].message}</p></div>)}
-        </div>
+        <Form.Group className="mb-3">
+            <Form.Label htmlFor={name}>{label}</Form.Label>
+            <Form.Control
+                as="textarea"
+                rows={3}
+                id={name}
+                name={name}
+                placeholder='Type here..'
+                {...register(name, {
+                    required: required
+                })}
+            />
+            {errors[name] && (<p className="text-warning">{errors[name].message}</p>)}
+            <p>{description}</p>
+        </Form.Group>
     )
 }
