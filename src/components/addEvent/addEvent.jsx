@@ -4,9 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { useState } from 'react';
 import {useForm} from "react-hook-form";
-import {Input} from "./Input";
-import {Textarea} from "./Textarea";
-import {Checkbox} from "./Checkbox";
+import {Input} from "../assets/Input";
+import {Textarea} from "../assets/Textarea";
+import {Checkbox} from "../assets/Checkbox";
 import {Button, Col, Container, Form, Image, Row} from "react-bootstrap";
 
 

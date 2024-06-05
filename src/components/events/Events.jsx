@@ -4,6 +4,7 @@ import { setEvents } from '../../redux/slices';
 import EventCard from '../eventCard/eventCard';
 import {Link} from 'react-router-dom'
 import { useEffect } from 'react';
+import {Col, Container, Row} from "react-bootstrap";
 
 
 function Events () {
@@ -24,11 +25,16 @@ function Events () {
             ) : (
                 <h3 className='text-white'>To add event you have to be logged in</h3>
             )}
-            <div className='mt-2.5 grid grid-cols-2 gap-y-4 justify-items-center'>
-                {events.map(event => (
-                    <EventCard key={event._id} {...event} className="my-2"/>
-                ))}
-            </div>
+            <Container>
+                <Row>
+                    {events.map(event => (
+                        <Col className={'padding-20px'}>
+                            <EventCard key={event._id} {...event} className="my-2"/>
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
+
         </>
     )
 }

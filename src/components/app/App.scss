@@ -42,6 +42,11 @@ $form-check-input-checked-bg-color: $primary-light;
 $form-check-input-border: $primary-light;
 $input-focus-color: white;
 
+//Select
+$form-select-bg: $secondary;
+$form-select-color: white;
+
+
 //Tabs
 //$nav-tabs-border-width
 //$nav-tabs-border-radius
@@ -55,6 +60,7 @@ $nav-tabs-link-active-bg: $secondary;
 @import "~bootstrap/scss/bootstrap";
 @import '../../variables.scss';
 
+//Baseeee
 body {
   background-color: #292633
 }
@@ -67,6 +73,8 @@ a {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+//Margins and paddings
 .margin-20px {
   margin: 20px;
 }
@@ -80,9 +88,22 @@ code {
   margin: 0;
   padding: 0;
 }
-.width-100 {
-  width: 100%
+
+//Widths and heights
+.w-40 {
+  width: 40%;
 }
+.w-60 {
+  width: 60%;
+}
+.h-20rem {
+  height: 20rem;
+}
+.h-10rem {
+  height: 10rem;
+}
+
+//Flexbox
 .flex {
   display: flex;
 }
@@ -105,12 +126,19 @@ code {
 .flex-gap-1 {
   gap: 1%;
 }
+
+//Colors
 .back-secondary {
   background-color: $secondary-light;
+}
+.back-secondary-dark {
+  background-color: $secondary;
 }
 .border-1 {
   border-radius: 1rem;
 }
+
+//Other
 .btn {
   color: white;
   font-weight: 600;

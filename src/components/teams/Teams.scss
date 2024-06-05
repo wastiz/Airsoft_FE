@@ -1,0 +1,15 @@
+@import '../../variables.scss';
+
+.team-banner-img {
+  background-image: url('../../img/airsoft-team.jpg');
+  border: 4px solid $primary-light;
+  border-right: none;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+.team-banner-info {
+  border: 4px solid $primary-light;
+  border-left: none;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}

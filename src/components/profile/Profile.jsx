@@ -35,7 +35,7 @@ function Profile () {
 
     return (
         <Container className='padding-20px'>
-            <Row className={'width-100'}>
+            <Row className={'w-100'}>
                 <Col xs lg='2'>
                     <Image className='avatar' src={profileStates.avatar ? profileStates.avatar : defaultAvatar} roundedCircle fluid={true}/>
                 </Col>
@@ -48,7 +48,7 @@ function Profile () {
                     </Link>
                 </Col>
             </Row>
-            <Row className={'width-100 margin-20px'}>
+            <Row className={'w-100 margin-20px'}>
                 <Nav fill variant="tabs" defaultActiveKey="profile/user-info">
                     <Nav.Item>
                         <Nav.Link>

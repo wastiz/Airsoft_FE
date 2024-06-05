@@ -3,8 +3,60 @@ const router = express.Router();
 const eventSchema = require('../models/eventSchema');
 const multer = require("multer");
 
+
+function arbitraryRemake(inputObj) {
+    const entries = Object.entries(inputObj);
+
+    const sortedEntries = entries.sort((a, b) => {
+        const aKey = a[0];
+        const bKey = b[0];
+
+        if (aKey.startsWith("select0-option") && bKey.startsWith("select0-option")) {
+            const aIndex = parseInt(aKey.split("-").pop());
+            const bIndex = parseInt(bKey.split("-").pop());
+            return aIndex - bIndex;
+        }
+        return aKey.localeCompare(bKey);
+    });
+
+    const sortedObj = Object.fromEntries(sortedEntries);
+
+    const transformed = Object.keys(sortedObj).reduce((acc, key) => {
+        if (key.startsWith("select")) {
+            const [selectKey, optionKey] = key.split("-");
+            const index = parseInt(selectKey.replace("select", ""), 10);
+
+            if (!acc[`select${index}`]) {
+                acc[`select${index}`] = [sortedObj[key], []];
+            } else {
+                acc[`select${index}`][1].push(sortedObj[key]);
+            }
+        } else {
+            acc[key] = sortedObj[key];
+        }
+
+        return acc;
+    }, {});
+
+    const newObj = { select: [], textarea: [] }
+    for (const key in transformed) {
+        if (key.startsWith('select')) {
+            newObj['select'].push(transformed[key]);
+        }
+        if (key.startsWith('textarea')) {
+            newObj['textarea'].push(transformed[key]);
+        }
+    }
+
+    return newObj;
+}
+
+
+//Adding new Event
 router.post('/', async (req, res) => {
     try {
+        req.body.regForm.arbitraryContent = arbitraryRemake(req.body.regForm.arbitraryContent);
+
         const newEvent = await eventSchema.create(req.body);
         res.json(newEvent);
     } catch (error) {
