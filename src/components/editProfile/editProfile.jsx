@@ -1,22 +1,52 @@
 import './editProfile.scss';
 import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-import {setFirstName, setLastName, setAboutMe, setAge, setAvatar, setPhone, setRoles, setTeam, setFavWeapon} from "../../redux/slices/editProfileSlice";
+import {
+    setFirstName,
+    setLastName,
+    setAboutMe,
+    setAge,
+    setAvatar,
+    setPhone,
+    setRoles,
+    setTeam,
+    setFavWeapon,
+    setProfileData
+} from "../../redux/slices/editProfileSlice";
 import axios from "axios";
 import defaultAvatar from "../../img/avatar.jpg";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DropdownButton, InputGroup, Form, Dropdown, FloatingLabel, Image, Row} from "react-bootstrap";
+import {setLogged} from "../../redux/slices/currentDataSlice";
 
 function EditProfile () {
-    const currentStates = useSelector((state) => state.current);
-    console.log(currentStates.username);
-
     const dispatch = useDispatch();
     const profileStates = useSelector((state) => state.profile);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchProfileData = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/users/profile', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                });
+                dispatch(setProfileData(response.data));
+                setAvatarSrc(response.data.avatar);
+                dispatch(setLogged(true));
+            } catch (e) {
+                localStorage.removeItem('token');
+                dispatch(setLogged(false));
+                navigate('/login');
+            }
+        };
+
+        if (!profileStates.avatar) {
+            fetchProfileData();
+        }
+    }, [profileStates.avatar, dispatch, navigate]);
+
     //Обработка картинки
-    const [avatarSrc, setAvatarSrc] = useState('');
+    const [avatarSrc, setAvatarSrc] = useState(profileStates.avatar);
 
     const handleChangeFile = async (event) => {
         try {
@@ -30,7 +60,7 @@ function EditProfile () {
             alert('Error uploading image');
         }
     }
-    //Обработка формы
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -57,17 +87,21 @@ function EditProfile () {
                 dispatch(setTeam([value]));
                 break;
             case 'favWeapon':
-                dispatch(setFavWeapon());
+                dispatch(setFavWeapon(value));
                 break;
             default:
                 break;
         }
     };
 
+    const handleSelect = (eventKey) => {
+        dispatch(setRoles([eventKey]));
+    };
+
     const submitForm = async (e) => {
         e.preventDefault();
         try {
-            const profileData = {
+            const profileData= {
                 avatar: avatarSrc,
                 firstName: profileStates.firstName,
                 lastName: profileStates.lastName,
@@ -93,7 +127,11 @@ function EditProfile () {
     };
 
     return (
-        <Form className={'flex flex-column flex-center padding-20px'} onSubmit={submitForm}>
+        <Form className={'flex flex-column padding-20px'} onSubmit={submitForm}>
+            <Link to={'/profile'}>
+                <button className={'btn btn-primary'}>Back</button>
+            </Link>
+            <br/>
             <InputGroup>
                 <InputGroup.Text>First and Last name</InputGroup.Text>
                 <Form.Control
@@ -113,7 +151,7 @@ function EditProfile () {
             </InputGroup>
             <br/>
             <div className={'flex flex-row align-items-center gap-4'}>
-                <Image className={'w-25'} src={avatarSrc ? avatarSrc : defaultAvatar} roundedCircle fluid></Image>
+                <Image className="w-20rem" src={avatarSrc ? avatarSrc : defaultAvatar} roundedCircle fluid></Image>
                 <div>
                     <p className='text-white'>Upload your avatar:</p>
                     <div className="input-group mb-3">
@@ -130,6 +168,7 @@ function EditProfile () {
                     aria-label="Default"
                     aria-describedby="inputGroup-sizing-default"
                     placeholder='Age'
+                    type={'number'}
                     onChange={handleChange}
                     name='age'
                     value={profileStates.age || ''}
@@ -138,15 +177,16 @@ function EditProfile () {
             <br/>
             <InputGroup className="mb-3">
                 <DropdownButton variant="outline-secondary" title="Country" id="input-group-dropdown-1">
-                    <Dropdown.Item href="#">Estonia</Dropdown.Item>
-                    <Dropdown.Item href="#">Latvia</Dropdown.Item>
-                    <Dropdown.Item href="#">Lithuania</Dropdown.Item>
+                    <Dropdown.Item href="#">Estonia (+372)</Dropdown.Item>
+                    <Dropdown.Item href="#">Latvia (+371)</Dropdown.Item>
+                    <Dropdown.Item href="#">Lithuania (+370)</Dropdown.Item>
                 </DropdownButton>
                 <Form.Control
                     aria-label="Text input with dropdown button"
                     placeholder='Your phone number...'
                     onChange={handleChange}
                     name='phone'
+                    type={'phone'}
                     value={profileStates.phone || ''}
                 />
             </InputGroup>
@@ -165,15 +205,16 @@ function EditProfile () {
             <InputGroup className="mb-3">
                 <DropdownButton
                     variant="outline-secondary"
-                    title="Role"
+                    title="Choose Role below"
                     id="input-group-dropdown-1"
+                    onSelect={handleSelect}
                 >
-                    <Dropdown.Item href="#">Write my own variant</Dropdown.Item>
-                    <Dropdown.Divider/>
-                    <Dropdown.Item href="#">Stormtrooper</Dropdown.Item>
-                    <Dropdown.Item href="#">Medic</Dropdown.Item>
-                    <Dropdown.Item href="#">Sniper</Dropdown.Item>
-                    <Dropdown.Item href="#">Lurker</Dropdown.Item>
+                    <Dropdown.Item eventKey="Write my own variant">Write my own variant</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item eventKey="Stormtrooper">Stormtrooper</Dropdown.Item>
+                    <Dropdown.Item eventKey="Medic">Medic</Dropdown.Item>
+                    <Dropdown.Item eventKey="Sniper">Sniper</Dropdown.Item>
+                    <Dropdown.Item eventKey="Lurker">Lurker</Dropdown.Item>
                 </DropdownButton>
                 <Form.Control
                     aria-label="Text input with dropdown button"

@@ -41,6 +41,8 @@ $form-check-input-bg: $secondary;
 $form-check-input-checked-bg-color: $primary-light;
 $form-check-input-border: $primary-light;
 $input-focus-color: white;
+$input-group-addon-color: black;
+$input-group-addon-bg: $primary;
 
 //Select
 $form-select-bg: $secondary;
@@ -95,6 +97,9 @@ code {
 }
 .w-60 {
   width: 60%;
+}
+.w-20rem {
+  width: 20rem;
 }
 .h-20rem {
   height: 20rem;
