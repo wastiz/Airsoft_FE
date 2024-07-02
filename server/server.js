@@ -43,8 +43,8 @@ app.use('/api/users', userController);
 app.use('/api/events', eventController);
 app.use('/api/users', profileController);
 app.use('/uploads/avatar-uploads', express.static(path.join(__dirname, 'uploads/avatar-uploads')));
-app.use('/uploads/cover-event-uploads', express.static(path.join(__dirname, 'uploads/cover-event-uploads')));
-app.use('/uploads/other-event-uploads', express.static(path.join(__dirname, 'uploads/other-event-uploads')));
+app.use('/uploads/cover-events-uploads', express.static(path.join(__dirname, 'uploads/cover-events-uploads')));
+app.use('/uploads/other-events-uploads', express.static(path.join(__dirname, 'uploads/other-events-uploads')));
 
 
 // Запуск сервера

@@ -1,0 +1,94 @@
+@import '../../variables.scss';
+
+.event-banner {
+  background-image: url("../../img/44.jpg");
+  background-size: cover;
+}
+.event-block {
+  background-color: $secondary;
+  border-radius: 1em;
+  padding: 10px 10px 10px 15px;
+}
+.carousel-item {
+  height: 600px;
+}
+
+.carousel-item img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.event-card {
+  width: 356px;
+  height: 250px;
+  border: 2px solid gray;
+  border-radius: 10px;
+  text-align: center;
+}
+.event-title {
+  background-color: blue;
+  border-radius: 7px;
+}
+.event-btn:hover {
+  color: white;
+}
+.event-card-cover-img {
+  background-size: cover;
+}
+.toggle-box {
+  z-index: 2;
+}
+.options{
+  border: 3px solid #1a1a1a;
+  display: inline-block;
+  padding: 10pt;
+  position: relative;
+  text-align: center;
+  transition: background 600ms ease, color 600ms ease;
+
+}
+input[type=radio].toggle {
+  display: none;
+}
+input[type=radio].toggle + label {
+  cursor: pointer;
+  min-width: 150px;
+}
+input[type=radio].toggle + label:hover {
+  background: none;
+  color: #1a1a1a;
+}
+input[type=radio].toggle + label:after {
+  background: #1a1a1a;
+  content: "";
+  height: 100%;
+  position: absolute;
+  top: 0;
+  transition: left 200ms cubic-bezier(0.77, 0, 0.175, 1);
+  width: 100%;
+  z-index: -1;
+}
+input[type=radio].toggle.toggle-left + label {
+  border-right: 0;
+}
+input[type=radio].toggle.toggle-left + label:after {
+  left: 100%;
+}
+input[type=radio].toggle.toggle-right + label {
+  margin-left: -5px;
+}
+input[type=radio].toggle.toggle-right + label:after {
+  left: -100%;
+}
+input[type=radio].toggle:checked + label {
+  cursor: default;
+  color: #fff !important;
+  transition: color 200ms;
+}
+input[type=radio].toggle:checked + label:after {
+  left: 0;
+}
+
+.main-input::placeholder {
+  color: black;
+}

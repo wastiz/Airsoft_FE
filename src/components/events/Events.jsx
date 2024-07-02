@@ -1,7 +1,7 @@
 import './Events.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { setEvents } from '../../redux/slices';
-import EventCard from '../eventCard/eventCard';
+import EventCard from './eventCard';
 import {Link} from 'react-router-dom'
 import { useEffect } from 'react';
 import {Col, Container, Row} from "react-bootstrap";

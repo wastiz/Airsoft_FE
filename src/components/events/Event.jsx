@@ -1,7 +1,7 @@
+import './Events.scss';
 import {useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react'
 import {useForm} from "react-hook-form";
-import './Event.scss';
 import axios from 'axios';
 import {Carousel, Col, Container, Form, Row, Image} from "react-bootstrap";
 import {Input} from "../assets/Input";

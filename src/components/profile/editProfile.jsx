@@ -1,4 +1,4 @@
-import './editProfile.scss';
+import './Profile.scss';
 import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -151,7 +151,7 @@ function EditProfile () {
             </InputGroup>
             <br/>
             <div className={'flex flex-row align-items-center gap-4'}>
-                <Image className="w-20rem" src={avatarSrc ? avatarSrc : defaultAvatar} roundedCircle fluid></Image>
+                <Image className="w-20rem h-20rem" src={avatarSrc ? avatarSrc : defaultAvatar} roundedCircle fluid></Image>
                 <div>
                     <p className='text-white'>Upload your avatar:</p>
                     <div className="input-group mb-3">
@@ -220,6 +220,7 @@ function EditProfile () {
                     aria-label="Text input with dropdown button"
                     placeholder='Enter you role in games...'
                     name='roles'
+                    onChange={handleChange}
                     value={profileStates.roles[0] || ''}
                 />
             </InputGroup>

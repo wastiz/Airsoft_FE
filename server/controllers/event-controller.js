@@ -95,10 +95,10 @@ router.get('/:eventId', async (req, res) => {
     }
 });
 
-// Multer storage for event cover photo
+// Multer storage for events cover photo
 const coverEventImagesStore = multer.diskStorage({
     destination: (_, __, cb) => {
-        cb(null, 'server/uploads/cover-event-uploads');
+        cb(null, 'server/uploads/cover-events-uploads');
     },
     filename: (_, file, cb) => {
         cb(null, file.originalname);
@@ -122,10 +122,10 @@ router.post('/uploadCoverImage', coverUpload.single('coverImage'), (req, res) =>
     }
 });
 
-// Multer storage for event other photos
+// Multer storage for events other photos
 const otherEventImagesStore = multer.diskStorage({
     destination: (_, __, cb) => {
-        cb(null, 'server/uploads/other-event-uploads');
+        cb(null, 'server/uploads/other-events-uploads');
     },
     filename: (_, file, cb) => {
         cb(null, file.originalname);

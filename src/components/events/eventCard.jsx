@@ -1,4 +1,4 @@
-import './eventCard.scss';
+import './Events.scss';
 import placeholder from '../../img/placeholder.png';
 import { Link } from 'react-router-dom'
 import {Card} from "react-bootstrap";
@@ -6,7 +6,7 @@ import {Card} from "react-bootstrap";
 function EventCard ({ _id, date, photos: { coverPhoto }, location, price, times: {start}, title, description }) {
     return (
     <Card style={{ width: '38.5rem' }} className={'flex flex-row'}>
-        <Card.Img className={'w-60'} variant="top" src={coverPhoto? coverPhoto : placeholder} alt={'event cover'} />
+        <Card.Img className={'w-60'} variant="top" src={coverPhoto? coverPhoto : placeholder} alt={'events cover'} />
         <Card.Body className={'back-secondary-dark w-40'}>
             <Card.Title><b>{title}</b></Card.Title>
             <Card.Text>

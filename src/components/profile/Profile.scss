@@ -1,3 +1,10 @@
+@import '../../variables';
+
+.tab-active {
+    background-color: $primary;
+    border-radius: 5px;
+}
+
 .img-div {
     display: flex;
     align-items: center;
@@ -6,6 +13,4 @@
     height: 350px;
     border: 2px solid gray;
     border-radius: 10px;
-    .avatar {
-    }
 }

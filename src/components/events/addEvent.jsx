@@ -1,3 +1,4 @@
+import './Events.scss';
 import placeholder from '../../img/placeholder.png'
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -77,7 +78,7 @@ function AddEvent() {
             navigate('/');
         } catch (error) {
             setError("root", {
-                message: "Something happened handling your event"
+                message: "Something happened handling your events"
             })
             console.error('Error submitting data to MongoDB:', error);
         }
