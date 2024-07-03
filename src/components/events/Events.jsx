@@ -1,23 +1,16 @@
 import './Events.scss';
-import { useSelector, useDispatch } from 'react-redux';
-import { setEvents } from '../../redux/slices';
+import { useSelector } from 'react-redux';
 import EventCard from './eventCard';
 import {Link} from 'react-router-dom'
-import { useEffect } from 'react';
+import { use } from 'react';
 import {Col, Container, Row} from "react-bootstrap";
 
 
 function Events () {
     const states = useSelector((state) => state.current)
-    const events = useSelector((state) => state.events.events)
-    const dispatch = useDispatch()
 
-    useEffect(() => {
-        fetch('http://localhost:5000/api/events')
-          .then(response => response.json())    
-          .then(data => dispatch(setEvents(data)))
-          .catch(error => console.error('Error fetching events:', error));
-    }, []);
+    const events = use(fetch('http://localhost:5000/api/events').then(res => res.json()))
+
     return (
         <>
             {states.logged ? (
@@ -28,13 +21,12 @@ function Events () {
             <Container>
                 <Row>
                     {events.map(event => (
-                        <Col className={'padding-20px'}>
-                            <EventCard key={event._id} {...event} className="my-2"/>
+                        <Col key={event._id} className={'padding-20px'}>
+                            <EventCard {...event} className="my-2"/>
                         </Col>
                     ))}
                 </Row>
             </Container>
-
         </>
     )
 }

@@ -1,8 +1,7 @@
 import './Events.scss';
 import {useParams} from 'react-router-dom';
-import {useEffect, useState} from 'react'
+import { use } from 'react'
 import {useForm} from "react-hook-form";
-import axios from 'axios';
 import {Carousel, Col, Container, Form, Row, Image} from "react-bootstrap";
 import {Input} from "../assets/Input";
 import {Select} from "../assets/Select";
@@ -17,7 +16,6 @@ ExampleCarouselImage.propTypes = {text: PropTypes.string};
 
 function Event() {
     const {eventId} = useParams();
-    const [event, setEvent] = useState(null);
 
     const {
         register,
@@ -33,23 +31,7 @@ function Event() {
         console.log('Submitted')
     }
 
-    const fetchDataAndSetEvent = async (eventId) => {
-        try {
-            const response = await axios.get(`http://localhost:5000/api/events/${eventId}`);
-            setEvent(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            throw error;
-        }
-    };
-
-    useEffect(() => {
-        fetchDataAndSetEvent(eventId);
-    }, [eventId]);
-
-    if (!event) {
-        return <div>Loading...</div>;
-    }
+    const eventData = use(fetch(`http://localhost:5000/api/events/${eventId}`).then(res => res.json()))
 
     const {
         created,
@@ -68,8 +50,10 @@ function Event() {
         orgFirstName,
         orgLastName,
         orgEmail
-    } = event
+    } = eventData
+
     console.log(arbitraryContent[0].textarea)
+
     return (
         <>
             <Container fluid className="event-banner h-20rem margin-padding-0">

@@ -65,9 +65,11 @@ router.post('/', async (req, res) => {
     }
 });
 
+//Getting all Events specific info
 router.get('/', async (req, res) => {
     try {
-        const events = await eventSchema.find();
+        // Используем .select() для указания необходимых полей
+        const events = await eventSchema.find().select('title description date price location photos.coverPhoto times.start');
         res.json(events);
     } catch (error) {
         console.error(error);
@@ -75,6 +77,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+//Getting event by id
 router.get('/:eventId', async (req, res) => {
     try {
         const eventId = req.params.eventId;
