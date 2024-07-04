@@ -12,6 +12,7 @@ const currentDataSlice = createSlice({
     },
     reducers: {
         setData: (state, action) => {
+            state._id = action.payload._id;
             state.username = action.payload.username;
             state.email = action.payload.email;
         },
@@ -21,11 +22,8 @@ const currentDataSlice = createSlice({
         setRememberMe: (state, action) => {
             state.rememberMe = action.payload
         },
-        setCurrentId: (state, action) => {
-            state._id = action.payload
-        }
     }
 })
 
-export const { setData, setLogged, setRememberMe, setCurrentId } = currentDataSlice.actions;
+export const { setData, setLogged, setRememberMe} = currentDataSlice.actions;
 export const currentDataReducer = currentDataSlice.reducer;

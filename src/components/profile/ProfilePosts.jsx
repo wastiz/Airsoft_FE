@@ -1,5 +1,20 @@
-export function ProfilePosts(props) {
+import {Container} from "react-bootstrap";
+import {useSelector} from "react-redux";
+import {use} from "react";
+
+export function ProfilePosts () {
+    const currentStates = useSelector((state) => state.current);
+    const posts = use(
+        fetch(`http://localhost:5000/api/users/profile/posts?id=${currentStates._id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(res => res.json())
+    );
+    console.log(posts);
     return (
-        <h1>Posts will be here</h1>
+        <Container>
+            <h1>Posts</h1>
+        </Container>
     )
 }

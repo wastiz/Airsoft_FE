@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const eventSchema = require('../models/eventSchema');
 const multer = require("multer");
+const { v4: uuidv4 } = require('uuid');
 
 
 function arbitraryRemake(inputObj) {
@@ -55,7 +56,9 @@ function arbitraryRemake(inputObj) {
 //Adding new Event
 router.post('/', async (req, res) => {
     try {
-        req.body.regForm.arbitraryContent = arbitraryRemake(req.body.regForm.arbitraryContent);
+        if (req.body.regForm.arbitraryContent) {
+            req.body.regForm.arbitraryContent = arbitraryRemake(req.body.regForm.arbitraryContent);
+        }
 
         const newEvent = await eventSchema.create(req.body);
         res.json(newEvent);
@@ -68,7 +71,6 @@ router.post('/', async (req, res) => {
 //Getting all Events specific info
 router.get('/', async (req, res) => {
     try {
-        // Используем .select() для указания необходимых полей
         const events = await eventSchema.find().select('title description date price location photos.coverPhoto times.start');
         res.json(events);
     } catch (error) {
@@ -101,10 +103,13 @@ router.get('/:eventId', async (req, res) => {
 // Multer storage for events cover photo
 const coverEventImagesStore = multer.diskStorage({
     destination: (_, __, cb) => {
-        cb(null, 'server/uploads/cover-events-uploads');
+        cb(null, 'server/uploads/cover-event-uploads');
     },
     filename: (_, file, cb) => {
-        cb(null, file.originalname);
+        const uniqueSuffix = uuidv4();
+        const originalName = file.originalname;
+        const extension = originalName.substring(originalName.lastIndexOf('.'));
+        cb(null, uniqueSuffix + extension);
     }
 });
 
@@ -128,10 +133,13 @@ router.post('/uploadCoverImage', coverUpload.single('coverImage'), (req, res) =>
 // Multer storage for events other photos
 const otherEventImagesStore = multer.diskStorage({
     destination: (_, __, cb) => {
-        cb(null, 'server/uploads/other-events-uploads');
+        cb(null, 'server/uploads/other-event-uploads');
     },
     filename: (_, file, cb) => {
-        cb(null, file.originalname);
+        const uniqueSuffix = uuidv4();
+        const originalName = file.originalname;
+        const extension = originalName.substring(originalName.lastIndexOf('.'));
+        cb(null, uniqueSuffix + extension);
     }
 });
 

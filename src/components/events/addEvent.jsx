@@ -8,10 +8,12 @@ import {useForm} from "react-hook-form";
 import {Input} from "../assets/Input";
 import {Textarea} from "../assets/Textarea";
 import {Checkbox} from "../assets/Checkbox";
-import {Button, Col, Container, Form, Image, Row} from "react-bootstrap";
+import {Alert, Button, Col, Container, Form, Image, Row, Spinner} from "react-bootstrap";
+import {useSelector} from "react-redux";
 
 
 function AddEvent() {
+    const currentStates = useSelector((state) => state.current);
     const navigate = useNavigate();
 
     const {
@@ -25,7 +27,7 @@ function AddEvent() {
 
     const onSubmit = async (data) => {
         try {
-            const newId = uuidv4()
+            const newId = uuidv4();
 
             const originalDate = new Date(data.date);
             const day = originalDate.getDate().toString().padStart(2, '0');
@@ -33,8 +35,33 @@ function AddEvent() {
             const year = originalDate.getFullYear().toString().slice(-2);
             const formattedDate = `${day}.${month}.${year}`;
 
+            // Загрузка изображения обложки
+            const coverFormData = new FormData();
+            if (coverEventImageFile) {
+                coverFormData.append('coverImage', coverEventImageFile);
+            }
+            const coverResponse = await axios.post('http://localhost:5000/api/events/uploadCoverImage', coverFormData);
+            const coverImage = coverResponse.data;
+            console.log('Cover image upload response:', coverImage); // Логируем ответ сервера
+
+            // Загрузка других изображений
+            const otherFormData = new FormData();
+            otherEventImageFiles.forEach((file, index) => {
+                otherFormData.append('otherImages', file);
+            });
+            const otherResponse = await axios.post('http://localhost:5000/api/events/uploadOtherImage', otherFormData);
+            const otherImages = otherResponse.data;
+            console.log('Other images upload response:', otherImages); // Логируем ответ сервера
+
+            // Проверяем наличие полей в ответах сервера
+            if (!coverImage.url || !otherImages.urls) {
+                throw new Error('Invalid response from server');
+            }
+
+            // Создание события
             const response = await axios.post('http://localhost:5000/api/events', {
                 _id: newId,
+                author: currentStates._id,
                 title: data.title,
                 description: data.description,
                 rules: data.rules,
@@ -57,8 +84,8 @@ function AddEvent() {
                     otherService: data.otherService,
                 },
                 photos: {
-                    coverPhoto: coverEventImageSrc,
-                    otherPhoto: otherEventImagesSrc,
+                    coverPhoto: coverImage.url,
+                    otherPhoto: otherImages.urls,
                 },
                 regForm: {
                     firstName: data.regFirstName,
@@ -75,50 +102,49 @@ function AddEvent() {
             });
 
             console.log(response.statusText);
-            navigate('/');
+            navigate('/events');
         } catch (error) {
             setError("root", {
                 message: "Something happened handling your events"
-            })
+            });
             console.error('Error submitting data to MongoDB:', error);
         }
     }
 
+
     //Обработка ковер картинки
-    const [coverEventImageSrc, setCoverEventImageSrc] = useState('');
+    const [coverEventImageSrc, setCoverEventImageSrc] = useState();
+    const [coverEventImageFile, setCoverEventImageFile] = useState();
 
-    const handleChangeFile = async (event) => {
-        try {
-            const formData = new FormData();
-            formData.append('coverImage', event.target.files[0]);
-
-            const {data} = await axios.post('http://localhost:5000/api/events/uploadCoverImage', formData);
-            setCoverEventImageSrc(data.url);
-        } catch (e) {
-            console.warn(e);
-            alert('Error uploading image');
+    const handleChangeFile = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setCoverEventImageFile(file)
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCoverEventImageSrc(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
-    }
+    };
 
     //Обработка остальных картинок
 
     const [otherEventImagesSrc, setOtherEventImagesSrc] = useState([]);
+    const [otherEventImageFiles, setOtherEventImageFiles] = useState([]);
 
-    const handleChangeFiles = async (event) => {
-        try {
-            const formData = new FormData();
-            const files = event.target.files;
-
-            for (let i = 0; i < files.length; i++) {
-                formData.append('otherImages', files[i]);
+    const handleChangeFiles = (event) => {
+        const files = Array.from(event.target.files); // Преобразуем FileList в массив
+        files.forEach(file => {
+            if (file) {
+                setOtherEventImageFiles(prevFiles => [...prevFiles, file])
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setOtherEventImagesSrc(prevImages => [...prevImages, reader.result]);
+                };
+                reader.readAsDataURL(file);
             }
-
-            const { data } = await axios.post('http://localhost:5000/api/events/uploadOtherImage', formData);
-            setOtherEventImagesSrc(data.urls);
-        } catch (e) {
-            console.warn(e);
-            alert('Error uploading images');
-        }
+        });
     }
 
     //Обработка полей с разными аттрибутами
@@ -242,9 +268,10 @@ function AddEvent() {
                                errors={errors}/>
                     </Col>
                 </Row>
-                <Row>
-                    {/*Cover photo*/}
 
+                {/*Cover photo*/}
+
+                <Row>
                     <Col>
                         <Image fluid src={coverEventImageSrc ? coverEventImageSrc : placeholder} alt="cover"/>
                     </Col>
@@ -375,26 +402,21 @@ function AddEvent() {
                 </div>
 
 
-                {isSubmitting ? <span className="loading loading-spinner loading-md"></span> : null}
+                {isSubmitting ?
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                    : null}
+
                 {errors.root && (
-                    <div role="alert" className="alert alert-error">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none"
-                             viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <span>{errors.root.message}</span>
-                    </div>
+                    <Alert key={'danger'} variant={'danger'}>
+                        Sorry, you got an error: {errors.root.message}
+                    </Alert>
                 )}
                 {isSubmitSuccessful ?
-                    <div role="alert" className="alert alert-success">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none"
-                             viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <span>Your purchase has been confirmed!</span>
-                    </div>
+                    <Alert key={'success'} variant={'success'}>
+                        Yey! You have uploaded smth!
+                    </Alert>
                     : null}
             </Container>
         </Form>

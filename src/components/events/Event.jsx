@@ -52,8 +52,6 @@ function Event() {
         orgEmail
     } = eventData
 
-    console.log(arbitraryContent[0].textarea)
-
     return (
         <>
             <Container fluid className="event-banner h-20rem margin-padding-0">
@@ -146,19 +144,24 @@ function Event() {
                                        required='Your real age is required!' errors={errors}/>
                                 : null}
 
-                            {arbitraryContent[0].select ? (
-                                arbitraryContent[0].select.map((item, index) => (
-                                    <Select key={index} label={item[0]} options={item[1]} name={item[0]}
-                                            register={register} required={'This field is required!'} errors={errors}
-                                            control={control}/>
-                                ))
+                            {arbitraryContent && arbitraryContent[0] ? (
+                                <>
+                                    {arbitraryContent[0].select ? (
+                                        arbitraryContent[0].select.map((item, index) => (
+                                            <Select key={index} label={item[0]} options={item[1]} name={item[0]}
+                                                    register={register} required={'This field is required!'} errors={errors}
+                                                    control={control}/>
+                                        ))
+                                    ) : null}
+                                    {arbitraryContent[0].textarea ? (
+                                        arbitraryContent[0].textarea.map((item, index) => (
+                                            <Textarea key={index} label={item} name={item} register={register}
+                                                      required={'This field is required!'} errors={errors}/>
+                                        ))
+                                    ) : null}
+                                </>
                             ) : null}
-                            {arbitraryContent[0].textarea ? (
-                                arbitraryContent[0].textarea.map((item, index) => (
-                                    <Textarea label={item} name={item} register={register}
-                                              required={'This field is required!'} errors={errors}/>
-                                ))
-                            ) : null}
+
                             <div className={'flex flex-center'}>
                                 <button className={'btn btn-primary'} type={'submit'}>Submit</button>
                             </div>

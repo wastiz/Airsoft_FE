@@ -15,6 +15,7 @@ import EditProfile from '../profile/editProfile';
 import Events from '../events/Events';
 import AddEvent from '../events/addEvent';
 import Event from '../events/Event';
+import AddTeam from '../teams/addTeam'
 
 function App () {
 
@@ -40,8 +41,9 @@ function App () {
 					localStorage.setItem('token', response.data.token);
 					dispatch(setLogged(true));
 					dispatch(setData({
+						_id: response.data.user._id,
 						username: response.data.user.username,
-						email: response.data.user.email
+						email: response.data.user.email,
 					}));
 				} else {
 					// Если токен недействителен, удаляем его из localStorage и устанавливаем logged в false
@@ -66,7 +68,6 @@ function App () {
 				<main className="margin-20px back-secondary border-1">
 					<Routes>
 						<Route exact path='/' element={<Landing/>}></Route>
-						<Route exact path='/teams' element={<Teams/>}></Route>
 						<Route exact path='/sign-up' element={<SigninForm/>}></Route>
 						<Route exact path='/log-in' element={<LoginForm/>}></Route>
 						<Route exact path='/profile/*' element={<Profile/>}></Route>
@@ -74,6 +75,8 @@ function App () {
 						<Route exact path='/events' element={<Suspense fallback={<h1>Loading...</h1>}><Events></Events></Suspense>}></Route>
 						<Route exact path='/add-event' element={<AddEvent/>}></Route>
 						<Route exact path='/events/:eventId' element={<Suspense fallback={<h1>Loading...</h1>}><Event></Event></Suspense>}></Route>
+						<Route exact path='/teams' element={<Teams/>}></Route>
+						<Route exact path='/add-team' element={<AddTeam/>}></Route>
 					</Routes>
 				</main>
 			</div>

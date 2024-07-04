@@ -104,6 +104,7 @@ router.get('/auth', authMiddleware,
             return res.json({
                 token,
                 user: {
+                    _id: user.id,
                     username: user.username,
                     email: user.email,
                 }

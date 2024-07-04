@@ -8,9 +8,9 @@ function Navigation () {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="navbar">
                     <Nav className="me-auto">
-                        <Nav.Link><Link to='/' className="text-white ml-2.5">Home</Link></Nav.Link>
-                        <Nav.Link><Link to='/events' className="text-white ml-2.5">Events</Link></Nav.Link>
-                        <Nav.Link><Link to='/teams' className="text-white ml-2.5">Teams</Link></Nav.Link>
+                        <Link to='/' className="text-white ml-2.5 nav-link" role={'button'} tabIndex={0}>Home</Link>
+                        <Link to='/events' className="text-white ml-2.5 nav-link" role={'button'} tabIndex={0}>Events</Link>
+                        <Link to='/teams' className="text-white ml-2.5 nav-link" role={'button'} tabIndex={0}>Teams</Link>
                         <NavDropdown title={<span className="text-white">Other pages</span>} id="basic-nav-dropdown">
                             <NavDropdown.Item className='navdrop-item' href="#action/3.1">
                                 <p href='#' className="text-white ml-2.5">News</p>

@@ -1,7 +1,7 @@
 import './Header.scss';
 import {Link} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setData, setLogged, setRememberMe, setCurrentId } from '../../redux/slices/currentDataSlice'
+import { setData, setLogged, setRememberMe } from '../../redux/slices/currentDataSlice'
 import { useNavigate } from'react-router-dom';
 import logo from '../../img/logo.png'
 import {Button, Container, Navbar, NavDropdown} from "react-bootstrap";
@@ -21,7 +21,6 @@ function Header () {
         localStorage.setItem("id", "");
         dispatch(setLogged(false));
         dispatch(setRememberMe(false));
-        dispatch(setCurrentId(""));
         navigate('/')
     }
 

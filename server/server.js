@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const userController = require('./controllers/user-controller');
 const eventController = require('./controllers/event-controller');
 const profileController = require('./controllers/profile-controller');
+const teamController = require('./controllers/team-controller');
 const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -42,9 +43,10 @@ app.use(morgan('dev'));
 app.use('/api/users', userController);
 app.use('/api/events', eventController);
 app.use('/api/users', profileController);
+app.use('/api/teams', teamController);
 app.use('/uploads/avatar-uploads', express.static(path.join(__dirname, 'uploads/avatar-uploads')));
-app.use('/uploads/cover-events-uploads', express.static(path.join(__dirname, 'uploads/cover-events-uploads')));
-app.use('/uploads/other-events-uploads', express.static(path.join(__dirname, 'uploads/other-events-uploads')));
+app.use('/uploads/cover-event-uploads', express.static(path.join(__dirname, 'uploads/cover-event-uploads')));
+app.use('/uploads/other-event-uploads', express.static(path.join(__dirname, 'uploads/other-event-uploads')));
 
 
 // Запуск сервера

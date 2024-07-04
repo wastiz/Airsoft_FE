@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
     _id: String,
+    author: {
+        type: String,
+        ref: 'User',
+        required: true
+    },
     created: {
         type: Date,
         default: Date.now

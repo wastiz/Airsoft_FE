@@ -1,5 +1,5 @@
 import './Profile.scss';
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import {setData, setLogged} from '../../redux/slices/currentDataSlice'
 import { setProfileData} from "../../redux/slices/editProfileSlice";
@@ -42,7 +42,7 @@ function Profile () {
 
     return (
         <Container className='padding-20px'>
-            <Row className={'w-100'}>
+            <Row className={'profile-header w-100'}>
                 <Col xs lg='2'>
                     <Image className='avatar-15rem' src={profileStates.avatar ? profileStates.avatar : defaultAvatar} roundedCircle/>
                 </Col>
@@ -78,7 +78,7 @@ function Profile () {
             <Row>
                 <Routes>
                     <Route exact path='' element={<ProfileInfo profileStates={profileStates}/>}></Route>
-                    <Route exact path='user-posts' element={<ProfilePosts/>}></Route>
+                    <Route exact path='user-posts' element={<Suspense fallback={<h1>Loading...</h1>}><ProfilePosts/></Suspense>}></Route>
                 </Routes>
             </Row>
         </Container>
