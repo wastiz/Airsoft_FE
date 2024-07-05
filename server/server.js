@@ -47,6 +47,7 @@ app.use('/api/teams', teamController);
 app.use('/uploads/avatar-uploads', express.static(path.join(__dirname, 'uploads/avatar-uploads')));
 app.use('/uploads/cover-event-uploads', express.static(path.join(__dirname, 'uploads/cover-event-uploads')));
 app.use('/uploads/other-event-uploads', express.static(path.join(__dirname, 'uploads/other-event-uploads')));
+app.use('/uploads/cover-team-uploads', express.static(path.join(__dirname, 'uploads/cover-team-uploads')));
 
 
 // Запуск сервера

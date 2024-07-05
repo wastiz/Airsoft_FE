@@ -1,6 +1,8 @@
 import {Container} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {use} from "react";
+import {PostEventCard} from "./PostEventCard";
+import {PostTeamCard} from "./PostTeamCard";
 
 export function ProfilePosts () {
     const currentStates = useSelector((state) => state.current);
@@ -14,7 +16,11 @@ export function ProfilePosts () {
     console.log(posts);
     return (
         <Container>
-            <h1>Posts</h1>
+            {posts.map(postData => (
+                postData.title ? (
+                    <PostEventCard key={postData._id} postData={postData} />
+                ) : <PostTeamCard key={postData._id} postData={postData} />
+            ))}
         </Container>
     )
 }

@@ -1,4 +1,4 @@
-export function ProfileInfo({profileStates : {firstName, lastName, age, phone, aboutMe, roles, team, favWeapon}}) {
+export function ProfileInfo({profileData : {firstName, lastName, age, phone, aboutMe, roles, team, favWeapon}}) {
     return (
         <>
             <h2><b>General Info</b></h2>

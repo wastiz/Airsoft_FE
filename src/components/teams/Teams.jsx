@@ -1,32 +1,30 @@
 import './Teams.scss'
 import {Link} from 'react-router-dom'
 import {Col, Container, Row} from "react-bootstrap";
+import {TeamCard} from './TeamCard';
+import {useSelector} from "react-redux";
+import {use} from "react";
 
 function Teams () {
+
+    const currentStates = useSelector((state) => state.current)
+
+    const teams = use(fetch('http://localhost:5000/api/teams').then(res => res.json()))
+    console.log(teams)
+
     return (
         <>
-            <Link to={'/add-team'}>
-                <button className={'btn btn-primary'}>Add Team</button>
-            </Link>
+            {currentStates.logged ? (
+                <Link to={'/add-team'}>
+                    <button className={'btn btn-primary'}>Add Team</button>
+                </Link>
+            ) : <h3>You have to be logged in to add teams</h3>}
             <Container fluid>
-                <Row className={'h-10rem margin-20px mb-5'}>
-                    <Col lg={10} className={'team-banner-img'}></Col>
-                    <Col lg={2} className={'team-banner-info'}>
-                        <h4>Team name</h4>
-                        <h6>Little description about this team and what they want</h6>
-                        <h6>Location: Narva</h6>
-                        <button className={'btn btn-primary'}>View</button>
-                    </Col>
-                </Row>
-                <Row className={'h-10rem margin-20px mb-5'}>
-                    <Col lg={10} className={'team-banner-img'}></Col>
-                    <Col lg={2} className={'team-banner-info'}>
-                        <h4>Team name</h4>
-                        <h6>Little description about this team and what they want</h6>
-                        <h6>Location: Narva</h6>
-                        <button className={'btn btn-primary'}>View</button>
-                    </Col>
-                </Row>
+                {teams.map(item => {
+                    return (
+                        <TeamCard key={item._id} teamData={item}></TeamCard>
+                    )
+                })}
             </Container>
         </>
     )

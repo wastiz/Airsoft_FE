@@ -3,13 +3,14 @@ import placeholder from '../../img/placeholder.png'
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {useForm} from "react-hook-form";
 import {Input} from "../assets/Input";
 import {Textarea} from "../assets/Textarea";
 import {Checkbox} from "../assets/Checkbox";
 import {Alert, Button, Col, Container, Form, Image, Row, Spinner} from "react-bootstrap";
 import {useSelector} from "react-redux";
+import {FormSubmitting} from "../assets/FormSubmitting";
 
 
 function AddEvent() {
@@ -35,16 +36,16 @@ function AddEvent() {
             const year = originalDate.getFullYear().toString().slice(-2);
             const formattedDate = `${day}.${month}.${year}`;
 
-            // Загрузка изображения обложки
+            // Загрузка coverImage
             const coverFormData = new FormData();
             if (coverEventImageFile) {
                 coverFormData.append('coverImage', coverEventImageFile);
             }
             const coverResponse = await axios.post('http://localhost:5000/api/events/uploadCoverImage', coverFormData);
             const coverImage = coverResponse.data;
-            console.log('Cover image upload response:', coverImage); // Логируем ответ сервера
+            console.log('Cover image upload response:', coverImage);
 
-            // Загрузка других изображений
+            // Загрузка otherImages
             const otherFormData = new FormData();
             otherEventImageFiles.forEach((file, index) => {
                 otherFormData.append('otherImages', file);
@@ -105,7 +106,7 @@ function AddEvent() {
             navigate('/events');
         } catch (error) {
             setError("root", {
-                message: "Something happened handling your events"
+                message: "Something happened creating your event"
             });
             console.error('Error submitting data to MongoDB:', error);
         }
@@ -401,23 +402,12 @@ function AddEvent() {
                     <button className='btn btn-primary' type='submit'>Submit</button>
                 </div>
 
-
-                {isSubmitting ?
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                    : null}
-
-                {errors.root && (
-                    <Alert key={'danger'} variant={'danger'}>
-                        Sorry, you got an error: {errors.root.message}
-                    </Alert>
-                )}
-                {isSubmitSuccessful ?
-                    <Alert key={'success'} variant={'success'}>
-                        Yey! You have uploaded smth!
-                    </Alert>
-                    : null}
+                <FormSubmitting
+                    isSubmitting={isSubmitting}
+                    errors={errors}
+                    isSubmitSuccessful={isSubmitSuccessful}
+                    successText={'Event created successfully'}
+                />
             </Container>
         </Form>
     )

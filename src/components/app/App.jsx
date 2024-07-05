@@ -4,6 +4,7 @@ import {Suspense, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import {setData, setLogged} from "../../redux/slices/currentDataSlice";
+import {Loading} from "../assets/Loading";
 import Header from '../header/Header';
 import Navigation from '../navigation/Navigation';
 import Landing from '../landing/Landing';
@@ -16,6 +17,7 @@ import Events from '../events/Events';
 import AddEvent from '../events/addEvent';
 import Event from '../events/Event';
 import AddTeam from '../teams/addTeam'
+import {Spinner} from "react-bootstrap";
 
 function App () {
 
@@ -62,24 +64,22 @@ function App () {
 
 	return (
 		<BrowserRouter>
-			<div className='bg-base-100'>
-				<Header></Header>
-				<Navigation></Navigation>
-				<main className="margin-20px back-secondary border-1">
-					<Routes>
-						<Route exact path='/' element={<Landing/>}></Route>
-						<Route exact path='/sign-up' element={<SigninForm/>}></Route>
-						<Route exact path='/log-in' element={<LoginForm/>}></Route>
-						<Route exact path='/profile/*' element={<Profile/>}></Route>
-						<Route exact path='/profile-edit' element={<EditProfile/>}></Route>
-						<Route exact path='/events' element={<Suspense fallback={<h1>Loading...</h1>}><Events></Events></Suspense>}></Route>
-						<Route exact path='/add-event' element={<AddEvent/>}></Route>
-						<Route exact path='/events/:eventId' element={<Suspense fallback={<h1>Loading...</h1>}><Event></Event></Suspense>}></Route>
-						<Route exact path='/teams' element={<Teams/>}></Route>
-						<Route exact path='/add-team' element={<AddTeam/>}></Route>
-					</Routes>
-				</main>
-			</div>
+			<Header></Header>
+			<Navigation></Navigation>
+			<main className="margin-20px back-secondary border-1">
+				<Routes>
+					<Route exact path='/' element={<Landing/>}></Route>
+					<Route exact path='/sign-up' element={<SigninForm/>}></Route>
+					<Route exact path='/log-in' element={<LoginForm/>}></Route>
+					<Route exact path='/profile/*' element={<Suspense fallback={<Loading/>}><Profile/></Suspense>}></Route>
+					<Route exact path='/profile-edit' element={<EditProfile/>}></Route>
+					<Route exact path='/events' element={<Suspense fallback={<Spinner/>}><Events></Events></Suspense>}></Route>
+					<Route exact path='/add-event' element={<AddEvent/>}></Route>
+					<Route exact path='/events/:eventId' element={<Suspense fallback={<Spinner/>}><Event></Event></Suspense>}></Route>
+					<Route exact path='/teams' element={<Suspense fallback={<Loading/>}><Teams/></Suspense>}></Route>
+					<Route exact path='/add-team' element={<AddTeam/>}></Route>
+				</Routes>
+			</main>
 		</BrowserRouter>
 	)
 }

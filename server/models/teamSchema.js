@@ -43,7 +43,11 @@ const teamSchema = new mongoose.Schema({
     otherPhotos: {
         type: [String],
         default: []
-    }
+    },
+    participated: {
+        type: [String],
+        default: []
+    },
 });
 
 const TeamSchema = mongoose.model('Team', teamSchema);

@@ -7,13 +7,13 @@ import {Col, Container, Row} from "react-bootstrap";
 
 
 function Events () {
-    const states = useSelector((state) => state.current)
+    const currentStates = useSelector((state) => state.current)
 
     const events = use(fetch('http://localhost:5000/api/events').then(res => res.json()))
 
     return (
         <>
-            {states.logged ? (
+            {currentStates.logged ? (
                 <Link to='/add-event'><button className='text-white btn btn-primary'>Add Event</button></Link>
             ) : (
                 <h3 className='text-white'>To add event you have to be logged in</h3>

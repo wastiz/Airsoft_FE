@@ -56,11 +56,23 @@ router.get('/profile/posts', authMiddleware, async (req, res) => {
     }
 
     try {
-        const teams = await teamSchema.find({ author: id }).select('name coverPhoto members');
+        const teams = await teamSchema.find({ author: id }).select('name created coverPhoto members');
 
-        const events = await eventSchema.find({ author: id }).select('title date photos.coverPhoto');
+        const events = await eventSchema.find({ author: id }).select('title created date photos.coverPhoto');
 
-        res.json({ teams, events });
+        const combinedArray = [...teams, ...events];
+
+        const parseDate = (dateStr) => {
+            const [day, month, year] = dateStr.split('.');
+            return new Date(`20${year}-${month}-${day}`); // Предполагаем, что год - 20xx
+        };
+
+        combinedArray.sort((a, b) => {
+            const dateA = a.date ? parseDate(a.date) : new Date(0); // Если нет даты, используем начало эпохи
+            const dateB = b.date ? parseDate(b.date) : new Date(0);
+            return dateA - dateB;
+        });
+        res.json(combinedArray);
     } catch (err) {
         console.error('Error fetching author content:', err);
         res.status(500).json({ message: 'Server error' });

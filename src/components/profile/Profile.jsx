@@ -1,5 +1,5 @@
 import './Profile.scss';
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense, use, useEffect, useState} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import {setData, setLogged} from '../../redux/slices/currentDataSlice'
 import { setProfileData} from "../../redux/slices/editProfileSlice";
@@ -9,29 +9,18 @@ import defaultAvatar from '../../img/avatar.jpg'
 import {Col, Container, Row, Image, Nav, Button} from "react-bootstrap";
 import {ProfileInfo} from './ProfileInfo';
 import {ProfilePosts} from "./ProfilePosts";
+import {Loading} from "../assets/Loading";
 
 
 function Profile () {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const currentStates = useSelector((state) => state.current);
-    const profileStates = useSelector((state) => state.profile);
 
-    useEffect(() => {
-        const auth = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/users/profile`, {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                });
-                dispatch(setProfileData(response.data))
-                dispatch(setLogged(true));
-            } catch (e) {
-                localStorage.removeItem('token');
-                dispatch(setLogged(false));
-            }
-        };
-        auth();
-    }, [dispatch]);
+    const profileData = use(fetch('http://localhost:5000/api/users/profile', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }).then(res => res.json()));
 
     const [activeTab, setActiveTab] = useState('general-info');
 
@@ -44,7 +33,7 @@ function Profile () {
         <Container className='padding-20px'>
             <Row className={'profile-header w-100'}>
                 <Col xs lg='2'>
-                    <Image className='avatar-15rem' src={profileStates.avatar ? profileStates.avatar : defaultAvatar} roundedCircle/>
+                    <Image className='avatar-15rem' src={profileData.avatar ? profileData.avatar : defaultAvatar} roundedCircle/>
                 </Col>
                 <Col></Col>
                 <Col xs lg='2'>
@@ -77,8 +66,8 @@ function Profile () {
             </Row>
             <Row>
                 <Routes>
-                    <Route exact path='' element={<ProfileInfo profileStates={profileStates}/>}></Route>
-                    <Route exact path='user-posts' element={<Suspense fallback={<h1>Loading...</h1>}><ProfilePosts/></Suspense>}></Route>
+                    <Route exact path='' element={<ProfileInfo profileData={profileData}/>}></Route>
+                    <Route exact path='user-posts' element={<Suspense fallback={<Loading/>}><ProfilePosts/></Suspense>}></Route>
                 </Routes>
             </Row>
         </Container>
