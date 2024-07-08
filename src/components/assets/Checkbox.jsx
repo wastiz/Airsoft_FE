@@ -5,7 +5,6 @@ export function Checkbox ({ label, name, type, description, register, required, 
         <>
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                 <Form.Check
-                    id={name}
                     name={name}
                     type={type}
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"

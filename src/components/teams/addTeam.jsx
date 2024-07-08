@@ -1,7 +1,7 @@
 import './Teams.scss';
 import {Alert, Col, Container, Form, Image, Row, Spinner} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {useForm} from "react-hook-form";
 import {Input} from "../assets/Input";
 import {Textarea} from "../assets/Textarea";
@@ -9,10 +9,17 @@ import axios from "axios";
 import {FormSubmitting} from "../assets/FormSubmitting";
 import placeholder from "../../img/placeholder.png";
 import {useSelector} from "react-redux";
+import ReactCrop, {centerCrop, convertToPixelCrop, makeAspectCrop,} from "react-image-crop";
+import setCanvasPreview from "../assets/setCanvasPreview";
 
 function AddTeam () {
     const currentStates = useSelector(states => states.current);
     const navigate = useNavigate();
+
+    const ASPECT = 16/3; // Задает пропорции кропу. 1 - квадрат. 6/19 прямоугльник к примеру
+    const DIMENSION = 90; //Задает начальные размеры кропа в пикселях
+    const imgRef = useRef(null);
+    const previewCanvasRef = useRef(null);
 
     const {
         register,
@@ -25,9 +32,10 @@ function AddTeam () {
     const onSubmit = async (data) => {
 
         const coverFormData = new FormData();
-        if (coverTeamImageFile) {
-            coverFormData.append('coverImage', coverTeamImageFile);
-        }
+        const blob = await fetch(previewCanvasRef.current.toDataURL()).then(res => res.blob());
+        const file = new File([blob], "image.png", { type: "image/png" });
+        coverFormData.append('coverImage', file);
+
         const coverResponse = await axios.post('http://localhost:5000/api/teams/uploadTeamCoverImage', coverFormData);
 
         try {
@@ -51,13 +59,17 @@ function AddTeam () {
     }
 
     const [coverTeamImageSrc, setCoverTeamImageSrc] = useState();
-    const [coverTeamImageFile, setCoverTeamImageFile] = useState();
 
-    const handleChangeFile = (event) => {
-        const file = event.target.files[0];
+    const handleChangeFile = (e) => {
+        const file = e.target.files[0];
         if (file) {
-            setCoverTeamImageFile(file)
             const reader = new FileReader();
+            const {naturalWidth, naturalHeight} = e.currentTarget;
+            if (naturalWidth < DIMENSION || naturalHeight < DIMENSION) {
+                setError('cover-upload', {type: 'manual', message: 'Image should be at least 150 x 150 pixels'})
+                setCoverTeamImageSrc(null)
+                return;
+            }
             reader.onloadend = () => {
                 setCoverTeamImageSrc(reader.result);
             };
@@ -65,6 +77,18 @@ function AddTeam () {
         }
     };
 
+    const [crop, setCrop] = useState()
+
+    const onImageLoad = (e) => { //Создаем колбек который будет срабатывать после загрузки картинки чтобы сто проц создался объект кропа и передался
+        const {width, height} = e.currentTarget;
+        const crop = makeAspectCrop({
+            unit: '%',
+            width: DIMENSION,
+
+        }, ASPECT, width, height);
+        const centeredCrop = centerCrop(crop, width, height)
+        setCrop(centeredCrop)
+    }
     return (
         <Form className={'padding-20px'} onSubmit={handleSubmit(onSubmit)}>
             <Container>
@@ -86,18 +110,46 @@ function AddTeam () {
                 </Row>
                 <Row>
                     <Col>
-                        <Image fluid src={coverTeamImageSrc ? coverTeamImageSrc : placeholder} alt="cover"/>
+                        {coverTeamImageSrc ? (
+                            <ReactCrop
+                                crop={crop}
+                                onChange={(pixelCrop, percentCrop) => setCrop(percentCrop)}
+                                keepSelection
+                                aspect={ASPECT}
+                                minWidth={DIMENSION}
+                            >
+                                <Image fluid ref={imgRef} className={'form-placeholder'} src={coverTeamImageSrc} alt="cover" onLoad={onImageLoad}/>
+                            </ReactCrop>
+                        ) : <Image fluid className={'form-placeholder'} src={placeholder} alt="cover"/>}
                     </Col>
                     <Col>
-                        <Form.Group controlId="formFile" className="mb-3">
+                        <Form.Group className="mb-3">
                             <Form.Label>Upload cover image for your event</Form.Label>
                             <Form.Control type="file" name={'cover-upload'} onChange={handleChangeFile}
                                           id={'cover-upload'}/>
                         </Form.Group>
-                        <p className="text-xs leading-5 text-white">PNG, JPG, GIF up to 10MB (Recommended to use wide image)</p>
+                        <p className="text-xs leading-5 text-white">PNG, JPG, GIF up to 10MB (Recommended to use wide
+                            image)</p>
+                        <button
+                            className={'btn btn-primary'}
+                            type={'button'}
+                            onClick={() => {
+                                setCanvasPreview(
+                                    imgRef.current, // HTMLImageElement
+                                    previewCanvasRef.current, // HTMLCanvasElement
+                                    convertToPixelCrop(
+                                        crop,
+                                        imgRef.current.width,
+                                        imgRef.current.height
+                                    )
+                                );
+                            }}
+                        >
+                            Preview Image
+                        </button>
+                        {crop && <canvas ref={previewCanvasRef} className={'crop-preview mt-4'}/>}
                     </Col>
                 </Row>
-
 
                 <div className={'flex flex-row gap-3 justify-content-end'}>
                     <Link to='/teams'>

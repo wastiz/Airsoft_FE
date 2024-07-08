@@ -1,4 +1,5 @@
 import './App.scss';
+import 'react-image-crop/dist/ReactCrop.css'
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {Suspense, useEffect} from "react";
 import {useDispatch} from "react-redux";

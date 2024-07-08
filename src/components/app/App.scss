@@ -173,3 +173,12 @@ main {
   width: 5rem;
   height: 5rem;
 }
+.form-placeholder {
+  width: 620px;
+}
+.crop-preview {
+  border: 1px solid black;
+  object-fit: contain;
+  width: 620px;
+  height: 150px;
+}
