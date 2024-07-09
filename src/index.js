@@ -1,6 +1,5 @@
-import React, {Suspense} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.scss';
 import App from './components/app/App';
 import {Provider} from 'react-redux';
 import store from './redux/store'

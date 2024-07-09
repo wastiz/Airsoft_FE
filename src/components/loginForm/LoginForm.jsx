@@ -38,6 +38,7 @@ function LoginForm () {
 			if (response.data.token) {
 				localStorage.setItem('token', response.data.token);
 				dispatch(setData({
+					_id: response.data.user.id,
 					username: response.data.user.username,
 					email: response.data.user.email,
 				}));

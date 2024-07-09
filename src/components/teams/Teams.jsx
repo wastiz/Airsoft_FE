@@ -10,7 +10,6 @@ function Teams () {
     const currentStates = useSelector((state) => state.current)
 
     const teams = use(fetch('http://localhost:5000/api/teams').then(res => res.json()))
-    console.log(teams)
 
     return (
         <>

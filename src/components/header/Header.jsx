@@ -13,12 +13,11 @@ function Header () {
 
     const logout = () => {
         dispatch(setData({
+            _id: "",
             username: "",
             email: "",
         }))
-        localStorage.setItem("rememberMe", false);
-        localStorage.setItem("logged", false);
-        localStorage.setItem("id", "");
+        localStorage.setItem('token', '')
         dispatch(setLogged(false));
         dispatch(setRememberMe(false));
         navigate('/')

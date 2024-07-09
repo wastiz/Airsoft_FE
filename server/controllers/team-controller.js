@@ -35,6 +35,7 @@ router.get('/', async (req, res) => {
 router.get('/:teamId', async (req, res) => {
     try {
         const teamId = req.params.teamId;
+        console.log(teamId)
         const team = await teamSchema.findById(teamId);
 
         if (!team) {

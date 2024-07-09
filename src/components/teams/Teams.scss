@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@import '../assets/variables';
 
 .team-banner-column {
   border: 4px solid $primary-light;
@@ -18,4 +18,50 @@
   border-left: none;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
+}
+.team-header {
+  position: relative;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.team-header {
+  position: relative;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); // Регулируйте затемнение
+    z-index: 1;
+  }
+
+  h1 {
+    position: relative;
+    z-index: 2;
+  }
+  button {
+    z-index: 2;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
 }

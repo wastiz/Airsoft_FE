@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'CustomFont';
+  src: url('IBMPlexMono-Bold.ttf') format('ttf'),
+  url('./IBMPlexMono-BoldItalic.ttf') format('ttf'),
+  url('./IBMPlexMono-ExtraLight.ttf') format('ttf'),
+  url('./IBMPlexMono-ExtraLightItalic.ttf') format('ttf'),
+  url('./IBMPlexMono-Light.ttf') format('ttf'),
+  url('./IBMPlexMono-Medium.ttf') format('ttf'),
+  url('./IBMPlexMono-Regular.ttf ') format('ttf'),
+  url('./IBMPlexMono-SemiBold.ttf ') format('ttf'),
+  url('./IBMPlexMono-Thin.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'CustomFont', sans-serif;
+}

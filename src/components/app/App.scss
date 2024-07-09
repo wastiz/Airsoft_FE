@@ -58,9 +58,10 @@ $nav-tabs-link-hover-border-color: $primary-light;
 $nav-tabs-link-active-color: $primary-light;
 $nav-tabs-link-active-bg: $secondary;
 
-// Re-import Bootstrap to apply custom variables
+// Re-import Bootstrap to apply custom variables, font
 @import "~bootstrap/scss/bootstrap";
-@import '../../variables.scss';
+@import '../assets/variables';
+//@import '../assets/fonts/fonts.scss';
 
 //Baseeee
 body {
@@ -70,7 +71,7 @@ h1, h2, h3, h4, h5, h6, button, span, div, a, p, b, small, label{
   color: white !important;
 }
 a {
-  text-decoration: none !important;
+  text-decoration: none;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
@@ -181,4 +182,10 @@ main {
   object-fit: contain;
   width: 620px;
   height: 150px;
+}
+.link-decoration {
+  text-decoration: underline !important;
+  &:hover {
+    color: $primary-light !important;
+  }
 }
