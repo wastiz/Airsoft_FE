@@ -1,7 +1,7 @@
 import './Teams.scss';
-import {Alert, Col, Container, Form, Image, Row, Spinner} from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom";
-import React, {useRef, useState} from "react";
+import {Col, Container, Form, Image, Row} from "react-bootstrap";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import React, {useEffect, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
 import {Input} from "../assets/Input";
 import {Textarea} from "../assets/Textarea";
@@ -11,52 +11,130 @@ import placeholder from "../../img/placeholder.png";
 import {useSelector} from "react-redux";
 import ReactCrop, {centerCrop, convertToPixelCrop, makeAspectCrop,} from "react-image-crop";
 import setCanvasPreview from "../assets/setCanvasPreview";
+import {Select} from "../assets/Select";
 
-function AddTeam () {
+async function fetchTeamData(teamId) {
+    const response = await axios.get(`http://localhost:5000/api/teams/${teamId}`);
+    return response.data;
+}
+
+function TeamForm () {
+    const { teamId } = useParams();
     const currentStates = useSelector(states => states.current);
     const navigate = useNavigate();
 
-    const ASPECT = 16/3; // Задает пропорции кропу. 1 - квадрат. 6/19 прямоугльник к примеру
-    const DIMENSION = 90; //Задает начальные размеры кропа в пикселях
+    const ASPECT = 16 / 3; // Задает пропорции кропу. 1 - квадрат. 6/19 прямоугльник к примеру
+    const DIMENSION = 90; // Задает начальные размеры кропа в пикселях
     const imgRef = useRef(null);
     const previewCanvasRef = useRef(null);
+
+    const [teamData, setTeamData] = useState(null);
+
+    useEffect(() => {
+        if (teamId) {
+            fetchTeamData(teamId).then(data => {
+                setTeamData(data);
+            }).catch(error => {
+                console.error('Error fetching team data:', error);
+            });
+        }
+    }, [teamId]);
 
     const {
         register,
         handleSubmit,
-        watch,
         setError,
+        control,
         formState: { errors, isSubmitting, isSubmitSuccessful },
-    } = useForm()
+        getValues,
+        reset
+    } = useForm({
+        defaultValues: teamData || {}
+    });
+
+    useEffect(() => {
+        if (teamData) {
+            reset(teamData);
+        }
+    }, [teamData, reset]);
+
 
     const onSubmit = async (data) => {
+        let url = 'http://localhost:5000/api/teams';
+        let method = 'POST';
 
-        const coverFormData = new FormData();
-        const blob = await fetch(previewCanvasRef.current.toDataURL()).then(res => res.blob());
-        const file = new File([blob], "image.png", { type: "image/png" });
-        coverFormData.append('coverImage', file);
+        if (teamId) {
+            url += `/${teamId}`;
+            method = 'PUT';
+        }
 
-        const coverResponse = await axios.post('http://localhost:5000/api/teams/uploadTeamCoverImage', coverFormData);
+        let coverPhoto = null;
+
+        if (previewCanvasRef.current) {
+            const coverFormData = new FormData();
+            const blob = await fetch(previewCanvasRef.current.toDataURL()).then(res => res.blob());
+            const file = new File([blob], "image.png", { type: "image/png" });
+            coverFormData.append('coverImage', file);
+
+            try {
+                const response = await axios.post('http://localhost:5000/api/teams/uploadTeamCoverImage', coverFormData);
+                coverPhoto = response.data.url;
+            } catch (error) {
+                console.error('Error uploading cover image:', error);
+            }
+        }
 
         try {
-            const response = await axios.post('http://localhost:5000/api/teams', {
-                author: currentStates._id,
+            const requestData = {
                 name: data.name,
                 description: data.description,
                 rules: data.rules,
                 memberLimit: data.limit,
-                coverPhoto: coverResponse.data.url,
-                members: [currentStates._id],
-            })
-            console.log(response.statusText)
-            navigate('/teams')
+            };
+
+            if (method === 'POST') {
+                requestData.author = currentStates._id;
+                requestData.coverPhoto = coverPhoto;
+                requestData.members = [currentStates._id]
+            }
+
+            if (method === 'PUT') {
+                if (coverPhoto) {
+                    requestData.coverPhoto = coverPhoto;
+                }
+            }
+
+            switch (data.joinMethod) {
+                case 'Free join':
+                    requestData.joinMethod = 'opened';
+                    break;
+                case 'By request':
+                    requestData.joinMethod = 'request';
+                    break;
+                case 'Restricted':
+                    requestData.joinMethod = 'restricted';
+                    break;
+                default:
+                    throw new Error(`Unknown join method: ${data.joinMethod}`);
+            }
+
+            const response = await axios({
+                method: method,
+                url: url,
+                data: requestData
+            });
+
+            console.log(response.statusText);
+            navigate('/teams');
         } catch (error) {
             setError("root", {
-                message: "Something happened in creating your team"
+                message: "Something happened in creating/updating your team"
             });
             console.error('Error submitting data to MongoDB:', error);
         }
     }
+
+
 
     const [coverTeamImageSrc, setCoverTeamImageSrc] = useState();
 
@@ -105,8 +183,12 @@ function AddTeam () {
                               register={register} required={false} errors={errors}/>
                 </Row>
                 <Row>
-                    <Input label='Number of members can join (put 0 if unlimited)*:' name='limit' type='number'
-                           register={register} required='Number is required!' errors={errors}/>
+                    <Select label={'Join Method'} name={'joinMethod'} options={['Free join', 'By request', 'Restricted']}
+                            register={register} required={'You must select'} errors={errors} control={control}/>
+                </Row>
+                <Row>
+                    <Input label='Number of members can join (put 0 if unlimited)*:' name='memberLimit' type='number'
+                           register={register} required='Limit is required!' errors={errors}/>
                 </Row>
                 <Row>
                     <Col>
@@ -147,7 +229,7 @@ function AddTeam () {
                         >
                             Preview Image
                         </button>
-                        {crop && <canvas ref={previewCanvasRef} className={'crop-preview mt-4'}/>}
+                        {crop ? <canvas ref={previewCanvasRef} className={'crop-preview mt-4'}/> : <img className={'crop-preview mt-4'} src={getValues('coverPhoto')} alt="cover"/> }
                     </Col>
                 </Row>
 
@@ -169,4 +251,4 @@ function AddTeam () {
     )
 }
 
-export default AddTeam;
+export default TeamForm;

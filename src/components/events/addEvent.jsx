@@ -8,7 +8,7 @@ import {useForm} from "react-hook-form";
 import {Input} from "../assets/Input";
 import {Textarea} from "../assets/Textarea";
 import {Checkbox} from "../assets/Checkbox";
-import {Alert, Button, Col, Container, Form, Image, Row, Spinner} from "react-bootstrap";
+import {Col, Container, Form, Image, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {FormSubmitting} from "../assets/FormSubmitting";
 

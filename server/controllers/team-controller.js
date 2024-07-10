@@ -3,6 +3,7 @@ const router = express.Router();
 const teamSchema = require('../models/teamSchema');
 const multer = require("multer");
 const { v4: uuidv4 } = require('uuid');
+const userSchema = require("../models/userSchema");
 
 //Adding new Team
 router.post('/', async (req, res) => {
@@ -20,6 +21,31 @@ router.post('/', async (req, res) => {
     }
 });
 
+//Updating existing Team
+router.put('/:teamId', async (req, res) => {
+    const { teamId } = req.params;
+    const updates = req.body;
+
+    try {
+        const updatedTeam = await teamSchema.findByIdAndUpdate(
+            teamId,
+            updates,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedTeam) {
+            return res.status(404).json({ message: "Team not found" });
+        }
+
+        return res.json({
+            message: "Team updated successfully",
+            updatedTeam: updatedTeam
+        });
+    } catch (error) {
+        console.error("Error updating team:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
 //Getting all team's specific info
 router.get('/', async (req, res) => {
     try {

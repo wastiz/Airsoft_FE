@@ -145,6 +145,22 @@ router.post('/uploadAvatar', upload.single('avatar'), (req, res) => {
     }
 });
 
+//Getting user's username, firstName and Lastname by array for UserCards
+router.post('/user-card/by-ids', async (req, res) => {
+    try {
+        const { ids } = req.body;
+        if (!Array.isArray(ids)) {
+            return res.status(400).json({ message: 'Invalid input, expected an array of IDs' });
+        }
+        const users = await userSchema.find({ _id: { $in: ids } }, 'username profile.firstName profile.lastName profile.avatar');
+
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 router.get('')
 
 module.exports = router;

@@ -8,7 +8,6 @@ const authMiddleware = require("../middlewares/auth-middleware");
 const userSchema = require("../models/userSchema");
 const {ObjectId} = require("mongodb");
 
-
 //Getting profile on profile page
 router.get('/profile', authMiddleware, async (req, res) => {
     try {

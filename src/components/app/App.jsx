@@ -18,7 +18,7 @@ import Event from '../events/Event';
 import AddEvent from '../events/addEvent';
 import Teams from '../teams/Teams';
 import Team from "../teams/Team";
-import AddTeam from '../teams/addTeam'
+import TeamForm from '../teams/TeamForm'
 import {Spinner} from "react-bootstrap";
 
 function App () {
@@ -84,8 +84,9 @@ function App () {
 					<Route exact path='/add-event' element={<AddEvent/>}></Route>
 					{/*Teams*/}
 					<Route exact path='/teams' element={<Suspense fallback={<Loading/>}><Teams/></Suspense>}></Route>
-					<Route exact path='/teams/:teamId' element={<Suspense fallback={<Loading/>}><Team/></Suspense>}></Route>
-					<Route exact path='/add-team' element={<AddTeam/>}></Route>
+					<Route exact path='/teams/:teamId/*' element={<Suspense fallback={<Loading/>}><Team/></Suspense>}></Route>
+					<Route exact path='/team-form' element={<Suspense fallback={<Loading/>}><TeamForm/></Suspense>}></Route>
+					<Route exact path='/team-form/:teamId' element={<Suspense fallback={<Loading/>}><TeamForm/></Suspense>}></Route>
 				</Routes>
 			</main>
 		</BrowserRouter>

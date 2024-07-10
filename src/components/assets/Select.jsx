@@ -11,7 +11,7 @@ export function Select({ label, name, options, register, required, errors, contr
                 required: required
             })}
             render={({ field }) => (
-                <Form.Group>
+                <Form.Group className={'mb-3'}>
                     <Form.Label htmlFor={name}>{label}</Form.Label>
                     <Form.Select {...field}>
                         <option>Select here...</option>

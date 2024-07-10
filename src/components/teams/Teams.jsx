@@ -14,7 +14,7 @@ function Teams () {
     return (
         <>
             {currentStates.logged ? (
-                <Link to={'/add-team'}>
+                <Link to={'/team-form'}>
                     <button className={'btn btn-primary'}>Add Team</button>
                 </Link>
             ) : <h3>You have to be logged in to add teams</h3>}

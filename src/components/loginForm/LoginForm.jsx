@@ -1,7 +1,7 @@
 import { useDispatch, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setNameLog, setPasswordLog, setStatusLog, resetFormLog } from '../../redux/slices/loginSlice';
-import {setRememberMe, setLogged, setCurrentId, setData} from '../../redux/slices/currentDataSlice';
+import { setNameLog, setPasswordLog, resetFormLog } from '../../redux/slices/loginSlice';
+import {setLogged, setCurrentId, setData} from '../../redux/slices/currentDataSlice';
 import axios from 'axios';
 import {Button, Form} from "react-bootstrap";
 
