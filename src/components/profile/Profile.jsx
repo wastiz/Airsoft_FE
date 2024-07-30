@@ -1,10 +1,7 @@
 import './Profile.scss';
-import React, {Suspense, use, useEffect, useState} from 'react';
-import {useDispatch, useSelector } from 'react-redux';
-import {setData, setLogged} from '../../redux/slices/currentDataSlice'
-import { setProfileData} from "../../redux/slices/editProfileSlice";
-import {Link, Route, Routes, useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import React, {Suspense, use, useState} from 'react';
+import {useSelector } from 'react-redux';
+import {Link, Route, Routes, useLocation, useNavigate, useParams} from 'react-router-dom';
 import defaultAvatar from '../../img/avatar.jpg'
 import {Col, Container, Row, Image, Nav, Button} from "react-bootstrap";
 import {ProfileInfo} from './ProfileInfo';
@@ -15,17 +12,20 @@ import {Loading} from "../assets/Loading";
 function Profile () {
     const navigate = useNavigate();
     const currentStates = useSelector((state) => state.current);
+    const location = useLocation();
+    const { userId } = useParams();
 
-    const profileData = use(fetch('http://localhost:5000/api/users/profile', {
+    const profileData = use(fetch(`http://localhost:5000/api/users/profile/${userId}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }).then(res => res.json()));
 
-    const [activeTab, setActiveTab] = useState('general-info');
+
+    const pathSegments = location.pathname.split('/');
+    const activeTab = pathSegments[pathSegments.length - 1] === 'user-posts' ? 'user-posts' : 'general-info';
 
     const handleTabClick = (tab, path) => {
-        setActiveTab(tab);
         navigate(path);
     };
 
@@ -39,12 +39,14 @@ function Profile () {
                 <Col xs lg='2'>
                     <h3 className='text-white text-xl'>Username:</h3>
                     <h3 className='text-white text-3xl'><b>{currentStates.username}</b></h3>
-                    <Link to={"/profile-edit"}>
-                        <Button variant={'primary'}>Edit Profile</Button>
-                    </Link>
+                    {userId === currentStates._id ? (
+                        <Link to={'edit/'}>
+                            <Button variant={'primary'}>Edit Profile</Button>
+                        </Link>
+                    ) : null}
                 </Col>
             </Row>
-            <Row className={'w-100 margin-20px'}>
+            <Row className={'w-100 mt-4'}>
                 <Nav fill variant="tabs" defaultActiveKey="profile/user-info">
                     <div
                         className={`nav-item ${activeTab === 'general-info' ? 'tab-active' : ''}`}
@@ -64,10 +66,10 @@ function Profile () {
                     </div>
                 </Nav>
             </Row>
-            <Row>
+            <Row className={'mt-4'}>
                 <Routes>
                     <Route exact path='' element={<ProfileInfo profileData={profileData}/>}></Route>
-                    <Route exact path='user-posts' element={<Suspense fallback={<Loading/>}><ProfilePosts/></Suspense>}></Route>
+                    <Route exact path='user-posts' element={<Suspense fallback={<Loading/>}><ProfilePosts userId={userId}/></Suspense>}></Route>
                 </Routes>
             </Row>
         </Container>

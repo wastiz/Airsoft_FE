@@ -47,7 +47,7 @@ function Header () {
                         <Navbar.Text className="text-white">
                                 Signed in as: <br/> <b>{currentStates.username}</b>
                             </Navbar.Text>
-                            <Link to={`/profile`}>
+                                <Link to={`/profile/${currentStates._id}`}>
                                 <Button variant="outline-primary">My Profile</Button>
                             </Link>
                             <Button onClick={logout} variant="primary">Log out</Button>

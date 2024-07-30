@@ -4,10 +4,9 @@ import {use} from "react";
 import {PostEventCard} from "./PostEventCard";
 import {PostTeamCard} from "./PostTeamCard";
 
-export function ProfilePosts () {
-    const currentStates = useSelector((state) => state.current);
+export function ProfilePosts ({userId}) {
     const posts = use(
-        fetch(`http://localhost:5000/api/users/profile/posts?id=${currentStates._id}`, {
+        fetch(`http://localhost:5000/api/users/profile/posts?id=${userId}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }

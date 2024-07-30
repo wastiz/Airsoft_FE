@@ -2,8 +2,8 @@ import {Col, Image, Row} from "react-bootstrap";
 
 export function PostTeamCard ({postData: { name, created, coverPhoto, members}}) {
     return (
-        <Row>
-            <Col lg={8}>
+        <Row className={'user-post-card'}>
+            <Col lg={8} className={'mh-100'}>
                 <Image className={'team-banner-img'} src={coverPhoto} fluid></Image>
             </Col>
             <Col lg={4}>

@@ -76,8 +76,8 @@ function App () {
 					<Route exact path='/sign-up' element={<SigninForm/>}></Route>
 					<Route exact path='/log-in' element={<LoginForm/>}></Route>
 					{/*Profile*/}
-					<Route exact path='/profile/*' element={<Suspense fallback={<Loading/>}><Profile/></Suspense>}></Route>
-					<Route exact path='/profile-edit' element={<EditProfile/>}></Route>
+					<Route exact path='/profile/:userId/*' element={<Suspense fallback={<Loading/>}><Profile/></Suspense>}></Route>
+					<Route exact path='/profile/:userId/edit' element={<EditProfile/>}></Route>
 					{/*Events*/}
 					<Route exact path='/events' element={<Suspense fallback={<Spinner/>}><Events></Events></Suspense>}></Route>
 					<Route exact path='/events/:eventId' element={<Suspense fallback={<Spinner/>}><Event></Event></Suspense>}></Route>

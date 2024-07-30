@@ -8,10 +8,11 @@ const authMiddleware = require("../middlewares/auth-middleware");
 const userSchema = require("../models/userSchema");
 const {ObjectId} = require("mongodb");
 
-//Getting profile on profile page
-router.get('/profile', authMiddleware, async (req, res) => {
+//Getting profileData by id
+router.get('/profile/:id', authMiddleware, async (req, res) => {
     try {
-        const user = await userSchema.findOne({ _id: req.user.id });
+        const userId = req.params.id;
+        const user = await userSchema.findOne({ _id: userId });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

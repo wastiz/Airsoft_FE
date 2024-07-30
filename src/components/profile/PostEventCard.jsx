@@ -2,9 +2,9 @@ import {Col, Image, Row} from "react-bootstrap";
 
 export function PostEventCard ({postData: {title, created, date, photos: {coverPhoto}}}) {
     return (
-        <Row>
-            <Col lg={8}>
-                <Image className={'team-banner-img'} src={coverPhoto} fluid></Image>
+        <Row className={'user-post-card'}>
+            <Col lg={8} className={'mh-100'}>
+                <Image src={coverPhoto} fluid></Image>
             </Col>
             <Col lg={4}>
                 <h4>{title}</h4>
