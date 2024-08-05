@@ -89,7 +89,8 @@ function TeamForm () {
                 name: data.name,
                 description: data.description,
                 rules: data.rules,
-                memberLimit: data.limit,
+                memberLimit: +data.memberLimit,
+                joinMethod: data.joinMethod,
             };
 
             if (method === 'POST') {
@@ -104,26 +105,11 @@ function TeamForm () {
                 }
             }
 
-            switch (data.joinMethod) {
-                case 'Free join':
-                    requestData.joinMethod = 'opened';
-                    break;
-                case 'By request':
-                    requestData.joinMethod = 'request';
-                    break;
-                case 'Restricted':
-                    requestData.joinMethod = 'restricted';
-                    break;
-                default:
-                    throw new Error(`Unknown join method: ${data.joinMethod}`);
-            }
-
             const response = await axios({
                 method: method,
                 url: url,
                 data: requestData
             });
-
             console.log(response.statusText);
             navigate('/teams');
         } catch (error) {

@@ -38,7 +38,7 @@ const teamSchema = new mongoose.Schema({
     },
     joinMethod: {
         type: String,
-        enum: ['opened', 'request', 'restricted'],
+        enum: ['Free join', 'By request', 'Restricted'],
         required: true,
     },
     coverPhoto: {

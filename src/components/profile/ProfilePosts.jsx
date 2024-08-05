@@ -5,14 +5,15 @@ import {PostEventCard} from "./PostEventCard";
 import {PostTeamCard} from "./PostTeamCard";
 
 export function ProfilePosts ({userId}) {
+
     const posts = use(
-        fetch(`http://localhost:5000/api/users/profile/posts?id=${userId}`, {
+        fetch(`http://localhost:5000/api/users/profile/posts/${userId}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         }).then(res => res.json())
     );
-    console.log(posts);
+
     return (
         <Container>
             {posts.map(postData => (

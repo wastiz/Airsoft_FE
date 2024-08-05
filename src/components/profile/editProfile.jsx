@@ -6,7 +6,6 @@ import {
     setLastName,
     setAboutMe,
     setAge,
-    setAvatar,
     setPhone,
     setRoles,
     setTeam,
@@ -22,12 +21,13 @@ import {setLogged} from "../../redux/slices/currentDataSlice";
 function EditProfile () {
     const dispatch = useDispatch();
     const profileStates = useSelector((state) => state.profile);
+    const { _id } = useSelector((state) => state.current);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/users/profile', {
+                const response = await axios.get(`http://localhost:5000/api/users/profile/${_id}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 dispatch(setProfileData(response.data));
@@ -120,7 +120,7 @@ function EditProfile () {
             });
 
             alert(response.data.message);
-            navigate('/profile');
+            navigate(`/profile/${_id}`);
         } catch (error) {
             console.error(error);
         }

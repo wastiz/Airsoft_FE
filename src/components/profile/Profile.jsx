@@ -21,7 +21,6 @@ function Profile () {
         }
     }).then(res => res.json()));
 
-
     const pathSegments = location.pathname.split('/');
     const activeTab = pathSegments[pathSegments.length - 1] === 'user-posts' ? 'user-posts' : 'general-info';
 
@@ -38,9 +37,9 @@ function Profile () {
                 <Col></Col>
                 <Col xs lg='2'>
                     <h3 className='text-white text-xl'>Username:</h3>
-                    <h3 className='text-white text-3xl'><b>{currentStates.username}</b></h3>
+                    <h3 className='text-white text-3xl'><b>{profileData.firstName} {profileData.lastName}</b></h3>
                     {userId === currentStates._id ? (
-                        <Link to={'edit/'}>
+                        <Link to={`edit`}>
                             <Button variant={'primary'}>Edit Profile</Button>
                         </Link>
                     ) : null}

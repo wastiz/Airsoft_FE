@@ -21,6 +21,28 @@ router.post('/', async (req, res) => {
     }
 });
 
+//Adding member to team
+router.post('/joining', async (req, res) => {
+    const {teamId, userId} = req.body;
+
+    try {
+        const team = await teamSchema.findByIdAndUpdate(
+            teamId,
+            { $addToSet: { members: userId } },
+            { new: true }
+        );
+
+        if (!team) {
+            return res.status(404).send("Team not found");
+        }
+
+        res.status(200).json({ message: "User added to team successfully", team });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Couldn't add user to team");
+    }
+})
+
 //Updating existing Team
 router.put('/:teamId', async (req, res) => {
     const { teamId } = req.params;
@@ -46,6 +68,8 @@ router.put('/:teamId', async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+
+
 //Getting all team's specific info
 router.get('/', async (req, res) => {
     try {
@@ -56,6 +80,7 @@ router.get('/', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 //Getting Team by id
 router.get('/:teamId', async (req, res) => {

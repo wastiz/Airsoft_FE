@@ -6,7 +6,6 @@ const eventSchema = require('../models/eventSchema');
 const { v4: uuidv4 } = require('uuid');
 const authMiddleware = require("../middlewares/auth-middleware");
 const userSchema = require("../models/userSchema");
-const {ObjectId} = require("mongodb");
 
 //Getting profileData by id
 router.get('/profile/:id', authMiddleware, async (req, res) => {
@@ -48,17 +47,19 @@ router.put('/profile', authMiddleware, async (req, res) => {
 });
 
 //Getting user's posts
-router.get('/profile/posts', authMiddleware, async (req, res) => {
-    const { id } = req.query;
+router.get('/profile/posts/:userId', authMiddleware, async (req, res) => {
+    const { userId } = req.params;
 
-    if (!id) {
+    console.log(userId);
+
+    if (!userId) {
         return res.status(400).json({ message: 'Author ID is required' });
     }
 
     try {
-        const teams = await teamSchema.find({ author: id }).select('name created coverPhoto members');
+        const teams = await teamSchema.find({ author: userId }).select('name created coverPhoto members');
 
-        const events = await eventSchema.find({ author: id }).select('title created date photos.coverPhoto');
+        const events = await eventSchema.find({ author: userId }).select('title created date photos.coverPhoto');
 
         const combinedArray = [...teams, ...events];
 

@@ -1,7 +1,7 @@
 import placeholder from "../../img/placeholder.png";
 import {Link} from "react-router-dom";
 
-function UserCard({memberData: {username, profile: {firstname, lastName, avatar}}}) {
+function UserCard({memberData: {_id, username, profile: {firstname, lastName, avatar}}}) {
     return (
         <div className="card mb-3" style={{maxWidth: "540px"}}>
             <div className="row g-0 flex flex-center">
@@ -12,7 +12,7 @@ function UserCard({memberData: {username, profile: {firstname, lastName, avatar}
                     <div className="card-body">
                         <h5 className="card-title">{username}</h5>
                         <p className="card-text">{firstname} {lastName}</p>
-                        <Link to={'/'}>
+                        <Link to={`/profile/${_id}`}>
                             <button className={'btn btn-primary'}>Visit profile</button>
                         </Link>
                     </div>

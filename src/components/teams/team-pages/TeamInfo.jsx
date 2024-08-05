@@ -1,4 +1,5 @@
-export function TeamInfo({ teamData: { author, created, description, rules } }) {
+export function TeamInfo({ teamData }) {
+    const [author, created, description, rules] = teamData;
     return (
         <>
             <h3>About the team</h3>
