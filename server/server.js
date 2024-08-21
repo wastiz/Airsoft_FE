@@ -4,6 +4,7 @@ const userController = require('./controllers/user-controller');
 const eventController = require('./controllers/event-controller');
 const profileController = require('./controllers/profile-controller');
 const teamController = require('./controllers/team-controller');
+const notificationController = require('./controllers/notification-controller');
 const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -41,8 +42,9 @@ app.use(morgan('dev'));
 
 // Маршруты
 app.use('/api/users', userController);
-app.use('/api/events', eventController);
 app.use('/api/users', profileController);
+app.use('/api/users', notificationController)
+app.use('/api/events', eventController);
 app.use('/api/teams', teamController);
 app.use('/uploads/avatar-uploads', express.static(path.join(__dirname, 'uploads/avatar-uploads')));
 app.use('/uploads/cover-event-uploads', express.static(path.join(__dirname, 'uploads/cover-event-uploads')));

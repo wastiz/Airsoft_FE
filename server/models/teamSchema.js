@@ -36,6 +36,11 @@ const teamSchema = new mongoose.Schema({
         ref: 'User',
         default: []
     },
+    pendingMembers: {
+        type: [String],
+        ref: 'User',
+        default: []
+    },
     joinMethod: {
         type: String,
         enum: ['Free join', 'By request', 'Restricted'],

@@ -8,12 +8,13 @@ import {TeamInfo} from "./team-pages/TeamInfo";
 import {TeamGallery} from "./team-pages/TeamGallery";
 import {TeamMembers} from "./team-pages/TeamMembers";
 import {TeamParticipations} from "./team-pages/TeamParticipations";
-import axios from "axios";
+import {addPendingMember, addTeamMember} from "../assets/Functions";
+import {Loading} from "../assets/Loading";
 
 function Team() {
     const { teamId } = useParams();
     const currentStates = useSelector((state) => state.current);
-    const teamData = use(fetch(`http://localhost:5000/api/teams/${teamId}`).then(res => res.json()))
+    const teamData = use(fetch(`http://localhost:5000/api/teams/${teamId}`).then(res => res.json()));
 
     const { name, author, coverPhoto, created, description, rules, joinMethod, memberLimit, members, participated } = teamData;
 
@@ -22,51 +23,63 @@ function Team() {
             return <p>You are author of this team</p>
         } else if (members.includes(currentStates._id)) {
             return <p>You are joined in this team</p>
-        } else if (joinMethod === "Free join" ) {
+        } else if (joinMethod === "Free join") {
             return <button onClick={() => handleShow('Joining Team', `Are you sure you want to join team "${name}"?`, 'Join Team')} className={'btn btn-primary'}>Join this team</button>
         } else if (joinMethod === "By request") {
-            return <button onClick={() => handleShow('Requesting to join team', `Are you sure you sent join request to team "${name}"?`, 'Request to join')} className={'btn btn-primary'}>Request to join</button>
+            return <button onClick={() => handleShow('Requesting to join team', `Are you sure you want to send join request to team "${name}"?`, 'Request to join')} className={'btn btn-primary'}>Request to join</button>
         } else if (joinMethod === "Restricted") {
             return <p className={'alert-danger'}>This team is restricted to join</p>
         }
     }
 
-    //Modal
+    // Modal
     const [show, setShow] = useState(false);
     const [modalText, setModalText] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => {
         setShow(false);
         setModalText([]);
-    }
+    };
+
     const handleShow = (title, body, button) => {
         setShow(true);
-        setModalText([title, body, button])
-    }
+        setModalText([title, body, button]);
+    };
 
-
-    //Joining methods
+    // Team joining methods
     const handleJoin = async (method) => {
-        if (method === 'Join Team') {
-            try {
-                await axios.post(`http://localhost:5000/api/teams/joining`, {
-                    teamId: teamId,
-                    userId: currentStates._id,
-                })
-                setShow(false)
-                console.log(`You joined`)
-            } catch (error) {
-                console.error(error)
+        setLoading(true);
+        handleShow('Just a sec', <Loading />, "Loading..."); // Показать модальное окно загрузки
+
+        try {
+            if (method === 'Join Team') {
+                await addTeamMember(teamId, currentStates._id);
+                handleShow("Success!", `Congratulations! You have joined team "${name}"`, "Got it");
+            } else if (method === "Request to join") {
+                await addPendingMember(teamId, currentStates._id);
+                handleShow("Success!", `We have sent your join request to leaders of team "${name}"`, "Got it");
             }
+        } catch (error) {
+            handleShow("Oops", 'Sorry, but something went wrong from our side', "Okay((");
+        } finally {
+            setLoading(false);
         }
-        if (method === "Request to join") {
-            console.log('Sending request...')
+    };
+
+    const modalBtn = (type) => {
+        if (type === 'Join Team') {
+            return <Button onClick={() => handleJoin(type)} className={'primary'}>{type}</Button>
+        } else if (type === 'Request to join') {
+            return <Button onClick={() => handleJoin(type)} className={'primary'}>{type}</Button>
+        } else if (type === 'Loading...') {
+            return <Button className={'primary'} disabled>{type}</Button>
         }
-    }
+    };
 
     return (
         <Container>
-            <div className="team-header" style={{backgroundImage: `url(${coverPhoto})`}}>
+            <div className="team-header" style={{ backgroundImage: `url(${coverPhoto})` }}>
                 <h1>{name}</h1>
                 {currentStates._id === author && (
                     <Link to={`/team-form/${teamId}`}>
@@ -74,10 +87,10 @@ function Team() {
                     </Link>
                 )}
             </div>
-            <br/>
+            <br />
             <Row>
                 <Col lg={3}>
-                    <Card style={{width: '16rem'}}>
+                    <Card style={{ width: '16rem' }}>
                         <Card.Img className="img-thumbnail" variant="top" src={logo} />
                         <ListGroup>
                             <ListGroup.Item className="Item">
@@ -113,9 +126,7 @@ function Team() {
                                         <Button variant="secondary" onClick={handleClose}>
                                             Close
                                         </Button>
-                                        <Button variant="primary" onClick={() => handleJoin(modalText[2])}>
-                                            {modalText[2]}
-                                        </Button>
+                                        {modalBtn(modalText[2])}
                                     </Modal.Footer>
                                 </Modal>
                             </ListGroup.Item>
@@ -124,10 +135,10 @@ function Team() {
                 </Col>
                 <Col lg={9}>
                     <Routes>
-                        <Route exact path='' element={<TeamInfo teamData={[author, created, description, rules]}/>}></Route>
-                        <Route exact path='team-members' element={<Suspense><TeamMembers members={members}/></Suspense>}></Route>
-                        <Route exact path='team-participations' element={<TeamParticipations/>}></Route>
-                        <Route exact path='team-gallery' element={<TeamGallery/>}></Route>
+                        <Route exact path='' element={<TeamInfo teamData={[author, created, description, rules]} />} />
+                        <Route exact path='team-members' element={<Suspense><TeamMembers members={members} /></Suspense>} />
+                        <Route exact path='team-participations' element={<TeamParticipations />} />
+                        <Route exact path='team-gallery' element={<TeamGallery />} />
                     </Routes>
                 </Col>
             </Row>

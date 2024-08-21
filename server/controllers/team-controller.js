@@ -43,6 +43,24 @@ router.post('/joining', async (req, res) => {
     }
 })
 
+//Adding member to pending array
+router.post('/pending', async (req, res) => {
+    const { teamId, userId } = req.body;
+
+    try {
+        const team = await teamSchema.findByIdAndUpdate(teamId, { $addToSet: { pendingMembers: userId } }, { new: true })
+
+        if (!team) {
+            return res.status(404).send("Team not found");
+        }
+
+        res.status(200).json({ message: "User added to pending list successfully", team });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Couldn't add user to pending list");
+    }
+})
+
 //Updating existing Team
 router.put('/:teamId', async (req, res) => {
     const { teamId } = req.params;

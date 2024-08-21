@@ -9,7 +9,7 @@ const currentDataSlice = createSlice({
         email: '',
         logged: false,
         rememberMe: false,
-        teamData: {}
+        notifications: [],
     },
     reducers: {
         setData: (state, action) => {
@@ -23,11 +23,11 @@ const currentDataSlice = createSlice({
         setRememberMe: (state, action) => {
             state.rememberMe = action.payload
         },
-        setTeamData: (state, action) => {
-            state.teamData = action.payload
+        setNotifications: (state, action) => {
+            state.notifications = action.payload
         }
     }
 })
 
-export const { setData, setLogged, setRememberMe, setTeamData} = currentDataSlice.actions;
+export const { setData, setLogged, setRememberMe, setNotifications} = currentDataSlice.actions;
 export const currentDataReducer = currentDataSlice.reducer;

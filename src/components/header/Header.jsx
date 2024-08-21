@@ -4,12 +4,52 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setData, setLogged, setRememberMe } from '../../redux/slices/currentDataSlice'
 import { useNavigate } from'react-router-dom';
 import logo from '../../img/logo.png'
-import {Button, Container, Navbar, NavDropdown} from "react-bootstrap";
+import {Badge, Button, Container, Navbar, NavDropdown, OverlayTrigger, Popover} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import axios from "axios";
+
 
 function Header () {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const currentStates = useSelector((state) => state.current);
+
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/users/user-notifications`, {
+                    params: { userId: currentStates._id },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                setNotifications(response.data);
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            }
+        };
+
+        fetchNotifications();
+    }, [currentStates._id]);
+
+    console.log(notifications);
+
+    const popover = (
+        <Popover id="popover-basic">
+            {/*<Popover.Header style={{ backgroundColor: 'green' }} as="h3">Notifications</Popover.Header>*/}
+            <Popover.Body>
+                {currentStates.length > 0 ? currentStates.notifications.map(item => {
+                    <>
+                        <p>{item.title}</p>
+                        <p>{item.message}</p>
+                    </>
+                }) : <p>You have no notifications</p>}
+            </Popover.Body>
+        </Popover>
+    );
+
 
     const logout = () => {
         dispatch(setData({
@@ -44,13 +84,19 @@ function Header () {
 
                     {currentStates.logged ? (
                         <>
-                        <Navbar.Text className="text-white">
+                            <Navbar.Text className="text-white">
                                 Signed in as: <br/> <b>{currentStates.username}</b>
                             </Navbar.Text>
-                                <Link to={`/profile/${currentStates._id}`}>
-                                <Button variant="outline-primary">My Profile</Button>
+                            <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+                                <Button variant="primary">
+                                    Notifications <Badge bg="warning">9</Badge>
+                                    <span className="visually-hidden">unread messages</span>
+                                </Button>
+                            </OverlayTrigger>
+                            <Link to={`/profile/${currentStates._id}`}>
+                                <Button variant="primary">My Profile</Button>
                             </Link>
-                            <Button onClick={logout} variant="primary">Log out</Button>
+                            <Button onClick={logout} variant="outline-primary">Log out</Button>
                         </>
                     ) : (
                         <>
