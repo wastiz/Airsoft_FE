@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ProfileSchema = require('./profileSchema');
+const notificationSchema = require('./notificationSchema');
 
 
 const userSchema = new mongoose.Schema({
@@ -21,6 +22,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    notifications: {
+        type: [notificationSchema],
+        default: [],
     },
     profile: {
         type: ProfileSchema,

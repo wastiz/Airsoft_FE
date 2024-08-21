@@ -4,7 +4,7 @@ import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {Suspense, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import axios from "axios";
-import {setData, setLogged} from "../../redux/slices/currentDataSlice";
+import {setData, setLogged, setNotifications} from "../../redux/slices/currentDataSlice";
 import {Loading} from "../assets/Loading";
 import Header from '../header/Header';
 import Navigation from '../navigation/Navigation';
@@ -42,12 +42,13 @@ function App () {
 				// Проверяем, существует ли токен и не истек ли его срок действия
 				if (response.data.token) {
 					// Если все в порядке, сохраняем новый токен и устанавливаем logged в true
-					localStorage.setItem('token', response.data.token);
+					const { token, _id, username, email } = response.data;
+					localStorage.setItem('token', token);
 					dispatch(setLogged(true));
 					dispatch(setData({
-						_id: response.data.user._id,
-						username: response.data.user.username,
-						email: response.data.user.email,
+						_id: _id,
+						username: username,
+						email: email,
 					}));
 				} else {
 					// Если токен недействителен, удаляем его из localStorage и устанавливаем logged в false

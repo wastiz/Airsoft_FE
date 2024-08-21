@@ -103,11 +103,10 @@ router.get('/auth', authMiddleware,
             const token = jwt.sign({id: user.id}, "airsoft-fe-key", {expiresIn: "30d"})
             return res.json({
                 token,
-                user: {
-                    _id: user.id,
-                    username: user.username,
-                    email: user.email,
-                }
+                _id: user.id,
+                username: user.username,
+                email: user.email,
+                notifications: user.notifications
             })
         } catch (e) {
             console.log(e)
