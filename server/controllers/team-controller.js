@@ -4,6 +4,7 @@ const teamSchema = require('../models/teamSchema');
 const multer = require("multer");
 const { v4: uuidv4 } = require('uuid');
 const userSchema = require("../models/userSchema");
+const addNotification = require('../functions');
 
 //Adding new Team
 router.post('/', async (req, res) => {
@@ -36,6 +37,8 @@ router.post('/joining', async (req, res) => {
             return res.status(404).send("Team not found");
         }
 
+        await addNotification("team_joined", { teamId: teamId, joinedId: userId });
+
         res.status(200).json({ message: "User added to team successfully", team });
     } catch (error) {
         console.error(error);
@@ -53,6 +56,8 @@ router.post('/pending', async (req, res) => {
         if (!team) {
             return res.status(404).send("Team not found");
         }
+
+        await addNotification('team_join_request', { teamId: teamId, senderId: userId });
 
         res.status(200).json({ message: "User added to pending list successfully", team });
     } catch (error) {

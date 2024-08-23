@@ -38,4 +38,19 @@ async function addNotification (type, content) {
     }
 }
 
+const TWO_DAYS_IN_MS = 2 * 24 * 60 * 60 * 1000;
+
+setInterval(async () => {
+    try {
+        const cutoffDate = new Date(Date.now() - TWO_DAYS_IN_MS);
+        const result = await userSchema.updateMany(
+            { "notifications.readAt": { $lt: cutoffDate } },
+            { $pull: { notifications: { readAt: { $lt: cutoffDate } } } }
+        );
+        console.log(`Deleted ${result.nModified} old notifications.`);
+    } catch (error) {
+        console.error('Error deleting old notifications:', error);
+    }
+}, 24 * 60 * 60 * 1000);
+
 module.exports = addNotification;

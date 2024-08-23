@@ -50,6 +50,7 @@ router.post('/registration',
                 password: hashPassword,
             });
             await user.save();
+            await addNotification("app", { title: "Welcome to airsoft community", message: "Congrats on creating new account, enjoy to explore airsoft community", userId: newId });
             res.status(201).json({ message: "User was created" });
         } catch (e) {
             console.error(e);

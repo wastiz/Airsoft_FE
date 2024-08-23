@@ -10,7 +10,8 @@ const notificationSchema = new mongoose.Schema({
     title: { type: String, required: true },
     message: { type: String, required: true },
     date: { type: Date, default: Date.now },
-    read: { type: Boolean, default: false }
+    read: { type: Boolean, default: false },
+    readAt: { type: Date, default: null },
 });
 
 module.exports = notificationSchema;
