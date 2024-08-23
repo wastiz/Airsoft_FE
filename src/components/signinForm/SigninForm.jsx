@@ -3,6 +3,8 @@ import { setName, setEmail, setPassword, setId, setStatus, resetForm } from '../
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {Button, Form} from "react-bootstrap";
+import {addNotification} from "../assets/Functions";
+import {v4 as uuidv4} from "uuid";
 
 const SigninForm = () => {
 	const dispatch = useDispatch();
@@ -33,7 +35,7 @@ const SigninForm = () => {
 			const response = await axios.post('http://localhost:5000/api/users/registration', {
 				username: signInStates.username,
 				email: signInStates.email,
-				password: signInStates.password,
+				password: signInStates.password
 			})
 			alert(response.data.message)
 			dispatch(resetForm());

@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs")
 const { v4: uuidv4 } = require('uuid');
 const authMiddleware = require('../middlewares/auth-middleware')
 const multer = require("multer");
+const addNotification = require('../functions');
 
 //User registration
 router.post('/registration',
@@ -49,7 +50,6 @@ router.post('/registration',
                 password: hashPassword,
             });
             await user.save();
-
             res.status(201).json({ message: "User was created" });
         } catch (e) {
             console.error(e);

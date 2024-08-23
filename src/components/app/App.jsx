@@ -1,7 +1,7 @@
 import './App.scss';
 import 'react-image-crop/dist/ReactCrop.css'
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
-import {Suspense, useEffect} from "react";
+import {Suspense, useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import {setData, setLogged, setNotifications} from "../../redux/slices/currentDataSlice";
@@ -24,6 +24,8 @@ import {Spinner} from "react-bootstrap";
 function App () {
 
 	const dispatch = useDispatch();
+	const [notifications, setNotifications] = useState([]);
+
 
 	useEffect(() => {
 		async function auth () {
@@ -41,8 +43,8 @@ function App () {
 
 				// Проверяем, существует ли токен и не истек ли его срок действия
 				if (response.data.token) {
-					// Если все в порядке, сохраняем новый токен и устанавливаем logged в true
-					const { token, _id, username, email } = response.data;
+					// Если все в порядке, сохраняем новый токен и устанавливаем дату и получаем уведомления
+					const { token, _id, username, email, notifications } = response.data;
 					localStorage.setItem('token', token);
 					dispatch(setLogged(true));
 					dispatch(setData({
@@ -50,6 +52,7 @@ function App () {
 						username: username,
 						email: email,
 					}));
+					setNotifications(notifications);
 				} else {
 					// Если токен недействителен, удаляем его из localStorage и устанавливаем logged в false
 					localStorage.removeItem('token');
@@ -67,7 +70,7 @@ function App () {
 
 	return (
 		<BrowserRouter>
-			<Header></Header>
+			<Header notifications={notifications}></Header>
 			<Navigation></Navigation>
 			<main className="margin-20px back-secondary border-1">
 				<Routes>

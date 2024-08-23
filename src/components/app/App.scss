@@ -208,3 +208,13 @@ main {
     object-fit: contain;
   }
 }
+
+.notification-container {
+  border: 1px solid $gray-400;
+  border-radius: 1rem;
+  padding: 10px;
+  h5 {
+    font-size: 17px;
+    font-weight: bold;
+  }
+}

@@ -31,7 +31,7 @@ export async function addTeamMember(teamId, userId) {
     }
 }
 
-// Function to add user to pending members
+// Function to add user to pending members of team
 export async function addPendingMember(teamId, userId) {
     try {
         await axios.post(`http://localhost:5000/api/teams/pending`, {
